@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "release alpha",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
