@@ -1,4 +1,4 @@
-import { isFunction } from '@dp/vis-util';
+import { isFunction } from '@visactor/vutils';
 import { hierarchy } from 'd3-hierarchy';
 import type { DataView } from '../data-view';
 import { DATAVIEW_TYPE } from '../constants';

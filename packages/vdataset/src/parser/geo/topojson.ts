@@ -1,6 +1,6 @@
 import { feature } from 'topojson-client';
 import type { Topology } from 'topojson-specification';
-import { isString } from '@dp/vis-util';
+import { isString } from '@visactor/vutils';
 import { DATAVIEW_TYPE } from '../../constants';
 import type { DataView } from '../../data-view';
 import type { Parser } from '..';

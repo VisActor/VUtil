@@ -1,4 +1,4 @@
-import { EventEmitter } from '@dp/vis-util';
+import { EventEmitter } from '@visactor/vutils';
 import type { DataView } from './data-view';
 import { getUUID } from './utils/uuid';
 import type { Transform } from './transform';

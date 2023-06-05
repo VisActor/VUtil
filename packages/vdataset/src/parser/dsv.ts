@@ -1,5 +1,5 @@
 import { dsvFormat, csvParse, tsvParse } from 'd3-dsv';
-import { isString } from '@dp/vis-util';
+import { isString } from '@visactor/vutils';
 import { DATAVIEW_TYPE } from '../constants';
 import type { DataView } from '../data-view';
 import { mergeDeepImmer } from '../utils/js';

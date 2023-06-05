@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { cloneDeep, isObject } from '@dp/vis-util';
+import { cloneDeep, isObject } from '@visactor/vutils';
 
 /**
  * 深拷贝

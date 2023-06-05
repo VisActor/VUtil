@@ -1,4 +1,4 @@
-import { cloneDeep, EventEmitter } from '@dp/vis-util';
+import { cloneDeep, EventEmitter } from '@visactor/vutils';
 import type { DataSet } from './data-set';
 import type { ITransformOptions } from './transform';
 import type { DATAVIEW_TYPE } from './constants';
