@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "release alpha",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
