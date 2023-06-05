@@ -1,6 +1,6 @@
 import * as simpleStatistics from 'simple-statistics';
 import { mergeDeepImmer } from '../utils/js';
-import { isArray, uniqArray, flattenArray } from '@dp/vis-util';
+import { isArray, uniqArray, flattenArray } from '@visactor/vutils';
 import { STATISTICS_METHODS } from '../constants';
 import type { Transform } from '.';
 

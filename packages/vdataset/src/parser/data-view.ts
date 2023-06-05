@@ -1,6 +1,6 @@
 import type { DataView } from '../data-view';
 import type { Parser } from '.';
-import { isBoolean, isArray } from '@dp/vis-util';
+import { isBoolean, isArray } from '@visactor/vutils';
 
 export interface IDataViewParserOptions {
   dependencyUpdate?: boolean; // 是否依赖更新

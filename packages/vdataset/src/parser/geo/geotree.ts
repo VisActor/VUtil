@@ -1,6 +1,6 @@
 // import getPointAtLength from 'point-at-length';
 // import { geoPath } from 'd3-geo';
-import { cloneDeep } from '@dp/vis-util';
+import { cloneDeep } from '@visactor/vutils';
 import { DATAVIEW_TYPE } from '../../constants';
 import type { DataView } from '../../data-view';
 import type { Parser } from '..';
