@@ -1,0 +1,77 @@
+{
+  "name": "@visactor/vutils",
+  "entries": [
+    {
+      "version": "0.0.49",
+      "tag": "@visactor/vutils_v0.0.49",
+      "date": "Wed, 31 May 2023 02:35:46 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "publish"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.0.48",
+      "tag": "@visactor/vutils_v0.0.48",
+      "date": "Fri, 26 May 2023 11:06:17 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "修复eventemitter3引用方式"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.0.47",
+      "tag": "@visactor/vutils_v0.0.47",
+      "date": "Fri, 26 May 2023 09:58:21 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "import fix"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.0.46",
+      "tag": "@visactor/vutils_v0.0.46",
+      "date": "Tue, 23 May 2023 12:08:35 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "text measure"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.0.45",
+      "tag": "@visactor/vutils_v0.0.45",
+      "date": "Tue, 23 May 2023 09:31:12 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "publish"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.0.44",
+      "tag": "@visactor/vutils_v0.0.44",
+      "date": "Tue, 23 May 2023 06:42:05 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "update for remove lodash-es"
+          }
+        ]
+      }
+    }
+  ]
+}

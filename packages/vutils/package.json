@@ -1,0 +1,51 @@
+{
+  "name": "@visactor/vutils",
+  "version": "0.0.49",
+  "main": "cjs/index.js",
+  "module": "es/index.js",
+  "types": "es/index.d.ts",
+  "files": [
+    "cjs",
+    "es",
+    "dist"
+  ],
+  "description": "util",
+  "author": "dp-fe",
+  "license": "ISC",
+  "keywords": [
+    "visual",
+    "utility"
+  ],
+  "scripts": {
+    "compile": "tsc --noEmit",
+    "eslint": "eslint --debug --fix src/",
+    "build": "bundle",
+    "dev": "bundle --clean -f es -w",
+    "start": "vite ./vite",
+    "test": "jest",
+    "test-check": "DEBUG=jest jest --forceExit --detectOpenHandles --silent false --verbose false --runInBand"
+  },
+  "devDependencies": {
+    "@internal/bundler": "workspace:*",
+    "@internal/eslint-config": "workspace:*",
+    "@internal/ts-config": "workspace:*",
+    "@rushstack/eslint-patch": "~1.1.4",
+    "eslint": "~8.18.0",
+    "vite": "3.2.6",
+    "@internal/jest-config": "workspace:*",
+    "jest": "~29.5.0",
+    "@jest/globals": "~29.5.0",
+    "ts-jest": "~29.1.0",
+    "@types/jest": "~29.5.0",
+    "typescript": "4.9.5",
+    "@types/node": "*"
+  },
+  "dependencies": {
+    "eventemitter3": "^4.0.7",
+    "@turf/invariant": "^6.5.0",
+    "@turf/helpers": "^6.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
