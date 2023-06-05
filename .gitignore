@@ -86,3 +86,8 @@ common/autoinstallers/*/.npmrc
 
 # Heft temporary files
 .heft
+
+# build temporary files
+
+.rollup.cache/
+tsconfig.tsbuildinfo
