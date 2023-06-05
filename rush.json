@@ -15,7 +15,8 @@
     // "changefilesCommitMessage": "Rush change"
   },
   "repository": {
-    "defaultBranch": "master",
+    "url": "https://github.com/VisActor/vutil",
+    "defaultBranch": "main",
     "defaultRemote": "origin"
   },
   // "eventHooks": {
@@ -28,6 +29,12 @@
   // "hotfixChangeEnabled": false,
   "allowedProjectTags": ["tool", "share", "package", "doc"],
   "projects": [
+    {
+      "packageName": "@visactor/vscale",
+      "projectFolder": "packages/vscale",
+      "tags": ["package"],
+      "shouldPublish": true
+    },
     {
       "packageName": "@visactor/vutils",
       "projectFolder": "packages/vutils",
