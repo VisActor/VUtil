@@ -13,4 +13,5 @@ export { ThresholdScale } from './threshold-scale';
 export { TimeScale } from './time-scale';
 
 export * from './interface';
+// type
 export * from './type';

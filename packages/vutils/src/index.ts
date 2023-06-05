@@ -42,5 +42,4 @@ export * from './time';
 // dom
 export * from './dom';
 
-// geo
 export * from './geo';
