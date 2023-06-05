@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "release",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}

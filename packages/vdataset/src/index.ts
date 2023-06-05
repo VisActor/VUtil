@@ -36,6 +36,7 @@ export type { ITreeParserOptions } from './parser/tree';
 export { dataViewParser } from './parser/data-view';
 export type { IDataViewParserOptions } from './parser/data-view';
 
+// core
 export { DataSet } from './data-set';
 export { DataView } from './data-view';
 export type { IDataViewOptions, IFields, IFieldsMeta } from './data-view';
