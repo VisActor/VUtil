@@ -11,7 +11,7 @@
   ],
   "description": "data processing tool",
   "author": "dp-fe",
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
     "visual",
     "util",
