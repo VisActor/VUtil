@@ -93,4 +93,4 @@ common/autoinstallers/*/.npmrc
 tsconfig.tsbuildinfo
 
 # git-hook
-common/scripts/pre-commit.py
+common/scripts/pre-commit

@@ -2,6 +2,6 @@
 
 node common/scripts/install-run-rush.js lint-staged || exit $? #++
 
-if [ -f "common/scripts/pre-commit.py" ]; then
-  common/scripts/pre-commit.py
+if [ -f "common/scripts/pre-commit" ]; then
+  common/scripts/pre-commit
 fi
