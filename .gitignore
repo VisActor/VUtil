@@ -91,3 +91,6 @@ common/autoinstallers/*/.npmrc
 
 .rollup.cache/
 tsconfig.tsbuildinfo
+
+# git-hook
+common/scripts/pre-commit
