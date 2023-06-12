@@ -6,7 +6,7 @@ Your pull requests will be merged after one of the collaborators approve.
 Thank you!
 -->
 
-[[中文版模板 / Chinese template](https://github.com/VisActor/vutil/blob/main/.github/pr_cn.md?plain=1)]
+[[中文版模板 / Chinese template](https://github.com/VisActor/Vutil/blob/main/.github/PULL_REQUEST_TEMPLATE/pr_cn.md?plain=1)]
 
 ### 🤔 This is a ...
 
@@ -24,6 +24,7 @@ Thank you!
 - [ ] Site / documentation update
 - [ ] Demo update
 - [ ] Workflow
+- [ ] Chore
 - [ ] Other (about what?)
 
 ### 🔗 Related issue link
