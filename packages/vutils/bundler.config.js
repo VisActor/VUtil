@@ -4,5 +4,6 @@
  */
 module.exports = {
   formats: ["cjs", "es", "umd"],
-  name: "VUtils"
+  name: "VUtils",
+  umdOutputFilename: 'index.js'
 };

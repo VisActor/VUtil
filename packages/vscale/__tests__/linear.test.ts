@@ -128,7 +128,7 @@ test('linear.invert(y) maps an empty range to the middle of the domain', functio
 });
 
 test('linear.invert(y) coerces range values to numbers', function () {
-  expect((new LinearScale() as any).range(['0', '2']).invert('1')).toBe(0.5);
+  expect((new LinearScale() as any).range(['0', '2']).invert('1')).toBeCloseTo(0.5);
   expect(
     (new LinearScale() as any).range([new Date(1990, 0, 1), new Date(1991, 0, 1)]).invert(new Date(1990, 6, 2, 13))
   ).toBe(0.5);

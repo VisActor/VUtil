@@ -3,5 +3,6 @@
  */
 module.exports = {
   formats: ["cjs", "es", "umd"],
-  name: "VDataset"
+  name: "VDataset",
+  umdOutputFilename: 'index.js'
 };

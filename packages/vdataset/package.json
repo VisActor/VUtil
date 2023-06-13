@@ -9,6 +9,12 @@
     "es",
     "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./es/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "description": "data processing tool",
   "author": "dp-fe",
   "license": "MIT",
