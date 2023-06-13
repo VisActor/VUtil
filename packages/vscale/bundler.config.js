@@ -4,5 +4,5 @@
 module.exports = {
   formats: ['cjs', 'es', 'umd'],
   name: 'VScale',
-  umdOutputFilename: 'index.js'
+  umdOutputFilename: 'index'
 };
