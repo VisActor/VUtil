@@ -12,7 +12,7 @@
   "exports": {
     ".": {
       "import": "./es/index.js",
-      "require": "./cjs/index.js"
+      "require": "./dist/index.js"
     }
   },
   "description": "data processing tool",
