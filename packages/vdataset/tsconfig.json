@@ -2,7 +2,8 @@
   "extends": "@internal/ts-config/tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "output"
+    "outDir": "output",
+    "esModuleInterop": true
   },
   "ts-node": {
     "transpileOnly": true,
