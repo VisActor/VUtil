@@ -1,4 +1,4 @@
-import geobuf from 'geobuf';
+import * as geobuf from 'geobuf';
 import Pbf from 'pbf';
 import { DATAVIEW_TYPE } from '../../constants';
 import type { DataView } from '../../data-view';
