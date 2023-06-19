@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "chore: change the way of import geobuf package",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}
