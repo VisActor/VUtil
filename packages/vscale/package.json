@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vscale",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "description": "Scales for visual encoding, used in VGrammar, VTable",
   "keywords": [
     "scale",
@@ -33,7 +33,7 @@
     "test-check": "DEBUG=jest jest --forceExit --detectOpenHandles --silent false --verbose false --runInBand"
   },
   "dependencies": {
-    "@visactor/vutils": "workspace:0.10.1"
+    "@visactor/vutils": "workspace:0.11.0"
   },
   "devDependencies": {
     "@internal/bundler": "workspace:*",
