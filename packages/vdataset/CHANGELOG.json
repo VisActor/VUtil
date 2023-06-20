@@ -2,6 +2,34 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.11.0",
+      "tag": "@visactor/vdataset_v0.11.0",
+      "date": "Tue, 20 Jun 2023 08:44:17 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "chore: change the way of import geobuf package"
+          },
+          {
+            "comment": "release"
+          },
+          {
+            "comment": "release alpha"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "release version 0.10.1"
+          }
+        ],
+        "dependency": [
+          {
+            "comment": "Updating dependency \"@visactor/vutils\" from `0.10.1` to `0.11.0`"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.0.11",
       "tag": "@visactor/vdataset_v0.0.11",
       "date": "Wed, 31 May 2023 02:35:46 GMT",
