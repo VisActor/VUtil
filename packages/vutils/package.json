@@ -23,7 +23,8 @@
     "dev": "bundle --clean -f es -w",
     "start": "vite ./vite",
     "test": "jest",
-    "test-check": "DEBUG=jest jest --forceExit --detectOpenHandles --silent false --verbose false --runInBand"
+    "test-check": "DEBUG=jest jest --forceExit --detectOpenHandles --silent false --verbose false --runInBand",
+    "test-cov": "jest -w 16 --coverage"
   },
   "devDependencies": {
     "@internal/bundler": "workspace:*",

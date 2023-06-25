@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@visactor/vutils": ["../vutils/src"]
+    }
+  },
+  "references": []
+}
