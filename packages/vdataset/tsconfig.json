@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "output",
+    "rootDir": "./src",
     "esModuleInterop": true
   },
   "ts-node": {
@@ -11,5 +12,10 @@
       "module": "commonjs"
     }
   },
+  "references": [
+    {
+      "path": "../vutils"
+    }
+  ],
   "include": ["src", "__tests__", "examples"]
 }
