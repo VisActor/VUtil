@@ -20,8 +20,8 @@ VUtil 是 VGrammar 的通用可视化工具包。
   <a href="">跨端</a>
 </p>
 
-[![npm Version](https://img.shields.io/npm/v/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutil)
-[![npm Download](https://img.shields.io/npm/dm/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutil)
+[![npm Version](https://img.shields.io/npm/v/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
+[![npm Download](https://img.shields.io/npm/dm/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/visactor/vutil/blob/main/LICENSE)
 
 </div>
@@ -58,10 +58,10 @@ VUtil 是可视化语法库[VGrammar](https://github.com/VisActor/VGrammar) 的�
 
 ```bash
 // npm
-npm install @visactor/vutil
+npm install @visactor/vutils
 
 // yarn
-yarn add @visactor/vutil
+yarn add @visactor/vutils
 ```
 
 ##
