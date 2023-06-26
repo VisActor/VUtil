@@ -26,6 +26,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
   coverageReporters: ['json-summary', 'lcov', 'text'],
+  coveragePathIgnorePatterns: ['node_modules', '__tests__', 'interface.ts', '.d.ts', 'typings'],
   collectCoverageFrom: [
     '**/src/**',
     '!**/cjs/**',
