@@ -14,15 +14,21 @@ function getPackageJson(pkgJsonPath) {
 
 function run() {
   const cwd = process.cwd();
+  let packageName = process.argv.slice(2)[0];
+  if(packageName){
+    console.log('');
+    process.exit(1);
+  }
 
-  // 1. build all the packages
-  spawnSync('sh', ['-c', `rush build --only tag:package`], {
+  // 1. update version of package.json, this operation will remove the common/changes
+  spawnSync('sh', ['-c', `rush version --bump`], {
     stdio: 'inherit',
     shell: false,
   });
 
-  // 2. update version of package.json, this operation will remove the common/changes
-  spawnSync('sh', ['-c', `rush version --bump`], {
+
+  // 2. build all the packages
+  spawnSync('sh', ['-c', `rush build --only tag:package`], {
     stdio: 'inherit',
     shell: false,
   });
@@ -40,12 +46,7 @@ function run() {
   });
 
   const rushJson = getPackageJson(`${cwd}/rush.json`);
-  const package = rushJson.projects.find(
-    (project) =>
-      project.name === '@visactor/vdataset' ||
-      project.name === '@visactor/vscale'||
-      project.name === '@visactor/vutils'
-  );
+  const package = rushJson.projects.find((project) => project.name === `@visactor/${packageName}`);
 
   if (package) {
     const pkgJsonPath = path.resolve(project.projectFolder, 'package.json')
