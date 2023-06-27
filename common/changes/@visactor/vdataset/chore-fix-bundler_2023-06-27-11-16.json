@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "bunlder change ",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}

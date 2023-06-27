@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "bunlder change ",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
