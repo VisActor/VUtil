@@ -755,3 +755,10 @@ test('linear.ticks(count) when rangeFactor is not empty', function () {
     expect(tickData2[i]).toBeCloseTo(res[i]);
   });
 });
+
+test('linear.ticks(count) returns the expected ticks for a negative domain', function () {
+  const s = new LinearScale().domain([-1, 0]);
+  expect(s.ticks(10).map(roundEpsilon)).toEqual(
+    [0, -0.1, -0.2, -0.3, -0.4, -0.5, -0.6, -0.7, -0.8, -0.9, -1.0].reverse()
+  );
+});
