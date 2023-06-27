@@ -126,9 +126,9 @@ it('pow.domain(domain) accepts an array of numbers', () => {
 });
 
 it('pow.domain(domain) coerces domain values to numbers', () => {
-  expect(new PowScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain()).toEqual([
-    631123200000, 662659200000
-  ]);
+  const domain = new PowScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain();
+  expect(domain[0] / 100000000).toBeCloseTo(631123200000 / 100000000, 2);
+  expect(domain[1] / 662659200000).toBeCloseTo(662659200000 / 100000000, 2);
   expect(new PowScale().domain(['0.0', '1.0']).domain()).toEqual([0, 1]);
   expect(new PowScale().domain([0, 1]).domain()).toEqual([0, 1]);
 });

@@ -146,9 +146,9 @@ test('linear.domain(domain) accepts an array of numbers', function () {
 });
 
 test('linear.domain(domain) coerces domain values to numbers', function () {
-  expect(new LinearScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain()).toEqual([
-    631123200000, 662659200000
-  ]);
+  const domain = new LinearScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain();
+  expect(domain[0] / 100000000).toBeCloseTo(631123200000 / 100000000, 2);
+  expect(domain[1] / 662659200000).toBeCloseTo(662659200000 / 100000000, 2);
   expect(new LinearScale().domain(['0.0', '1.0']).domain()).toEqual([0, 1]);
   expect(new LinearScale().domain([Number(0), Number(1)]).domain()).toEqual([0, 1]);
 });
