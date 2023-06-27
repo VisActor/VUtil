@@ -15,15 +15,8 @@ async function generateOutputs(bundle: RollupBuild, outputOptionsList: OutputOpt
 function packageNameToPath(name: string) {
   return name.replace('@', '').replace('/', '_');
 }
-
-async function buildUmdES56(
-  config: Config,
-  projectRoot: string,
-  rawPackageJson: RawPackageJson,
-  minify: boolean,
-  es5 = false
-) {
-  const babelPlugins = getBabelPlugins(rawPackageJson.name, es5);
+export async function buildUmd(config: Config, projectRoot: string, rawPackageJson: RawPackageJson, minify: boolean) {
+  const babelPlugins = getBabelPlugins(rawPackageJson.name);
   const entry = path.resolve(
     projectRoot,
     config.sourceDir,
@@ -39,8 +32,8 @@ async function buildUmdES56(
       format: 'umd',
       name: config.name || packageNameToPath(rawPackageJson.name),
       file: minify
-        ? `${dest}/${config.umdOutputFilename || packageNameToPath(rawPackageJson.name)}${es5 ? '.es5' : ''}.min.js`
-        : `${dest}/${config.umdOutputFilename || packageNameToPath(rawPackageJson.name)}${es5 ? '.es5' : ''}.js`,
+        ? `${dest}/${config.umdOutputFilename || packageNameToPath(rawPackageJson.name)}.min.js`
+        : `${dest}/${config.umdOutputFilename || packageNameToPath(rawPackageJson.name)}.js`,
       exports: 'named',
       globals: { react: 'React' }
     }
@@ -49,9 +42,4 @@ async function buildUmdES56(
   if (bundle) {
     await bundle.close();
   }
-}
-
-export async function buildUmd(config: Config, projectRoot: string, rawPackageJson: RawPackageJson, minify: boolean) {
-  await buildUmdES56(config, projectRoot, rawPackageJson, minify, false);
-  await buildUmdES56(config, projectRoot, rawPackageJson, minify, true);
 }
