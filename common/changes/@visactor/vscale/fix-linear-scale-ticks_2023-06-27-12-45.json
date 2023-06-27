@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix linear scale ticks return empty array in negative domain",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
