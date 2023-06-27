@@ -20,7 +20,7 @@ function run(packageName) {
   let preReleaseName = process.argv.slice(2)[0];
   let packageName = process.argv.slice(2)[1];
   if(packageName){
-    console.log('');
+    console.log('\x1b[31m[warning]\x1b[0m no package-name supply!')
     process.exit(1);
   }
   let preReleaseType = '';
