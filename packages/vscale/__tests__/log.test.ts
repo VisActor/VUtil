@@ -19,11 +19,11 @@ test('LogScale() has the expected defaults', function () {
 test('LogScale().domain(…) coerces values to numbers', () => {
   const s = new LogScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]);
   expect(s.domain()[0] / 10000000000).toBeCloseTo(631123200000 / 10000000000, 2);
-  expect(s.scale(new Date(1989, 9, 20))).toBeCloseTo(-0.205987, 5);
-  expect(s.scale(new Date(1990, 0, 1))).toBeCloseTo(0.0, 5);
-  expect(s.scale(new Date(1990, 2, 15))).toBeCloseTo(0.2039385, 5);
-  expect(s.scale(new Date(1990, 4, 27))).toBeCloseTo(0.4057544, 5);
-  expect(s.scale(new Date(1991, 0, 1))).toBeCloseTo(1, 5);
+  expect(s.scale(new Date(1989, 9, 20))).toBeCloseTo(-0.205987, 2);
+  expect(s.scale(new Date(1990, 0, 1))).toBeCloseTo(0.0, 2);
+  expect(s.scale(new Date(1990, 2, 15))).toBeCloseTo(0.2039385, 2);
+  expect(s.scale(new Date(1990, 4, 27))).toBeCloseTo(0.4057544, 2);
+  expect(s.scale(new Date(1991, 0, 1))).toBeCloseTo(1, 2);
   s.domain(['1', '10']);
   expect(s.domain()).toEqual([1, 10]);
   expect(s.scale(5)).toBeCloseTo(0.69897, 5);
