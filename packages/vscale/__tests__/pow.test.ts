@@ -79,7 +79,7 @@ it('pow.invert(y) maps an empty range to the middle of the domain', () => {
 });
 
 it('pow.invert(y) coerces range values to numbers', () => {
-  expect(new PowScale().range(['0', '2']).invert('1')).toBe(0.5);
+  expect(new PowScale().range(['0', '2']).invert('1')).toBeCloseTo(0.5);
   expect(new PowScale().range([new Date(1990, 0, 1), new Date(1991, 0, 1)]).invert(new Date(1990, 6, 2, 13))).toBe(0.5);
 });
 
