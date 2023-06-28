@@ -5,8 +5,7 @@
     "lib": ["DOM", "ESNext"],
     "baseUrl": ".",
     "rootDir": "./src",
-    "outDir": "./es",
-    "composite": true
+    "outDir": "./es"
   },
   "references": [
     {
