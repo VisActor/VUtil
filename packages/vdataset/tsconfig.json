@@ -2,7 +2,8 @@
   "extends": "@internal/ts-config/tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "output",
+    "rootDir": "./src",
+    "outDir": "./es",
     "esModuleInterop": true
   },
   "ts-node": {
@@ -11,5 +12,10 @@
       "module": "commonjs"
     }
   },
+  "references": [
+    {
+      "path": "../vutils"
+    }
+  ],
   "include": ["src", "__tests__", "examples"]
 }

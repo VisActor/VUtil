@@ -36,6 +36,15 @@
       "allowWarningsInSuccessfulBuild": true
     },
     {
+      "name": "test-cov",
+      "summary": "",
+      "enableParallelism": true,
+      "commandKind": "bulk",
+      "ignoreMissingScript": true,
+      "ignoreDependencyOrder": true,
+      "allowWarningsInSuccessfulBuild": true
+    },
+    {
       "name": "run",
       "summary": "",
       "commandKind": "global",

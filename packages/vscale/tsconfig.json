@@ -5,9 +5,13 @@
     "lib": ["DOM", "ESNext"],
     "baseUrl": ".",
     "rootDir": "./src",
-    "outDir": "./es",
-    "composite": true
+    "outDir": "./es"
   },
+  "references": [
+    {
+      "path": "../vutils"
+    }
+  ],
   "include": ["src", "__tests__", "examples"],
   "exclude": []
 }
