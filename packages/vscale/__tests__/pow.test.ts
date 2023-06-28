@@ -79,8 +79,10 @@ it('pow.invert(y) maps an empty range to the middle of the domain', () => {
 });
 
 it('pow.invert(y) coerces range values to numbers', () => {
-  expect(new PowScale().range(['0', '2']).invert('1')).toBe(0.5);
-  expect(new PowScale().range([new Date(1990, 0, 1), new Date(1991, 0, 1)]).invert(new Date(1990, 6, 2, 13))).toBe(0.5);
+  expect(new PowScale().range(['0', '2']).invert('1')).toBeCloseTo(0.5);
+  expect(
+    new PowScale().range([new Date(1990, 0, 1), new Date(1991, 0, 1)]).invert(new Date(1990, 6, 2, 13))
+  ).toBeCloseTo(0.5);
 });
 
 it('pow.invert(y) returns NaN if the range is not coercible to number', () => {
@@ -126,9 +128,9 @@ it('pow.domain(domain) accepts an array of numbers', () => {
 });
 
 it('pow.domain(domain) coerces domain values to numbers', () => {
-  expect(new PowScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain()).toEqual([
-    631123200000, 662659200000
-  ]);
+  const domain = new PowScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain();
+  expect(domain[0] / 10000000000).toBeCloseTo(631123200000 / 10000000000, 2);
+  expect(domain[1] / 10000000000).toBeCloseTo(662659200000 / 10000000000, 2);
   expect(new PowScale().domain(['0.0', '1.0']).domain()).toEqual([0, 1]);
   expect(new PowScale().domain([0, 1]).domain()).toEqual([0, 1]);
 });

@@ -20,8 +20,8 @@ VUtil is a general visualization tool for VGrammar.
   <a href="">Cross-Platform</a>
 </p>
 
-[![npm Version](https://img.shields.io/npm/v/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutil)
-[![npm Download](https://img.shields.io/npm/dm/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutil)
+[![npm Version](https://img.shields.io/npm/v/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
+[![npm Download](https://img.shields.io/npm/dm/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/visactor/vutil/blob/main/LICENSE)
 
 </div>
@@ -58,10 +58,10 @@ This repository includes the following packages:
 
 ```bash
 // npm
-npm install @visactor/vutil
+npm install @visactor/vutils
 
 // yarn
-yarn add @visactor/vutil
+yarn add @visactor/vutils
 ```
 
 ##

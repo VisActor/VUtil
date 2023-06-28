@@ -19,6 +19,12 @@ export function ticks(start: number, stop: number, count: number) {
   stop = +stop;
   start = +start;
   count = +count;
+
+  // add check for start equal stop
+  if (start === stop) {
+    return [];
+  }
+
   if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
     return [start];
   }
@@ -27,9 +33,10 @@ export function ticks(start: number, stop: number, count: number) {
     start = stop;
     stop = n;
   }
-
   step = tickIncrement(start, stop, count);
-  if (stop === 0 || !isFinite(step)) {
+  // why return empty array when stop === 0 ?
+  // if (stop === 0 || !isFinite(step)) {
+  if (!isFinite(step)) {
     return [];
   }
 

@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "bunlder change ",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}

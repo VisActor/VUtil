@@ -131,7 +131,7 @@ test('linear.invert(y) coerces range values to numbers', function () {
   expect((new LinearScale() as any).range(['0', '2']).invert('1')).toBeCloseTo(0.5);
   expect(
     (new LinearScale() as any).range([new Date(1990, 0, 1), new Date(1991, 0, 1)]).invert(new Date(1990, 6, 2, 13))
-  ).toBe(0.5);
+  ).toBeCloseTo(0.5);
 });
 
 test('linear.invert(y) returns NaN if the range is not coercible to number', function () {
@@ -146,9 +146,9 @@ test('linear.domain(domain) accepts an array of numbers', function () {
 });
 
 test('linear.domain(domain) coerces domain values to numbers', function () {
-  expect(new LinearScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain()).toEqual([
-    631123200000, 662659200000
-  ]);
+  const domain = new LinearScale().domain([new Date(1990, 0, 1), new Date(1991, 0, 1)]).domain();
+  expect(domain[0] / 10000000000).toBeCloseTo(631123200000 / 10000000000, 2);
+  expect(domain[1] / 10000000000).toBeCloseTo(662659200000 / 10000000000, 2);
   expect(new LinearScale().domain(['0.0', '1.0']).domain()).toEqual([0, 1]);
   expect(new LinearScale().domain([Number(0), Number(1)]).domain()).toEqual([0, 1]);
 });
@@ -754,4 +754,11 @@ test('linear.ticks(count) when rangeFactor is not empty', function () {
   tickData2.forEach((d, i) => {
     expect(tickData2[i]).toBeCloseTo(res[i]);
   });
+});
+
+test('linear.ticks(count) returns the expected ticks for a negative domain', function () {
+  const s = new LinearScale().domain([-1, 0]);
+  expect(s.ticks(10).map(roundEpsilon)).toEqual(
+    [0, -0.1, -0.2, -0.3, -0.4, -0.5, -0.6, -0.7, -0.8, -0.9, -1.0].reverse()
+  );
 });

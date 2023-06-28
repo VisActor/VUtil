@@ -5,11 +5,11 @@ name: Unit test CI
 
 on:
   pull_request:
-    branches: ['main']
+    branches: ['main', 'develop']
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
