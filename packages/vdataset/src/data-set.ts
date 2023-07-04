@@ -2,7 +2,7 @@ import { EventEmitter } from '@visactor/vutils';
 import type { DataView } from './data-view';
 import { getUUID } from './utils/uuid';
 import type { Transform } from './transform';
-import type { Parser } from './parser';
+import type { IParserOptions, Parser } from './parser';
 
 interface IDataSetOptions {
   name?: string;
@@ -159,6 +159,10 @@ export class DataSet {
     this._callMap.set(call, callAd);
   }
 
+  allDataViewAddListener(event: string, call: Function) {
+    this.multipleDataViewAddListener(Object.values(this.dataViewMap), event, call);
+  }
+
   // eslint-disable-next-line @typescript-eslint/ban-types
   multipleDataViewRemoveListener(list: DataView[], event: string, call: Function) {
     const callAd = this._callMap.get(call);
@@ -168,6 +172,16 @@ export class DataSet {
       });
     }
     this._callMap.delete(call);
+  }
+
+  multipleDataViewUpdateInParse(newData: { name: string; data: any; options?: IParserOptions }[]) {
+    newData.forEach(d => this.getDataView(d.name)?.markRunning());
+    newData.forEach(d => this.getDataView(d.name)?.parseNewData(d.data, d.options));
+  }
+
+  multipleDataViewUpdateInRawData(newData: { name: string; data: any; options?: IParserOptions }[]) {
+    newData.forEach(d => this.getDataView(d.name)?.markRunning());
+    newData.forEach(d => this.getDataView(d.name)?.updateRawData(d.data, d.options));
   }
 
   destroy() {
