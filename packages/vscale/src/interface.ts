@@ -69,7 +69,11 @@ export interface IBaseScale {
   tickData?: (count?: number) => TickData[];
 }
 
-export interface IBandLikeScale extends IBaseScale, IRangeFactor {
+export interface IOrdinalScale extends IBaseScale {
+  specified: (_?: Record<string, unknown>) => this | Record<string, unknown>;
+}
+
+export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
   readonly type: DiscreteScaleType;
   rangeRound: (_: any[], slience?: boolean) => this;
   /**
