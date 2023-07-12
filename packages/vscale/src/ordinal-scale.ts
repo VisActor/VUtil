@@ -44,7 +44,7 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
 
   scale(d: any): any {
     const special = this._getSpecifiedValue(d);
-    if (isNil(special)) {
+    if (!isNil(special)) {
       return special;
     }
     const key = `${d}`;
