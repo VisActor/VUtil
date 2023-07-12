@@ -69,7 +69,12 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       if (isValid(this._option.getCanvasForMeasure)) {
         this._canvas = this._option.getCanvasForMeasure();
       }
-      if (isNil(this._canvas) && isValid(globalThis.document)) {
+      if (
+        isNil(this._canvas) &&
+        typeof window !== 'undefined' &&
+        typeof window.document !== 'undefined' &&
+        isValid(globalThis.document)
+      ) {
         // 默认创建方法
         this._canvas = globalThis.document.createElement('canvas');
       }
