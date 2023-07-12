@@ -1,3 +1,4 @@
+import { isNil } from '@visactor/vutils';
 import { ScaleEnum } from './type';
 import type { DiscreteScaleType, IBaseScale } from './interface';
 import { BaseScale } from './base-scale';
@@ -17,7 +18,7 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
     if (!_) {
       return { ...this._specified };
     }
-    this._specified = { ...(this._specified ?? {}), ..._ };
+    this._specified = Object.assign(this._specified ?? {}, _);
     return this;
   }
 
@@ -43,7 +44,7 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
 
   scale(d: any): any {
     const special = this._getSpecifiedValue(d);
-    if (special) {
+    if (isNil(special)) {
       return special;
     }
     const key = `${d}`;
