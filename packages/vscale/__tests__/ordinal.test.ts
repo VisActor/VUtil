@@ -212,3 +212,10 @@ test('ordinal.clone() changes to the range are isolated', function () {
   expect(s1.range()).toEqual(['bar', 'foo']);
   expect(s2.range()).toEqual(['foo', 'baz']);
 });
+
+test('ordinal.specified could set & get the special map and work well', function () {
+  const s = new OrdinalScale().domain(['a', 'b']).range(['white', 'black']).specified({ a: 'red' });
+  expect(s.specified()).toEqual({ a: 'red' });
+  expect(s.scale('a')).toEqual('red');
+  expect(s.scale('b')).toEqual('black');
+});

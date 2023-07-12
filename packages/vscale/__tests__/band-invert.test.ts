@@ -3,6 +3,7 @@ import { BandScale } from '../src/band-scale';
 test('scaleBand() has the expected defaults', function () {
   const s = new BandScale(true).domain(['A', 'B', 'C', 'D', 'E']);
 
+  expect(s.invert(0.31)).toBe('B');
   expect(s.invert(-1)).toBe('A');
   expect(s.invert(0.1)).toBe('A');
   expect(s.invert(0.2)).toBe('A');
