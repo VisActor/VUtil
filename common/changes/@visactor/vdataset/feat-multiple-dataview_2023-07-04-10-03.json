@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "add api for multiple view",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}
