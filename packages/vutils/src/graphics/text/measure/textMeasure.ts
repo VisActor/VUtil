@@ -33,8 +33,8 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
 
   /** 是否不支持 canvas */
   protected _notSupportCanvas: boolean = false;
-  /** 是否不支持 canopus */
-  protected _notSupportCanopus: boolean = false;
+  /** 是否不支持 vrender */
+  protected _notSupportVRender: boolean = false;
 
   /** 文字 spec */
   protected readonly _userSpec: Partial<T> = {};
@@ -129,7 +129,8 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
   /** 计算文本宽高 */
   measure(text: TextMeasureInput, method?: TextMeasureMethod): ITextSize {
     switch (method) {
-      case 'canopus':
+      case 'vrender':
+      case 'canopus' as any:
         return this.fullMeasure(text);
       case 'canvas':
         return this.measureWithNaiveCanvas(text);
@@ -146,7 +147,7 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
     if (isNil(text)) {
       return { width: 0, height: 0 };
     }
-    if (isNil(this._option.getTextBounds) || !this._notSupportCanopus) {
+    if (isNil(this._option.getTextBounds) || !this._notSupportVRender) {
       return this.measureWithNaiveCanvas(text); // 降级
     }
     const { fontFamily, fontSize, fontWeight, textAlign, textBaseline, ellipsis, limit, lineHeight } = this.textSpec;
@@ -165,7 +166,7 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       });
       size = { width: bounds.width(), height: bounds.height() };
     } catch (e) {
-      this._notSupportCanopus = true;
+      this._notSupportVRender = true;
       size = this.measureWithNaiveCanvas(text); // 降级
     }
     return size;

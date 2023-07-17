@@ -1,7 +1,7 @@
 import { TextMeasure } from '../../src';
 
 describe('downgrade', () => {
-  it('test without canopus', () => {
+  it('test without vrender', () => {
     const str = 'test';
     const textMeasure = new TextMeasure({});
     const { width: width1 } = textMeasure.measureWithNaiveCanvas(str);

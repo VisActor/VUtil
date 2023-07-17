@@ -30,7 +30,7 @@ export class TestTextMeasure<T extends Partial<ITextMeasureSpec>> extends TextMe
       .map(callback);
 
     const methodMap: Record<string, (text: number | string) => ITextSize> = {
-      canopus: this.fullMeasure.bind(this),
+      vrender: this.fullMeasure.bind(this),
       canvas: this.measureWithNaiveCanvas.bind(this),
       simple: this.quickMeasureWithoutCanvas.bind(this),
       quick: this.quickMeasure.bind(this),

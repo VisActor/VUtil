@@ -1,6 +1,6 @@
 import type { ITextFontParams } from './interface';
 
-// FIXME: from Canopus
+// FIXME: from VRender
 export function getContextFont(text: Partial<ITextFontParams>, defaultAttr: Partial<ITextFontParams> = {}): string {
   const {
     fontStyle = defaultAttr.fontStyle,
