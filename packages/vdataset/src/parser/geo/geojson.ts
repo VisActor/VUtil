@@ -5,8 +5,7 @@ import type { Parser } from '..';
 import { mergeDeepImmer } from '../../utils/js';
 import trufRewind from '@turf/rewind';
 import flatten from '@turf/flatten';
-import isBoolean from '../../../../vutils/src/common/isBoolean';
-import isObject from '../../../../vutils/src/common/isObject';
+import { isObject } from '@visactor/vutils';
 
 const geoPathInstance = geoPath();
 export interface IGeoJSONOptions {
