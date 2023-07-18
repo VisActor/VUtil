@@ -38,21 +38,8 @@ export function getContainerSize(el: HTMLElement | null, defaultWidth: number = 
  * @returns
  */
 export function getElementAbsolutePosition(element: HTMLElement): IPointLike {
-  //计算x坐标
-  let actualLeft = element.offsetLeft;
-  let current = element.offsetParent as HTMLElement;
-  while (current) {
-    actualLeft += current.offsetLeft;
-    current = current.offsetParent as HTMLElement;
-  }
-  //计算y坐标
-  let actualTop = element.offsetTop;
-  current = element.offsetParent as HTMLElement;
-  while (current) {
-    actualTop += current.offsetTop + current.clientTop;
-    current = current.offsetParent as HTMLElement;
-  }
-  return { x: actualLeft, y: actualTop };
+  const { x, y } = element.getBoundingClientRect();
+  return { x, y };
 }
 
 /**
@@ -66,7 +53,7 @@ export function getElementRelativePosition(element: HTMLElement, base: HTMLEleme
   return { x: posElement.x - posBase.x, y: posElement.y - posBase.y };
 }
 
-const getScrollLeft = (element: HTMLElement) => {
+export const getScrollLeft = (element: HTMLElement) => {
   if (element === globalThis?.document?.body) {
     return globalThis?.document?.documentElement?.scrollLeft || element.scrollLeft;
   } else if (element.tagName.toLowerCase() === 'html') {
@@ -74,7 +61,7 @@ const getScrollLeft = (element: HTMLElement) => {
   }
   return element.scrollLeft;
 };
-const getScrollTop = (element: HTMLElement) => {
+export const getScrollTop = (element: HTMLElement) => {
   if (element === globalThis?.document?.body) {
     return globalThis?.document?.documentElement?.scrollTop || element.scrollTop;
   } else if (element.tagName.toLowerCase() === 'html') {
@@ -83,39 +70,25 @@ const getScrollTop = (element: HTMLElement) => {
   return element.scrollTop;
 };
 
-/**
- * 获取元素的绝对滚动偏移量
- * @param element
- * @returns
- */
-export function getElementAbsoluteScrollOffset(element: HTMLElement): IPointLike {
-  //计算x坐标
-  let actualLeft = getScrollLeft(element);
-  let current = element.parentElement as HTMLElement;
-  while (current) {
-    actualLeft += getScrollLeft(current);
-    current = current.parentElement as HTMLElement;
-  }
-  //计算y坐标
-  let actualTop = getScrollTop(element);
-  current = element.parentElement as HTMLElement;
-  while (current) {
-    actualTop += getScrollTop(current);
-    current = current.parentElement as HTMLElement;
-  }
-  return { x: actualLeft, y: actualTop };
-}
+export const getScaleX = (element: HTMLElement) => {
+  return element.getBoundingClientRect().width / element.offsetWidth;
+};
+
+export const getScaleY = (element: HTMLElement) => {
+  return element.getBoundingClientRect().height / element.offsetHeight;
+};
 
 /**
- * 获取元素的相对滚动偏移量（相对于其他dom元素）
- * @param element
+ * 获取目标元素的缩放因数
+ * @param element 目标 dom 元素
  * @returns
  */
-export function getElementRelativeScrollOffset(element: HTMLElement, base: HTMLElement): IPointLike {
-  const posElement = getElementAbsoluteScrollOffset(element);
-  const posBase = getElementAbsoluteScrollOffset(base);
-  return { x: posElement.x - posBase.x, y: posElement.y - posBase.y };
-}
+export const getScale = (element: HTMLElement) => {
+  if (element.offsetWidth > 0) {
+    return getScaleX(element);
+  }
+  return getScaleY(element);
+};
 
 /**
  * 判断是否是元素的父元素

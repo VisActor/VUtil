@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "feat: new getScale api",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
