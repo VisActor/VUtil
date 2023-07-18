@@ -5,13 +5,18 @@ import type { Parser } from '..';
 import { mergeDeepImmer } from '../../utils/js';
 import trufRewind from '@turf/rewind';
 import flatten from '@turf/flatten';
+import { isObject } from '@visactor/vutils';
 
 const geoPathInstance = geoPath();
 export interface IGeoJSONOptions {
   centroid?: boolean;
   name?: boolean;
   bbox?: boolean;
-  rewind?: boolean;
+  rewind?:
+    | boolean
+    | {
+        reverse?: boolean;
+      };
 }
 
 export const DEFAULT_GEOJSON_OPTIONS = {
@@ -53,7 +58,7 @@ export const flattenFeature = (data: any[]) => {
 export const geoJSONParser: Parser = (data: any, options: IGeoJSONOptions = {}, dataView: DataView) => {
   dataView.type = DATAVIEW_TYPE.GEO;
 
-  const mergeOptions = mergeDeepImmer(DEFAULT_GEOJSON_OPTIONS, options);
+  const mergeOptions: IGeoJSONOptions = mergeDeepImmer(DEFAULT_GEOJSON_OPTIONS, options);
 
   const { centroid, name, bbox, rewind } = mergeOptions;
   if (Array.isArray(data)) {
@@ -61,7 +66,7 @@ export const geoJSONParser: Parser = (data: any, options: IGeoJSONOptions = {}, 
   }
   let features: any[] = data.features;
   if (rewind) {
-    features = trufRewind(data).features;
+    features = trufRewind(data, { reverse: isObject(rewind) ? rewind.reverse : true }).features;
   }
   features.forEach(feature => {
     if (centroid) {

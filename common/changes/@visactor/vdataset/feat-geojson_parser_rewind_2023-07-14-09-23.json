@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "geojson data parser support reverse winding when need rewind",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}
