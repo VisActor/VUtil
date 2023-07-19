@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix(log): change errorHanlder args to ...args",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}

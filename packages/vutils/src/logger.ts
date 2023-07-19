@@ -86,7 +86,7 @@ export class Logger implements ILogger {
   }
 
   callErrorHandler(...args: any[]) {
-    this._onErrorHandler.forEach(h => h(args));
+    this._onErrorHandler.forEach(h => h(...args));
   }
 
   canLogInfo() {
@@ -119,7 +119,7 @@ export class Logger implements ILogger {
   error(...args: any[]) {
     if (this._level >= LoggerLevel.Error) {
       if (this._onErrorHandler.length) {
-        this.callErrorHandler(args);
+        this.callErrorHandler(...args);
       } else {
         log(this._method ?? 'error', 'ERROR', args);
       }
