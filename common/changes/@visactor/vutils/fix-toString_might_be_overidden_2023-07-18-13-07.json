@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix(utils): strict toString call",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
