@@ -32,7 +32,7 @@ export * from './graphics';
 export * from './type';
 
 // log
-export * as Logger from './logger';
+export * from './logger';
 
 // padding
 export * from './padding';
