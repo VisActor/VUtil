@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix: change logger type & add hasConsole check",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
