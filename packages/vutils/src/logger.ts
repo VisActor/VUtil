@@ -1,4 +1,3 @@
-import { path } from 'path';
 /* Adapted from vega by University of Washington Interactive Data Lab
  * https://vega.github.io/vega/
  * Licensed under the BSD-3-Clause
