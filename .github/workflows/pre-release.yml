@@ -38,6 +38,7 @@ jobs:
         with:
           semver_string: ${{ github.ref_name }}
           semver_pattern: '^pre-release/(.*)$' # ^v?(.*)$ by default
+          use_current_version: false # don't read package.json
 
       - name: Apply prereleaseName
         run: node common/scripts/install-run-rush.js publish --apply --prerelease-name ${{ steps.semver_parser.outputs.pre_release_name }} --partial-prerelease
