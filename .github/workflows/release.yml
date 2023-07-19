@@ -55,6 +55,7 @@ jobs:
         with:
           semver_string: ${{ github.ref_name }}
           semver_pattern: '^release/(.*)$' # ^v?(.*)$ by default
+          use_current_version: false # don't read package.json
 
       - name: Commit & Push changes
         uses: actions-js/push@master
