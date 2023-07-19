@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vscale",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "Scales for visual encoding, used in VGrammar, VTable",
   "keywords": [
     "scale",

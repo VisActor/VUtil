@@ -3,7 +3,7 @@
     {
       "packageName": "@visactor/vscale",
       "comment": "ordianl scale support specified",
-      "type": "minor"
+      "type": "patch"
     }
   ],
   "packageName": "@visactor/vscale"
