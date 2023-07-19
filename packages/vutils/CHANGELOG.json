@@ -2,6 +2,32 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.13.0",
+      "tag": "@visactor/vutils_v0.13.0",
+      "date": "Wed, 19 Jul 2023 11:31:07 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "feat(logger): remake Logger to support instance & errorHandler"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "feat: new getScale api"
+          },
+          {
+            "comment": "fix(utils): strict toString call"
+          },
+          {
+            "comment": "fix logger export error"
+          },
+          {
+            "comment": "fix: change logger type & add hasConsole check"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.11.0",
       "tag": "@visactor/vutils_v0.11.0",
       "date": "Tue, 20 Jun 2023 08:44:17 GMT",

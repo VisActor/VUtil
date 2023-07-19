@@ -2,6 +2,28 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.13.0",
+      "tag": "@visactor/vscale_v0.13.0",
+      "date": "Wed, 19 Jul 2023 11:31:07 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "ordianl scale support specified"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "fix linear scale ticks return empty array in negative domain"
+          }
+        ],
+        "dependency": [
+          {
+            "comment": "Updating dependency \"@visactor/vutils\" from `0.12.1` to `0.13.0`"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.11.0",
       "tag": "@visactor/vscale_v0.11.0",
       "date": "Tue, 20 Jun 2023 08:44:17 GMT",
