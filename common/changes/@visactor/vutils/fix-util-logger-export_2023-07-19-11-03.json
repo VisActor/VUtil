@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix logger export error",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
