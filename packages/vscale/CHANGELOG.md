@@ -1,6 +1,13 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Wed, 19 Jul 2023 11:31:07 GMT and should not be manually modified.
+This log was last generated on Wed, 19 Jul 2023 11:44:54 GMT and should not be manually modified.
+
+## 0.13.2
+Wed, 19 Jul 2023 11:44:54 GMT
+
+### Patches
+
+- chore: sync version from npm
 
 ## 0.13.0
 Wed, 19 Jul 2023 11:31:07 GMT
