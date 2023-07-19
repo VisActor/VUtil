@@ -3,7 +3,7 @@
     {
       "packageName": "@visactor/vutils",
       "comment": "feat(logger): remake Logger to support instance & errorHandler",
-      "type": "minor"
+      "type": "patch"
     }
   ],
   "packageName": "@visactor/vutils"
