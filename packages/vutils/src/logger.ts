@@ -10,11 +10,15 @@
 import { isNumber } from './common';
 import type { ILogger } from './type';
 
+const hasConsole = typeof console !== 'undefined';
+
 function log(method: string, level: any, input: any) {
   const args = [level].concat([].slice.call(input));
 
-  // eslint-disable-next-line prefer-spread, no-undef
-  console[method].apply(console, args); // eslint-disable-line no-console
+  if (hasConsole) {
+    // eslint-disable-next-line prefer-spread, no-undef
+    console[method].apply(console, args); // eslint-disable-line no-console
+  }
 }
 
 export enum LoggerLevel {

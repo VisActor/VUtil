@@ -1,6 +1,20 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Tue, 20 Jun 2023 08:44:17 GMT and should not be manually modified.
+This log was last generated on Wed, 19 Jul 2023 11:31:07 GMT and should not be manually modified.
+
+## 0.13.0
+Wed, 19 Jul 2023 11:31:07 GMT
+
+### Minor changes
+
+- feat(logger): remake Logger to support instance & errorHandler
+
+### Patches
+
+- feat: new getScale api
+- fix(utils): strict toString call
+- fix logger export error
+- fix: change logger type & add hasConsole check
 
 ## 0.11.0
 Tue, 20 Jun 2023 08:44:17 GMT

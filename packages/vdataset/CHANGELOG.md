@@ -1,6 +1,17 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Tue, 20 Jun 2023 08:44:17 GMT and should not be manually modified.
+This log was last generated on Wed, 19 Jul 2023 11:31:07 GMT and should not be manually modified.
+
+## 0.13.0
+Wed, 19 Jul 2023 11:31:07 GMT
+
+### Minor changes
+
+- geojson data parser support reverse winding when need rewind
+
+### Patches
+
+- add api for multiple view
 
 ## 0.11.0
 Tue, 20 Jun 2023 08:44:17 GMT
