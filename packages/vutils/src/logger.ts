@@ -10,6 +10,7 @@
 import { isNumber } from './common';
 import type { ILogger } from './type';
 
+// check console
 const hasConsole = typeof console !== 'undefined';
 
 function log(method: string, level: any, input: any) {
