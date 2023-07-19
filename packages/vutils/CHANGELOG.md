@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Wed, 19 Jul 2023 11:44:54 GMT and should not be manually modified.
+This log was last generated on Wed, 19 Jul 2023 12:27:59 GMT and should not be manually modified.
+
+## 0.13.3
+Wed, 19 Jul 2023 12:27:59 GMT
+
+### Patches
+
+- fix(log): change errorHanlder args to ...args
 
 ## 0.13.2
 Wed, 19 Jul 2023 11:44:54 GMT

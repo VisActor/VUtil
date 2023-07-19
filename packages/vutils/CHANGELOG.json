@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.13.3",
+      "tag": "@visactor/vutils_v0.13.3",
+      "date": "Wed, 19 Jul 2023 12:27:59 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix(log): change errorHanlder args to ...args"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.13.2",
       "tag": "@visactor/vutils_v0.13.2",
       "date": "Wed, 19 Jul 2023 11:44:54 GMT",
