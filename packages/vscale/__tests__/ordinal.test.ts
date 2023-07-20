@@ -218,4 +218,9 @@ test('ordinal.specified could set & get the special map and work well', function
   expect(s.specified()).toEqual({ a: 'red' });
   expect(s.scale('a')).toEqual('red');
   expect(s.scale('b')).toEqual('black');
+
+  s.specified({ a: undefined, b: null });
+
+  expect(s.scale('a')).toEqual('white');
+  expect(s.scale('b')).toEqual(null);
 });
