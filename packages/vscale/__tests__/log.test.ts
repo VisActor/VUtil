@@ -294,6 +294,63 @@ it('log.ticks() returns the empty array when the domain is degenerate', () => {
   expect(x.domain([0, 0]).ticks()).toEqual([]);
 });
 
+it('log.forceTicks() generates the expected power-of-ten for ascending ticks', () => {
+  const s = new LogScale();
+  expect(s.domain([1e-1, 1e1]).forceTicks().map(round)).toHaveLength(10);
+  expect(s.domain([1e-1, 1]).forceTicks().map(round)).toHaveLength(10);
+  expect(s.domain([-1, -1e-1]).forceTicks().map(round)).toHaveLength(10);
+});
+
+it('log.forceTicks() return right tick count for descending domains', () => {
+  const s = new LogScale();
+  expect(s.domain([-1e-1, -1e1]).forceTicks().map(round)).toHaveLength(10);
+  expect(s.domain([-1e-1, -1]).forceTicks().map(round)).toHaveLength(10);
+  expect(s.domain([1, 1e-1]).forceTicks().map(round)).toHaveLength(10);
+});
+
+it('log.forceTicks() return right tick count for small domains', () => {
+  const s = new LogScale();
+  expect(s.domain([1, 5]).forceTicks()).toHaveLength(10);
+  expect(s.domain([5, 1]).forceTicks()).toHaveLength(10);
+  expect(s.domain([-1, -5]).forceTicks()).toHaveLength(10);
+  expect(s.domain([-5, -1]).forceTicks()).toHaveLength(10);
+});
+
+it('log.forceTicks() return right tick count when the domain extent is small', () => {
+  const s = new LogScale();
+  expect(s.domain([41, 42]).forceTicks()).toHaveLength(10);
+  expect(s.domain([42, 41]).forceTicks()).toHaveLength(10);
+  expect(s.domain([1600, 1400]).forceTicks()).toHaveLength(10);
+});
+
+it('log.forceTicks() return right tick count when the domain is degenerate', () => {
+  const x = new LogScale();
+  expect(x.domain([0, 1]).forceTicks()).toHaveLength(10);
+  expect(x.domain([1, 0]).forceTicks()).toHaveLength(10);
+  expect(x.domain([0, -1]).forceTicks()).toHaveLength(10);
+  expect(x.domain([-1, 0]).forceTicks()).toHaveLength(10);
+  expect(x.domain([-1, 1]).forceTicks()).toHaveLength(10);
+  expect(x.domain([0, 0]).forceTicks()).toHaveLength(1);
+});
+
+it('log.forceTicks() return right tick count as input params', () => {
+  const s = new LogScale();
+  expect(s.domain([286.9252014, 329.4978332]).forceTicks(1)).toHaveLength(1);
+  expect(s.domain([286.9252014, 329.4978332]).forceTicks(2)).toHaveLength(2);
+  expect(s.domain([286.9252014, 329.4978332]).forceTicks(3)).toHaveLength(3);
+  expect(s.domain([286.9252014, 329.4978332]).forceTicks(4)).toHaveLength(4);
+  expect(s.domain([286.9252014, 329.4978332]).forceTicks()).toHaveLength(10);
+});
+
+it('log.stepTicks() return right tick as input params', () => {
+  const s = new LogScale();
+  expect(s.domain([286.9252014, 287.4978332]).stepTicks(1)).toEqual([286.9252014]);
+  expect(s.domain([286.9252014, 288.4978332]).stepTicks(1)).toEqual([286.9252014, 287.9252014]);
+  expect(s.domain([286.9252014, 289.4978332]).stepTicks(2)).toEqual([286.9252014, 288.9252014]);
+  expect(s.domain([286.9252014, 290.4978332]).stepTicks(2)).toEqual([286.9252014, 288.9252014]);
+  expect(s.domain([286.9252014, 291.4978332]).stepTicks(2)).toEqual([286.9252014, 288.9252014, 290.9252014]);
+});
+
 function round(x: number) {
   return Math.round(x * 1e12) / 1e12;
 }

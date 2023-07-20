@@ -1,4 +1,4 @@
-import { ticks } from './utils/tick-sample';
+import { ticks, forceTicks, stepTicks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
@@ -133,6 +133,24 @@ export class LogScale extends ContinuousScale {
       z = ticks(i, j, Math.min(j - i, count)).map(this._pows);
     }
     return r ? z.reverse() : z;
+  }
+
+  /**
+   * 生成tick数组，这个tick数组的长度就是count的长度
+   * @param count
+   */
+  forceTicks(count: number = 10): any[] {
+    const d = this.calculateVisibleDomain(this._range);
+    return forceTicks(d[0], d[d.length - 1], count);
+  }
+
+  /**
+   * 基于给定step的ticks数组生成
+   * @param step
+   */
+  stepTicks(step: number): any[] {
+    const d = this.calculateVisibleDomain(this._range);
+    return stepTicks(d[0], d[d.length - 1], step);
   }
 
   nice(): this {
