@@ -16,13 +16,13 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
   specified(_: Record<string, unknown>): this;
   specified(_?: Record<string, unknown>): this | Record<string, unknown> {
     if (!_) {
-      return { ...this._specified };
+      return Object.assign({}, this._specified);
     }
     this._specified = Object.assign(this._specified ?? {}, _);
     return this;
   }
 
-  protected _getSpecifiedValue(input: any): undefined | any {
+  protected _getSpecifiedValue(input: string): undefined | any {
     if (!this._specified) {
       return undefined;
     }
@@ -43,11 +43,11 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
   }
 
   scale(d: any): any {
-    const special = this._getSpecifiedValue(d);
-    if (!isNil(special)) {
+    const key = `${d}`;
+    const special = this._getSpecifiedValue(key);
+    if (special !== undefined) {
       return special;
     }
-    const key = `${d}`;
     let i = this._index.get(key);
     if (!i) {
       if (this._unknown !== implicit) {

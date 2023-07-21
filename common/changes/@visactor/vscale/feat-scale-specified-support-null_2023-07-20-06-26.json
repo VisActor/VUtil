@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "feat(specified): support null for scale specified return value",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
