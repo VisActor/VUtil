@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.13.4",
+      "tag": "@visactor/vdataset_v0.13.4",
+      "date": "Fri, 21 Jul 2023 09:19:13 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix: revert version of d3-geo from 3.x to 1.x\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.13.3",
       "tag": "@visactor/vdataset_v0.13.3",
       "date": "Wed, 19 Jul 2023 12:27:59 GMT",
