@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Wed, 19 Jul 2023 12:27:59 GMT and should not be manually modified.
+This log was last generated on Fri, 21 Jul 2023 09:19:13 GMT and should not be manually modified.
+
+## 0.13.4
+Fri, 21 Jul 2023 09:19:13 GMT
+
+### Patches
+
+- fix: revert version of d3-geo from 3.x to 1.x
+
+
 
 ## 0.13.3
 Wed, 19 Jul 2023 12:27:59 GMT
