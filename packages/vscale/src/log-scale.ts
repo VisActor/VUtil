@@ -1,8 +1,9 @@
-import { ticks, forceTicks, stepTicks } from './utils/tick-sample';
+import { ticks, forceTicks, stepTicks, niceLinear } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
 import type { ContinuousScaleType } from './interface';
+import { cloneDeep } from '@visactor/vutils';
 
 /**
  * 逆反函数
@@ -160,5 +161,39 @@ export class LogScale extends ContinuousScale {
         ceil: (x: number) => this._pows(Math.ceil(this._logs(x)))
       })
     );
+  }
+
+  /**
+   * 只对min区间进行nice
+   * 如果保持某一边界的值，就很难有好的nice效果，所以这里实现就是nice之后还原固定的边界值
+   */
+  niceMin(): this {
+    const maxD = this._domain[this._domain.length - 1];
+    this.nice();
+    const niceDomain = cloneDeep(this._domain);
+
+    if (this._domain) {
+      niceDomain[niceDomain.length - 1] = maxD;
+      this.domain(niceDomain);
+    }
+
+    return this;
+  }
+
+  /**
+   * 只对max区间进行nice
+   * 如果保持某一边界的值，就很难有好的nice效果，所以这里实现就是nice之后还原固定的边界值
+   */
+  niceMax(): this {
+    const minD = this._domain[0];
+    this.nice();
+    const niceDomain = cloneDeep(this._domain);
+
+    if (this._domain) {
+      niceDomain[0] = minD;
+      this.domain(niceDomain);
+    }
+
+    return this;
   }
 }
