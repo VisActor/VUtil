@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "feat(logScale): add forceTicks and stepTicks",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
