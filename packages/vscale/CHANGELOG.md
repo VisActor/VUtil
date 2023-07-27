@@ -1,6 +1,13 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Wed, 19 Jul 2023 12:27:59 GMT and should not be manually modified.
+This log was last generated on Thu, 27 Jul 2023 11:58:27 GMT and should not be manually modified.
+
+## 0.13.4
+Thu, 27 Jul 2023 11:58:27 GMT
+
+### Patches
+
+- feat(specified): support null for scale specified return value
 
 ## 0.13.3
 Wed, 19 Jul 2023 12:27:59 GMT

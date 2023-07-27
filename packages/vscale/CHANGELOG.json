@@ -2,6 +2,23 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.13.4",
+      "tag": "@visactor/vscale_v0.13.4",
+      "date": "Thu, 27 Jul 2023 11:58:27 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat(logScale): add forceTicks and stepTicks"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "feat(specified): support null for scale specified return value"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.13.3",
       "tag": "@visactor/vscale_v0.13.3",
       "date": "Wed, 19 Jul 2023 12:27:59 GMT",
