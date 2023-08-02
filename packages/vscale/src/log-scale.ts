@@ -1,4 +1,4 @@
-import { ticks, forceTicks, stepTicks, niceLinear } from './utils/tick-sample';
+import { ticks, forceTicks, stepTicks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
@@ -82,7 +82,7 @@ export class LogScale extends ContinuousScale {
     return identity;
   }
 
-  ticks(count: number = 10) {
+  d3Ticks(count: number = 10) {
     const d = this.domain();
     let u = d[0];
     let v = d[d.length - 1];
@@ -99,6 +99,7 @@ export class LogScale extends ContinuousScale {
     let z = [];
 
     if (!(this._base % 1) && j - i < count) {
+      // this._base is integer
       (i = Math.floor(i)), (j = Math.ceil(j));
       if (u > 0) {
         for (; i <= j; ++i) {
@@ -134,6 +135,10 @@ export class LogScale extends ContinuousScale {
       z = ticks(i, j, Math.min(j - i, count)).map(this._pows);
     }
     return r ? z.reverse() : z;
+  }
+
+  ticks(count: number = 10) {
+    return this.d3Ticks(count);
   }
 
   /**

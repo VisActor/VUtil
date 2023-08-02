@@ -49,6 +49,7 @@ export interface IRangeFactor {
 }
 
 export interface IContinuesScaleTicks {
+  d3Ticks: (count?: number) => any[];
   forceTicks: (count?: number) => any[];
   stepTicks: (step: number) => any[];
   nice: (count?: number) => this;
