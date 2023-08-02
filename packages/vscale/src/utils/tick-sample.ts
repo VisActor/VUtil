@@ -1,6 +1,48 @@
+import { range } from '@visactor/vutils';
+
 const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
 const e2 = Math.sqrt(2);
+
+const isInt = (value: number) => {
+  return Math.floor(value) === value;
+};
+
+export function calculateTicksOfSingleValue(value: number, tickCount: number, allowDecimals?: boolean) {
+  let step = 1;
+  let start = value;
+  const middleIndex = Math.floor((tickCount - 1) / 2);
+  const absVal = Math.abs(value);
+
+  if (value >= 0 && value <= Number.MIN_VALUE) {
+    start = 0;
+  } else if (value < 0 && value >= -Number.MIN_VALUE) {
+    start = -(tickCount - 1);
+  } else if (!isInt(value) && allowDecimals !== false && absVal < 1) {
+    step = getNickStep(absVal);
+    // middle = new Decimal(Math.floor(middle.div(step).toNumber())).mul(step);
+  } else if (allowDecimals === false || absVal > 1) {
+    start = Math.floor(value) - middleIndex * step;
+  } else {
+    // int
+    start = value - middleIndex * step;
+  }
+
+  if (step > 0) {
+    if (value > 0) {
+      start = Math.max(start, 0);
+    } else if (value < 0) {
+      // < 0;
+      start = Math.min(start, -(tickCount - 1) * step);
+    }
+
+    return range(0, tickCount).map((index: number) => start + index * step);
+  }
+
+  return value > 0
+    ? calculateTicksByStep(0, -(tickCount - 1) / step, step)
+    : calculateTicksByStep((tickCount - 1) / step, 0, step);
+}
 
 /**
  * 根据start、stop、count进行分割，不要求count完全准确
@@ -9,7 +51,7 @@ const e2 = Math.sqrt(2);
  * @param count
  * @returns
  */
-export function ticks(start: number, stop: number, count: number) {
+export function d3Ticks(start: number, stop: number, count: number) {
   let reverse;
   let i = -1;
   let n;
@@ -22,11 +64,11 @@ export function ticks(start: number, stop: number, count: number) {
 
   // add check for start equal stop
   if (start === stop) {
-    return [];
+    return calculateTicksOfSingleValue(start, count);
   }
 
   if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
-    return [start];
+    return calculateTicksOfSingleValue(start, count);
   }
   if ((reverse = stop < start)) {
     n = start;
@@ -76,8 +118,104 @@ export function ticks(start: number, stop: number, count: number) {
   return ticks;
 }
 
-export function tickIncrement(start: number, stop: number, count: number) {
-  const step = (stop - start) / Math.max(0, count);
+const calculateTicksByStep = (start: number, stop: number, step: number) => {
+  let i = -1;
+  let n;
+  let ticks;
+
+  if (step > 0) {
+    let r0 = Math.floor(start / step);
+    let r1 = Math.ceil(stop / step);
+    if ((r0 + 1) * step < start) {
+      ++r0;
+    }
+    if ((r1 - 1) * step > stop) {
+      --r1;
+    }
+    ticks = new Array((n = r1 - r0 + 1));
+    while (++i < n) {
+      ticks[i] = (r0 + i) * step;
+    }
+  } else {
+    step = -step;
+    let r0 = Math.floor(start * step);
+    let r1 = Math.ceil(stop * step);
+    if ((r0 + 1) / step < start) {
+      ++r0;
+    }
+    if ((r1 - 1) / step > stop) {
+      --r1;
+    }
+    ticks = new Array((n = r1 - r0 + 1));
+    while (++i < n) {
+      ticks[i] = (r0 + i) / step;
+    }
+  }
+
+  return ticks;
+};
+
+/**
+ * 根据start、stop、count进行分割，不要求count完全准确
+ * @param start
+ * @param stop
+ * @param count
+ * @returns
+ */
+export function ticks(start: number, stop: number, count: number) {
+  let reverse;
+  let ticks;
+  let n;
+  let step;
+  const maxIterations = 10;
+
+  stop = +stop;
+  start = +start;
+  count = +count;
+
+  // add check for start equal stop
+  if (start === stop) {
+    return calculateTicksOfSingleValue(start, count);
+  }
+
+  if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
+    return calculateTicksOfSingleValue(start, count);
+  }
+  if ((reverse = stop < start)) {
+    n = start;
+    start = stop;
+    stop = n;
+  }
+  step = tickIncrement(start, stop, count);
+  // why return empty array when stop === 0 ?
+  // if (stop === 0 || !isFinite(step)) {
+  if (!isFinite(step)) {
+    return [];
+  }
+  let cur = 0;
+  const originStep = step;
+
+  while (cur < maxIterations && ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count)) {
+    step += originStep;
+    cur += 1;
+  }
+
+  if (ticks.length < count) {
+    const lastTick = ticks[ticks.length - 1];
+
+    for (n = 1; n <= count - ticks.length; n++) {
+      ticks.push(lastTick + n * step);
+    }
+  }
+
+  if (reverse) {
+    ticks.reverse();
+  }
+
+  return ticks;
+}
+
+const getNickStep = (step: number) => {
   const power = Math.floor(Math.log(step) / Math.LN10); // 对数取整
   const error = step / 10 ** power;
 
@@ -94,6 +232,11 @@ export function tickIncrement(start: number, stop: number, count: number) {
     return gap * 10 ** power;
   }
   return -(10 ** -power) / gap;
+};
+
+export function tickIncrement(start: number, stop: number, count: number) {
+  const step = (stop - start) / Math.max(0, count);
+  return getNickStep(step);
 }
 
 /**
