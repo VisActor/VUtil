@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "feat(vscale): optimize ticks in two case: 1. equal values, 2. tickCount should match parameters, fix #51",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
