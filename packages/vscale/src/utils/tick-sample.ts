@@ -3,6 +3,7 @@ import { range } from '@visactor/vutils';
 const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
 const e2 = Math.sqrt(2);
+const niceNumbers = [1, 2, 5, 10];
 
 export function calculateTicksOfSingleValue(value: number, tickCount: number, allowDecimals?: boolean) {
   let step = 1;
@@ -15,7 +16,7 @@ export function calculateTicksOfSingleValue(value: number, tickCount: number, al
   } else if (value < 0 && value >= -Number.MIN_VALUE) {
     start = -(tickCount - 1);
   } else if (allowDecimals !== false && absVal < 1) {
-    step = getNickStep(absVal);
+    step = getNickStep(absVal).step;
     // middle = new Decimal(Math.floor(middle.div(step).toNumber())).mul(step);
   } else if (allowDecimals === false || absVal > 1) {
     start = Math.floor(value) - middleIndex * step;
@@ -68,7 +69,7 @@ export function d3Ticks(start: number, stop: number, count: number) {
     start = stop;
     stop = n;
   }
-  step = tickIncrement(start, stop, count);
+  step = tickIncrement(start, stop, count).step;
   // why return empty array when stop === 0 ?
   // if (stop === 0 || !isFinite(step)) {
   if (!isFinite(step)) {
@@ -148,6 +149,41 @@ const calculateTicksByStep = (start: number, stop: number, step: number) => {
   return ticks;
 };
 
+export const appendTicksToCount = (ticks: number[], count: number, step: number) => {
+  let n: number;
+  const firstTick = ticks[0];
+  const lastTick = ticks[ticks.length - 1];
+  const appendCount = count - ticks.length;
+
+  if (lastTick <= 0) {
+    const headTicks: number[] = [];
+    // append to head
+    for (n = appendCount; n >= 1; n--) {
+      headTicks.push(firstTick - n * step);
+    }
+    return headTicks.concat(ticks);
+  } else if (firstTick >= 0) {
+    // append to tail
+    for (n = 1; n <= appendCount; n++) {
+      ticks.push(lastTick + n * step);
+    }
+
+    return ticks;
+  }
+  let headTicks: number[] = [];
+  const tailTicks: number[] = [];
+  // append to head and tail
+  for (n = 1; n <= appendCount; n++) {
+    if (n % 2 === 0) {
+      headTicks = [firstTick - Math.floor(n / 2) * step].concat(headTicks);
+    } else {
+      tailTicks.push(lastTick + Math.ceil(n / 2) * step);
+    }
+  }
+
+  return headTicks.concat(ticks).concat(tailTicks);
+};
+
 /**
  * 根据start、stop、count进行分割，不要求count完全准确
  * @param start
@@ -159,8 +195,7 @@ export function ticks(start: number, stop: number, count: number) {
   let reverse;
   let ticks;
   let n;
-  let step;
-  const maxIterations = 10;
+  const maxIterations = 5;
 
   stop = +stop;
   start = +start;
@@ -179,26 +214,32 @@ export function ticks(start: number, stop: number, count: number) {
     start = stop;
     stop = n;
   }
-  step = tickIncrement(start, stop, count);
+  const stepRes = tickIncrement(start, stop, count);
+  let step = stepRes.step;
   // why return empty array when stop === 0 ?
   // if (stop === 0 || !isFinite(step)) {
   if (!isFinite(step)) {
     return [];
   }
-  let cur = 0;
-  const originStep = step;
+  if (step > 0) {
+    let cur = 1;
+    const { power, gap } = stepRes;
+    const delatStep = gap === 10 ? 5 * 10 ** power : step;
+    while (
+      cur <= maxIterations &&
+      ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count) &&
+      count > 2
+    ) {
+      step += delatStep;
 
-  while (cur < maxIterations && ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count)) {
-    step += originStep;
-    cur += 1;
-  }
-
-  if (ticks.length < count) {
-    const lastTick = ticks[ticks.length - 1];
-
-    for (n = 1; n <= count - ticks.length; n++) {
-      ticks.push(lastTick + n * step);
+      cur += 1;
     }
+
+    if (ticks.length < count) {
+      ticks = appendTicksToCount(ticks, count, step);
+    }
+  } else {
+    ticks = calculateTicksByStep(start, stop, step);
   }
 
   if (reverse) {
@@ -212,19 +253,19 @@ const getNickStep = (step: number) => {
   const power = Math.floor(Math.log(step) / Math.LN10); // 对数取整
   const error = step / 10 ** power;
 
-  let gap = 1;
+  let gap = niceNumbers[0];
   if (error >= e10) {
-    gap = 10;
+    gap = niceNumbers[3];
   } else if (error >= e5) {
-    gap = 5;
+    gap = niceNumbers[2];
   } else if (error >= e2) {
-    gap = 2;
+    gap = niceNumbers[1];
   }
 
   if (power >= 0) {
-    return gap * 10 ** power;
+    return { step: gap * 10 ** power, gap, power };
   }
-  return -(10 ** -power) / gap;
+  return { step: -(10 ** -power) / gap, gap, power };
 };
 
 export function tickIncrement(start: number, stop: number, count: number) {
@@ -319,7 +360,7 @@ export function niceLinear(d: number[], count: number = 10) {
   }
 
   while (maxIter-- > 0) {
-    step = tickIncrement(start, stop, count);
+    step = tickIncrement(start, stop, count).step;
     if (step === prestep) {
       d[i0] = start;
       d[i1] = stop;

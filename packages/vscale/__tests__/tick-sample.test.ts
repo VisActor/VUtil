@@ -11,3 +11,7 @@ test('ticks() of equal value', () => {
   expect(ticks(0.1, 0.1, 5)).toEqual([0, 0.1, 0.2, 0.3, 0.4]);
   expect(ticks(1e-12, 1e-12, 5)).toEqual([0, 1e-12, 2e-12, 3e-12, 4e-12]);
 });
+
+test('ticks() of different tickCount', () => {
+  expect(ticks(0, 1, 1)).toEqual([0, 1]);
+});
