@@ -52,6 +52,7 @@ export * from './number';
 
 // function
 export { default as constant } from './constant';
+export { memoize } from './memoize';
 
 // pad
 export { default as pad } from './pad';
