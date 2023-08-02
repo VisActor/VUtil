@@ -4,10 +4,6 @@ const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
 const e2 = Math.sqrt(2);
 
-const isInt = (value: number) => {
-  return Math.floor(value) === value;
-};
-
 export function calculateTicksOfSingleValue(value: number, tickCount: number, allowDecimals?: boolean) {
   let step = 1;
   let start = value;
@@ -18,14 +14,11 @@ export function calculateTicksOfSingleValue(value: number, tickCount: number, al
     start = 0;
   } else if (value < 0 && value >= -Number.MIN_VALUE) {
     start = -(tickCount - 1);
-  } else if (!isInt(value) && allowDecimals !== false && absVal < 1) {
+  } else if (allowDecimals !== false && absVal < 1) {
     step = getNickStep(absVal);
     // middle = new Decimal(Math.floor(middle.div(step).toNumber())).mul(step);
   } else if (allowDecimals === false || absVal > 1) {
     start = Math.floor(value) - middleIndex * step;
-  } else {
-    // int
-    start = value - middleIndex * step;
   }
 
   if (step > 0) {
