@@ -1,11 +1,13 @@
-import { range } from '@visactor/vutils';
+import { range, memoize } from '@visactor/vutils';
 
 const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
 const e2 = Math.sqrt(2);
 const niceNumbers = [1, 2, 5, 10];
 
-export function calculateTicksOfSingleValue(value: number, tickCount: number, allowDecimals?: boolean) {
+type TicksFunc = (start: number, stop: number, count: number) => number[];
+
+export const calculateTicksOfSingleValue = (value: number, tickCount: number, allowDecimals?: boolean) => {
   let step = 1;
   let start = value;
   const middleIndex = Math.floor((tickCount - 1) / 2);
@@ -36,7 +38,7 @@ export function calculateTicksOfSingleValue(value: number, tickCount: number, al
   return value > 0
     ? calculateTicksByStep(0, -(tickCount - 1) / step, step)
     : calculateTicksByStep((tickCount - 1) / step, 0, step);
-}
+};
 
 /**
  * 根据start、stop、count进行分割，不要求count完全准确
@@ -45,7 +47,7 @@ export function calculateTicksOfSingleValue(value: number, tickCount: number, al
  * @param count
  * @returns
  */
-export function d3Ticks(start: number, stop: number, count: number) {
+export const d3Ticks = memoize<TicksFunc>((start: number, stop: number, count: number) => {
   let reverse;
   let i = -1;
   let n;
@@ -110,7 +112,7 @@ export function d3Ticks(start: number, stop: number, count: number) {
   }
 
   return ticks;
-}
+});
 
 const calculateTicksByStep = (start: number, stop: number, step: number) => {
   let i = -1;
@@ -191,7 +193,7 @@ export const appendTicksToCount = (ticks: number[], count: number, step: number)
  * @param count
  * @returns
  */
-export function ticks(start: number, stop: number, count: number) {
+export const ticks = memoize<TicksFunc>((start: number, stop: number, count: number) => {
   let reverse;
   let ticks;
   let n;
@@ -247,7 +249,7 @@ export function ticks(start: number, stop: number, count: number) {
   }
 
   return ticks;
-}
+});
 
 const getNickStep = (step: number) => {
   const power = Math.floor(Math.log(step) / Math.LN10); // 对数取整

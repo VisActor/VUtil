@@ -1,5 +1,5 @@
 import { ScaleEnum } from './type';
-import { forceTicks, niceLinear, stepTicks, ticks } from './utils/tick-sample';
+import { d3Ticks, forceTicks, niceLinear, stepTicks, ticks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import type { ContinuousScaleType } from './interface';
 
@@ -25,6 +25,11 @@ export class LinearScale extends ContinuousScale {
     return () => {
       // TODO
     };
+  }
+
+  d3Ticks(count: number = 10) {
+    const d = this.calculateVisibleDomain(this._range);
+    return d3Ticks(d[0], d[d.length - 1], count);
   }
 
   ticks(count: number = 10) {
@@ -57,7 +62,6 @@ export class LinearScale extends ContinuousScale {
     if (niceDomain) {
       return this.domain(niceDomain);
     }
-
     return this;
   }
 
