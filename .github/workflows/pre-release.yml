@@ -36,9 +36,9 @@ jobs:
         id: semver_parser
         uses: xile611/read-package-version-action@main
         with:
+          path: packages/vutils
           semver_string: ${{ github.ref_name }}
           semver_pattern: '^pre-release/(.*)$' # ^v?(.*)$ by default
-          use_current_version: false # don't read package.json
 
       - name: Apply prereleaseName
         run: node common/scripts/install-run-rush.js publish --apply --prerelease-name ${{ steps.semver_parser.outputs.pre_release_name }} --partial-prerelease
@@ -55,10 +55,16 @@ jobs:
       - name: Update shrinkwrap
         run: node common/scripts/install-run-rush.js update
 
+      - name: Get npm version
+        id: package-version
+        uses: xile611/read-package-version-action@v2.1
+        with:
+          path: packages/vgrammar
+
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: 'build: prelease version ${{ steps.semver_parser.outputs.current_version }}'
+          message: 'build: prelease version ${{ steps.package-version.outputs.current_version }}'
           branch: ${{ github.ref_name }}
           author_name: ${{ github.actor }}
