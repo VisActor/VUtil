@@ -2,6 +2,7 @@ import { ScaleEnum } from './type';
 import { d3Ticks, forceTicks, niceLinear, stepTicks, ticks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import type { ContinuousScaleType } from './interface';
+import { toNumber } from '@visactor/vutils';
 
 /**
  * TODO:
@@ -30,6 +31,24 @@ export class LinearScale extends ContinuousScale {
     };
   }
 
+  domain(): any[];
+  domain(_: any[], slience?: boolean): this;
+  domain(_?: any[], slience?: boolean): this | any[] {
+    if (!_) {
+      return (this._niceDomain ?? this._domain).slice();
+    }
+
+    this._needNice = false;
+    this._needNiceMax = false;
+    this._needNiceMin = false;
+    this._niceDomain = null;
+
+    const nextDomain = Array.from(_, toNumber) as [number, number];
+
+    this._domain = nextDomain;
+    return this.rescale(slience);
+  }
+
   d3Ticks(count: number = 10) {
     const d = this.calculateVisibleDomain(this._range);
     return d3Ticks(d[0], d[d.length - 1], count);
@@ -40,7 +59,14 @@ export class LinearScale extends ContinuousScale {
    * if we don't update niceDomain, the ticks will exceed the domain
    */
   ticks(count: number = 10) {
-    if (this._rangeFactor && (this._rangeFactor[0] > 0 || this._rangeFactor[1] < 1) && this._range.length === 2) {
+    if (
+      this._rangeFactor &&
+      (this._rangeFactor[0] > 0 || this._rangeFactor[1] < 1) &&
+      this._range.length === 2 &&
+      !this._needNice &&
+      !this._needNiceMin &&
+      !this._needNiceMax
+    ) {
       return this.d3Ticks(count);
     }
     const domain = this._domain;
