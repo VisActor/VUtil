@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.14.0",
+      "tag": "@visactor/vscale_v0.14.0",
+      "date": "Thu, 03 Aug 2023 08:03:01 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "feat(vscale): optimize ticks in two case: 1. equal values, 2. tickCount should match parameters, fix #51"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.13.4",
       "tag": "@visactor/vscale_v0.13.4",
       "date": "Thu, 27 Jul 2023 11:58:27 GMT",

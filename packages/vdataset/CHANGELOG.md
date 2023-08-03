@@ -1,6 +1,11 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Fri, 21 Jul 2023 09:19:13 GMT and should not be manually modified.
+This log was last generated on Thu, 03 Aug 2023 08:03:01 GMT and should not be manually modified.
+
+## 0.14.0
+Thu, 03 Aug 2023 08:03:01 GMT
+
+_Version update only_
 
 ## 0.13.4
 Fri, 21 Jul 2023 09:19:13 GMT
@@ -40,6 +45,12 @@ Tue, 20 Jun 2023 08:44:17 GMT
 ### Minor changes
 
 - release version 0.10.1
+
+### Updates
+
+- chore: change the way of import geobuf package
+- release
+- release alpha
 
 ## 0.0.11
 Wed, 31 May 2023 02:35:46 GMT
