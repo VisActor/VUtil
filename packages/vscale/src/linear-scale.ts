@@ -60,12 +60,8 @@ export class LinearScale extends ContinuousScale {
    */
   ticks(count: number = 10) {
     if (
-      this._rangeFactor &&
-      (this._rangeFactor[0] > 0 || this._rangeFactor[1] < 1) &&
-      this._range.length === 2 &&
-      !this._needNice &&
-      !this._needNiceMin &&
-      !this._needNiceMax
+      (this._rangeFactor && (this._rangeFactor[0] > 0 || this._rangeFactor[1] < 1) && this._range.length === 2) ||
+      (!this._needNice && !this._needNiceMin && !this._needNiceMax)
     ) {
       return this.d3Ticks(count);
     }

@@ -325,16 +325,16 @@ test('linear.ticks(count) returns the expected ticks for an ascending domain', f
   expect(s.ticks(2).map(roundEpsilon)).toEqual([0.0, 0.5, 1.0]);
   expect(s.ticks(1).map(roundEpsilon)).toEqual([0.0, 1.0]);
   s.domain([-100, 100]);
-  expect(s.ticks(10)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160, 200]);
-  expect(s.ticks(9)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(8)).toEqual([-120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(7)).toEqual([-120, -80, -40, 0, 40, 80, 120]);
-  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100, 150]);
+  expect(s.ticks(10)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(9)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(8)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(7)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(5)).toEqual([-100, -50, 0, 50, 100]);
-  expect(s.ticks(4)).toEqual([-100, 0, 100, 200]);
-  expect(s.ticks(3)).toEqual([-100, 0, 100]);
+  expect(s.ticks(4)).toEqual([-100, -50, 0, 50, 100]);
+  expect(s.ticks(3)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(2)).toEqual([-100, 0, 100]);
-  expect(s.ticks(1)).toEqual([-200, 0, 200]);
+  expect(s.ticks(1)).toEqual([0]);
 });
 
 test('linear.forceTicks(count) returns the expected ticks for an ascending domain', function () {
@@ -408,16 +408,16 @@ test('linear.ticks(count) returns the expected ticks for a descending domain', f
   expect(s.ticks(2).map(roundEpsilon)).toEqual([0.0, 0.5, 1.0].reverse());
   expect(s.ticks(1).map(roundEpsilon)).toEqual([0.0, 1.0].reverse());
   s.domain([100, -100]);
-  expect(s.ticks(10)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160, 200].reverse());
-  expect(s.ticks(9)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160].reverse());
-  expect(s.ticks(8)).toEqual([-120, -80, -40, 0, 40, 80, 120, 160].reverse());
-  expect(s.ticks(7)).toEqual([-120, -80, -40, 0, 40, 80, 120].reverse());
-  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100, 150].reverse());
+  expect(s.ticks(10)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(9)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(8)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(7)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100].reverse());
   expect(s.ticks(5)).toEqual([-100, -50, 0, 50, 100].reverse());
-  expect(s.ticks(4)).toEqual([-100, 0, 100, 200].reverse());
-  expect(s.ticks(3)).toEqual([-100, 0, 100].reverse());
+  expect(s.ticks(4)).toEqual([-100, -50, 0, 50, 100].reverse());
+  expect(s.ticks(3)).toEqual([-100, -50, 0, 50, 100].reverse());
   expect(s.ticks(2)).toEqual([-100, 0, 100].reverse());
-  expect(s.ticks(1)).toEqual([-200, 0, 200].reverse());
+  expect(s.ticks(1)).toEqual([0].reverse());
 });
 
 test('linear.ticks(count) returns the expected ticks for a polylinear domain', function () {
@@ -433,16 +433,16 @@ test('linear.ticks(count) returns the expected ticks for a polylinear domain', f
   expect(s.ticks(2).map(roundEpsilon)).toEqual([0.0, 0.5, 1.0]);
   expect(s.ticks(1).map(roundEpsilon)).toEqual([0.0, 1.0]);
   s.domain([-100, 0, 100]);
-  expect(s.ticks(10)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160, 200]);
-  expect(s.ticks(9)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(8)).toEqual([-120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(7)).toEqual([-120, -80, -40, 0, 40, 80, 120]);
-  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100, 150]);
+  expect(s.ticks(10)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(9)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(8)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(7)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(5)).toEqual([-100, -50, 0, 50, 100]);
-  expect(s.ticks(4)).toEqual([-100, 0, 100, 200]);
-  expect(s.ticks(3)).toEqual([-100, 0, 100]);
+  expect(s.ticks(4)).toEqual([-100, -50, 0, 50, 100]);
+  expect(s.ticks(3)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(2)).toEqual([-100, 0, 100]);
-  expect(s.ticks(1)).toEqual([-200, 0, 200]);
+  expect(s.ticks(1)).toEqual([0]);
 });
 
 test('linear.ticks(X) spans linear.nice(X).domain()', function () {
@@ -775,12 +775,12 @@ test('linear.ticks(count) will update final domain of scale when nice is true', 
   expect(s.domain()).toEqual([newTicks[0], newTicks[newTicks.length - 1]]);
 });
 
-test('linear.ticks(count) will not update final domain of scale when nice is true', function () {
+test('linear.ticks(count) will not update final domain of scale when nice is false', function () {
   const originDomain = [3.45, 10];
   const s = new LinearScale().domain(originDomain);
 
   expect(s.domain()).toEqual(originDomain);
   const newTicks = s.ticks(5);
-  expect(newTicks).toEqual([2, 4, 6, 8, 10]);
+  expect(newTicks).toEqual([4, 5, 6, 7, 8, 9, 10]);
   expect(s.domain()).toEqual(originDomain);
 });

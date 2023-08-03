@@ -260,16 +260,16 @@ it('pow.ticks.scale(count) returns the expected ticks for an ascending domain', 
   expect(s.ticks(2).map(roundEpsilon)).toEqual([0.0, 0.5, 1.0]);
   expect(s.ticks(1).map(roundEpsilon)).toEqual([0.0, 1.0]);
   s.domain([-100, 100]);
-  expect(s.ticks(10)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160, 200]);
-  expect(s.ticks(9)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(8)).toEqual([-120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(7)).toEqual([-120, -80, -40, 0, 40, 80, 120]);
-  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100, 150]);
+  expect(s.ticks(10)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(9)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(8)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(7)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(5)).toEqual([-100, -50, 0, 50, 100]);
-  expect(s.ticks(4)).toEqual([-100, 0, 100, 200]);
-  expect(s.ticks(3)).toEqual([-100, 0, 100]);
+  expect(s.ticks(4)).toEqual([-100, -50, 0, 50, 100]);
+  expect(s.ticks(3)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(2)).toEqual([-100, 0, 100]);
-  expect(s.ticks(1)).toEqual([-200, 0, 200]);
+  expect(s.ticks(1)).toEqual([0]);
 });
 
 it('pow.ticks(count) returns the expected ticks for a descending domain', () => {
@@ -285,16 +285,16 @@ it('pow.ticks(count) returns the expected ticks for a descending domain', () => 
   expect(s.ticks(2).map(roundEpsilon)).toEqual([0.0, 0.5, 1.0].reverse());
   expect(s.ticks(1).map(roundEpsilon)).toEqual([0.0, 1.0].reverse());
   s.domain([100, -100]);
-  expect(s.ticks(10)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160, 200].reverse());
-  expect(s.ticks(9)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160].reverse());
-  expect(s.ticks(8)).toEqual([-120, -80, -40, 0, 40, 80, 120, 160].reverse());
-  expect(s.ticks(7)).toEqual([-120, -80, -40, 0, 40, 80, 120].reverse());
-  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100, 150].reverse());
+  expect(s.ticks(10)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(9)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(8)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(7)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100].reverse());
+  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100].reverse());
   expect(s.ticks(5)).toEqual([-100, -50, 0, 50, 100].reverse());
-  expect(s.ticks(4)).toEqual([-100, 0, 100, 200].reverse());
-  expect(s.ticks(3)).toEqual([-100, 0, 100].reverse());
+  expect(s.ticks(4)).toEqual([-100, -50, 0, 50, 100].reverse());
+  expect(s.ticks(3)).toEqual([-100, -50, 0, 50, 100].reverse());
   expect(s.ticks(2)).toEqual([-100, 0, 100].reverse());
-  expect(s.ticks(1)).toEqual([-200, 0, 200].reverse());
+  expect(s.ticks(1)).toEqual([0].reverse());
 });
 
 it('pow.ticks(count) returns the expected ticks for a polypow domain', () => {
@@ -310,16 +310,16 @@ it('pow.ticks(count) returns the expected ticks for a polypow domain', () => {
   expect(s.ticks(2).map(roundEpsilon)).toEqual([0.0, 0.5, 1.0]);
   expect(s.ticks(1).map(roundEpsilon)).toEqual([0.0, 1.0]);
   s.domain([-100, 0, 100]);
-  expect(s.ticks(10)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160, 200]);
-  expect(s.ticks(9)).toEqual([-160, -120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(8)).toEqual([-120, -80, -40, 0, 40, 80, 120, 160]);
-  expect(s.ticks(7)).toEqual([-120, -80, -40, 0, 40, 80, 120]);
-  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100, 150]);
+  expect(s.ticks(10)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(9)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(8)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(7)).toEqual([-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]);
+  expect(s.ticks(6)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(5)).toEqual([-100, -50, 0, 50, 100]);
-  expect(s.ticks(4)).toEqual([-100, 0, 100, 200]);
-  expect(s.ticks(3)).toEqual([-100, 0, 100]);
+  expect(s.ticks(4)).toEqual([-100, -50, 0, 50, 100]);
+  expect(s.ticks(3)).toEqual([-100, -50, 0, 50, 100]);
   expect(s.ticks(2)).toEqual([-100, 0, 100]);
-  expect(s.ticks(1)).toEqual([-200, 0, 200]);
+  expect(s.ticks(1)).toEqual([0]);
 });
 
 it('pow.ticks(count) returns the empty array if count is not a positive integer', () => {
