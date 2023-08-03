@@ -26,16 +26,7 @@ export abstract class BaseScale implements IRangeFactor {
     return range;
   }
 
-  calculateVisibleDomain(range: any[]) {
-    if (this._rangeFactor && range.length === 2) {
-      const d0 = this.invert(range[0]);
-      const d1 = this.invert(range[1]);
-
-      return [d0, d1];
-    }
-
-    return this.domain();
-  }
+  abstract calculateVisibleDomain(range: any[]): any[];
 
   rangeFactor(): [number, number];
   rangeFactor(_: [number, number], slience?: boolean): this;

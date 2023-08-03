@@ -750,7 +750,7 @@ test('linear.ticks(count) when rangeFactor is not empty', function () {
 
   s.rangeFactor([0.3, 0.5]);
   const tickData2 = s.ticks(5);
-  const res = [4, 4.5, 5, 5.5, 6];
+  const res = [4.5, 5, 5.5, 6];
   tickData2.forEach((d: number, i: number) => {
     expect(tickData2[i]).toBeCloseTo(res[i]);
   });
@@ -761,4 +761,26 @@ test('linear.ticks(count) returns the expected ticks for a negative domain', fun
   expect(s.ticks(10).map(roundEpsilon)).toEqual(
     [0, -0.1, -0.2, -0.3, -0.4, -0.5, -0.6, -0.7, -0.8, -0.9, -1.0].reverse()
   );
+});
+
+test('linear.ticks(count) will update final domain of scale when nice is true', function () {
+  const originDomain = [3.45, 10];
+  const s = new LinearScale().domain(originDomain);
+
+  expect(s.domain()).toEqual(originDomain);
+  s.nice(5);
+  expect(s.domain()).toEqual([3, 10]);
+  const newTicks = s.ticks(5);
+  expect(newTicks).toEqual([2, 4, 6, 8, 10]);
+  expect(s.domain()).toEqual([newTicks[0], newTicks[newTicks.length - 1]]);
+});
+
+test('linear.ticks(count) will not update final domain of scale when nice is true', function () {
+  const originDomain = [3.45, 10];
+  const s = new LinearScale().domain(originDomain);
+
+  expect(s.domain()).toEqual(originDomain);
+  const newTicks = s.ticks(5);
+  expect(newTicks).toEqual([2, 4, 6, 8, 10]);
+  expect(s.domain()).toEqual(originDomain);
 });
