@@ -50,25 +50,23 @@ jobs:
         run: node common/scripts/install-run-rush.js update
 
       - name: Parse semver version from branch name
-        id: semver_parser
+        id: package-version
         uses: xile611/read-package-version-action@main
         with:
-          semver_string: ${{ github.ref_name }}
-          semver_pattern: '^release/(.*)$' # ^v?(.*)$ by default
-          use_current_version: false # don't read package.json
+          path: packages/vutils
 
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: 'build: prelease version ${{ steps.semver_parser.outputs.current_version }}'
+          message: 'build: prelease version ${{ steps.package-version.outputs.current_version }}'
           branch: ${{ github.ref_name }}
 
       - name: Collect changelog of rush
         uses: xile611/collect-rush-changlog@main
         id: changelog
         with:
-          version: ${{ steps.semver_parser.outputs.current_version }}
+          version: ${{ steps.package-version.outputs.current_version }}
 
       - name: Create Release for Tag
         id: release_tag
@@ -76,7 +74,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: v${{ steps.semver_parser.outputs.current_version }}
+          tag: v${{ steps.package-version.outputs.current_version }}
           commit: main
           prerelease: false
           body: |
@@ -87,7 +85,7 @@ jobs:
         uses: dustinirving/create-pr@v1.0.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: '[Auto release] release ${{ steps.semver_parser.outputs.current_version }}'
+          title: '[Auto release] release ${{ steps.package-version.outputs.current_version }}'
           base: main
           head: ${{ github.ref_name }}
           labels: release # default labels, the action will throw error if not specified
