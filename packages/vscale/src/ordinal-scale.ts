@@ -1,4 +1,3 @@
-import { isNil } from '@visactor/vutils';
 import { ScaleEnum } from './type';
 import type { DiscreteScaleType, IBaseScale } from './interface';
 import { BaseScale } from './base-scale';
@@ -40,6 +39,17 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
   // TODO checkPoint
   clone(): IBaseScale {
     return new OrdinalScale().domain(this._domain).range(this._ordinalRange).unknown(this._unknown);
+  }
+
+  calculateVisibleDomain(range: any[]) {
+    if (this._rangeFactor && range.length === 2) {
+      const d0 = this.invert(range[0]);
+      const d1 = this.invert(range[1]);
+
+      return [d0, d1];
+    }
+
+    return this._domain;
   }
 
   scale(d: any): any {

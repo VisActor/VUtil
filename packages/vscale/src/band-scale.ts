@@ -59,7 +59,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   }
 
   calculateVisibleDomain(range: any[]) {
-    const domain = this.domain();
+    const domain = this._domain;
 
     if (this._rangeFactor && domain.length) {
       const d0 = this._getInvertIndex(range[0]);
@@ -103,7 +103,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
 
     if (count === -1) {
       // return domain as ticks when count is -1
-      return d;
+      return d.slice();
     }
 
     const tickIndexList = ticks(0, d.length - 1, count, false);

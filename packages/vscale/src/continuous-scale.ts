@@ -17,6 +17,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   protected transformer: TransformType;
   protected untransformer: TransformType;
 
+  protected _niceDomain: number[];
   protected _domain: number[];
   protected _range: any[];
   protected _unknown: any = undefined;
@@ -42,6 +43,17 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     this._interpolate = interpolate;
   }
 
+  calculateVisibleDomain(range: any[]) {
+    if (this._rangeFactor && range.length === 2) {
+      const d0 = this.invert(range[0]);
+      const d1 = this.invert(range[1]);
+
+      return [d0, d1];
+    }
+
+    return this._niceDomain ?? this._domain;
+  }
+
   scale(x: any): any {
     x = Number(x);
     if (Number.isNaN(x)) {
@@ -49,7 +61,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     }
     if (!this._output) {
       this._output = (this._piecewise as PolymapType<any>)(
-        this._domain.map(this.transformer),
+        (this._niceDomain ?? this._domain).map(this.transformer),
         this._calculateRange(this._range),
         this._interpolate
       );
@@ -73,7 +85,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   domain(_: any[], slience?: boolean): this;
   domain(_?: any[], slience?: boolean): this | any[] {
     if (!_) {
-      return this._domain.slice();
+      return (this._niceDomain ?? this._domain).slice();
     }
 
     const nextDomain = Array.from(_, toNumber) as [number, number];
@@ -105,24 +117,25 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     if (slience) {
       return this;
     }
-    const domainLength = this._domain.length;
+    const domain = this._niceDomain ?? this._domain;
+    const domainLength = domain.length;
     const rangeLength = this._range.length;
     let n = Math.min(domainLength, rangeLength);
 
     if (domainLength && domainLength < rangeLength && this._forceAlign) {
       // insert steps to domain
       const deltaStep = rangeLength - domainLength + 1;
-      const last = this._domain[domainLength - 1];
-      const delta = domainLength >= 2 ? (last - this._domain[domainLength - 2]) / deltaStep : 0;
+      const last = domain[domainLength - 1];
+      const delta = domainLength >= 2 ? (last - domain[domainLength - 2]) / deltaStep : 0;
 
       for (let i = 1; i <= deltaStep; i++) {
-        this._domain[domainLength - 2 + i] = last - delta * (deltaStep - i);
+        domain[domainLength - 2 + i] = last - delta * (deltaStep - i);
       }
       n = rangeLength;
     }
 
     if (this._clamp === undefined) {
-      this._clamp = clamper(this._domain[0], this._domain[n - 1]);
+      this._clamp = clamper(domain[0], domain[n - 1]);
     }
     this._piecewise = n > 2 ? polymap : bimap;
     this._output = this._input = null;

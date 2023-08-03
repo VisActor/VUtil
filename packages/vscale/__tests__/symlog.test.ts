@@ -117,15 +117,18 @@ it('symlog.clamp(clamp) coerces the specified clamp value to a boolean', () => {
 it('symlog.clone() returns a copy with changes to the domain are isolated', () => {
   const x = new SymlogScale();
   const y = x.clone();
+
   x.domain([1, 2]);
   expect(y.domain()).toEqual([0, 1]);
   expect(x.scale(1)).toBe(0);
   expect(y.scale(1)).toBe(1);
+
   y.domain([2, 3]);
   expect(x.scale(2)).toBe(1);
   expect(y.scale(2)).toBe(0);
   expect(x.domain()).toEqual([1, 2]);
   expect(y.domain()).toEqual([2, 3]);
+
   const y2 = x.domain([1, 1.9]).clone();
   x.nice(5);
   expect(x.domain()).toEqual([1, 2]);
