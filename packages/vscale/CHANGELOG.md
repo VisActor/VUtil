@@ -1,6 +1,13 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Thu, 27 Jul 2023 11:58:27 GMT and should not be manually modified.
+This log was last generated on Thu, 03 Aug 2023 08:03:01 GMT and should not be manually modified.
+
+## 0.14.0
+Thu, 03 Aug 2023 08:03:01 GMT
+
+### Minor changes
+
+- feat(vscale): optimize ticks in two case: 1. equal values, 2. tickCount should match parameters, fix #51
 
 ## 0.13.4
 Thu, 27 Jul 2023 11:58:27 GMT
@@ -8,6 +15,10 @@ Thu, 27 Jul 2023 11:58:27 GMT
 ### Patches
 
 - feat(specified): support null for scale specified return value
+
+### Updates
+
+- feat(logScale): add forceTicks and stepTicks
 
 ## 0.13.3
 Wed, 19 Jul 2023 12:27:59 GMT
@@ -38,6 +49,11 @@ Tue, 20 Jun 2023 08:44:17 GMT
 ### Minor changes
 
 - release version 0.10.1
+
+### Updates
+
+- release
+- release alpha
 
 ## 0.9.2
 Wed, 31 May 2023 02:35:46 GMT
