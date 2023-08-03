@@ -784,3 +784,29 @@ test('linear.ticks(count) will not update final domain of scale when nice is fal
   expect(newTicks).toEqual([4, 5, 6, 7, 8, 9, 10]);
   expect(s.domain()).toEqual(originDomain);
 });
+
+test('linear.ticks(count) will filter ticks when niceMin is true', function () {
+  const originDomain = [3.45, 11.5];
+  const s = new LinearScale().domain(originDomain);
+
+  expect(s.domain()).toEqual(originDomain);
+  s.niceMin(5);
+  expect(s.domain()).toEqual([2, originDomain[1]]);
+
+  const newTicks = s.ticks(5);
+  expect(newTicks).toEqual([0, 4, 8]);
+  expect(s.domain()).toEqual([newTicks[0], originDomain[1]]);
+});
+
+test('linear.ticks(count) will filter ticks when niceMax is true', function () {
+  const originDomain = [3.45, 11.5];
+  const s = new LinearScale().domain(originDomain);
+
+  expect(s.domain()).toEqual(originDomain);
+  s.niceMax(5);
+  expect(s.domain()).toEqual([originDomain[0], 12]);
+
+  const newTicks = s.ticks(5);
+  expect(newTicks).toEqual([4, 8, 12, 16]);
+  expect(s.domain()).toEqual([originDomain[0], newTicks[newTicks.length - 1]]);
+});

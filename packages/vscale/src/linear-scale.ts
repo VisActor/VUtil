@@ -68,7 +68,7 @@ export class LinearScale extends ContinuousScale {
     const domain = this._domain;
     const start = domain[0];
     const stop = domain[domain.length - 1];
-    const ticksResult = ticks(start, stop, count);
+    let ticksResult = ticks(start, stop, count);
 
     if (
       ticksResult.length &&
@@ -87,6 +87,13 @@ export class LinearScale extends ContinuousScale {
 
       this._niceDomain = newNiceDomain;
       this.rescale();
+
+      if (!this._needNice) {
+        const min = Math.min(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
+        const max = Math.max(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
+
+        ticksResult = ticksResult.filter(entry => entry >= min && entry <= max);
+      }
     }
 
     return ticksResult;
