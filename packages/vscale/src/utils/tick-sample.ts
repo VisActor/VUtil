@@ -60,11 +60,11 @@ export const d3Ticks = memoize<TicksFunc>((start: number, stop: number, count: n
 
   // add check for start equal stop
   if (start === stop) {
-    return calculateTicksOfSingleValue(start, count);
+    return [start];
   }
 
   if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
-    return calculateTicksOfSingleValue(start, count);
+    return [start];
   }
   if ((reverse = stop < start)) {
     n = start;
@@ -226,7 +226,7 @@ export const ticks = memoize<TicksFunc>((start: number, stop: number, count: num
   if (step > 0) {
     let cur = 1;
     const { power, gap } = stepRes;
-    const delatStep = gap === 10 ? 5 * 10 ** power : step;
+    const delatStep = gap === 10 ? 2 * 10 ** power : 1 * 10 ** power;
     while (
       cur <= maxIterations &&
       ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count) &&
