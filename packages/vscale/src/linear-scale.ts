@@ -49,26 +49,26 @@ export class LinearScale extends ContinuousScale {
     return this.rescale(slience);
   }
 
-  d3Ticks(count: number = 10) {
+  d3Ticks(count: number = 10, options?: { noDecimals?: boolean }) {
     const d = this.calculateVisibleDomain(this._range);
-    return d3Ticks(d[0], d[d.length - 1], count);
+    return d3Ticks(d[0], d[d.length - 1], count, options);
   }
 
   /**
    * the kind of algorithms will generate ticks that is smaller than the min or greater than the max
    * if we don't update niceDomain, the ticks will exceed the domain
    */
-  ticks(count: number = 10) {
+  ticks(count: number = 10, options?: { noDecimals?: boolean }) {
     if (
       (this._rangeFactor && (this._rangeFactor[0] > 0 || this._rangeFactor[1] < 1) && this._range.length === 2) ||
       (!this._needNice && !this._needNiceMin && !this._needNiceMax)
     ) {
-      return this.d3Ticks(count);
+      return this.d3Ticks(count, options);
     }
     const domain = this._domain;
     const start = domain[0];
     const stop = domain[domain.length - 1];
-    let ticksResult = ticks(start, stop, count);
+    let ticksResult = ticks(start, stop, count, options);
 
     if (
       ticksResult.length &&
