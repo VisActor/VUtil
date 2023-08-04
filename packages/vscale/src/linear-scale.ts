@@ -92,7 +92,7 @@ export class LinearScale extends ContinuousScale {
         const min = Math.min(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
         const max = Math.max(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
 
-        ticksResult = ticksResult.filter(entry => entry >= min && entry <= max);
+        ticksResult = ticksResult.filter((entry: number) => entry >= min && entry <= max);
       }
     }
 

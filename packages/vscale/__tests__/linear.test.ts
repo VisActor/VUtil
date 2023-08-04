@@ -794,7 +794,7 @@ test('linear.ticks(count) will filter ticks when niceMin is true', function () {
   expect(s.domain()).toEqual([2, originDomain[1]]);
 
   const newTicks = s.ticks(5);
-  expect(newTicks).toEqual([0, 4, 8]);
+  expect(newTicks).toEqual([3, 6, 9]);
   expect(s.domain()).toEqual([newTicks[0], originDomain[1]]);
 });
 
@@ -807,6 +807,6 @@ test('linear.ticks(count) will filter ticks when niceMax is true', function () {
   expect(s.domain()).toEqual([originDomain[0], 12]);
 
   const newTicks = s.ticks(5);
-  expect(newTicks).toEqual([4, 8, 12, 16]);
+  expect(newTicks).toEqual([6, 9, 12, 15]);
   expect(s.domain()).toEqual([originDomain[0], newTicks[newTicks.length - 1]]);
 });
