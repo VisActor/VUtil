@@ -3,13 +3,13 @@ import { calculateTicksOfSingleValue } from '../src/utils/tick-sample';
 test('calculateTicksOfSingleValue() of float number', () => {
   expect(calculateTicksOfSingleValue(0.122, 5)).toEqual([0, 0.1, 0.2, 0.3, 0.4]);
   expect(calculateTicksOfSingleValue(-0.122, 5)).toEqual([-0.4, -0.3, -0.2, -0.1, 0]);
-  expect(calculateTicksOfSingleValue(0.122, 5, false)).toEqual([0, 1, 2, 3, 4]);
-  expect(calculateTicksOfSingleValue(-0.122, 5, false)).toEqual([-4, -3, -2, -1, 0]);
+  expect(calculateTicksOfSingleValue(0.122, 5, true)).toEqual([0, 1, 2, 3, 4]);
+  expect(calculateTicksOfSingleValue(-0.122, 5, true)).toEqual([-4, -3, -2, -1, 0]);
 
   expect(calculateTicksOfSingleValue(0.00122, 5)).toEqual([0, 0.001, 0.002, 0.003, 0.004]);
   expect(calculateTicksOfSingleValue(-0.00122, 5)).toEqual([-0.004, -0.003, -0.002, -0.001, 0]);
-  expect(calculateTicksOfSingleValue(0.00122, 5, false)).toEqual([0, 1, 2, 3, 4]);
-  expect(calculateTicksOfSingleValue(-0.00122, 5, false)).toEqual([-4, -3, -2, -1, 0]);
+  expect(calculateTicksOfSingleValue(0.00122, 5, true)).toEqual([0, 1, 2, 3, 4]);
+  expect(calculateTicksOfSingleValue(-0.00122, 5, true)).toEqual([-4, -3, -2, -1, 0]);
 
   expect(calculateTicksOfSingleValue(0.99122, 5)).toEqual([0, 1, 2, 3, 4]);
   expect(calculateTicksOfSingleValue(-0.99122, 5)).toEqual([-4, -3, -2, -1, 0]);
