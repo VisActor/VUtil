@@ -65,7 +65,7 @@ jobs:
         id: package-version
         uses: xile611/read-package-version-action@v2.1
         with:
-          path: packages/vgrammar
+          path: packages/vutils
 
       - name: Commit & Push changes
         uses: actions-js/push@master
