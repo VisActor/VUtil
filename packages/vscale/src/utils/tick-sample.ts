@@ -245,7 +245,7 @@ export const ticks = memoize<ContinuousTicksFunc>(
       const delatStep = gap === 10 ? 2 * 10 ** power : 1 * 10 ** power;
       while (
         cur <= maxIterations &&
-        ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count) &&
+        ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count + 1) &&
         count > 2
       ) {
         step += delatStep;
@@ -253,7 +253,7 @@ export const ticks = memoize<ContinuousTicksFunc>(
         cur += 1;
       }
 
-      if (ticks.length < count) {
+      if (count > 2 && ticks.length < count - 1) {
         ticks = appendTicksToCount(ticks, count, step);
       }
     } else {
