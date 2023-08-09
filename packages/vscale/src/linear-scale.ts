@@ -1,7 +1,7 @@
 import { ScaleEnum } from './type';
-import { d3Ticks, forceTicks, niceLinear, stepTicks, ticks } from './utils/tick-sample';
+import { d3Ticks, forceTicks, niceLinear, parseNiceOptions, stepTicks, ticks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
-import type { ContinuousScaleType } from './interface';
+import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
 import { toNumber } from '@visactor/vutils';
 
 /**
@@ -11,9 +11,7 @@ import { toNumber } from '@visactor/vutils';
  */
 export class LinearScale extends ContinuousScale {
   readonly type: ContinuousScaleType = ScaleEnum.Linear;
-  protected _needNiceMin?: boolean;
-  protected _needNiceMax?: boolean;
-  protected _needNice?: boolean;
+  protected _niceType?: NiceType;
 
   clone(): LinearScale {
     return new LinearScale()
@@ -38,11 +36,9 @@ export class LinearScale extends ContinuousScale {
       return (this._niceDomain ?? this._domain).slice();
     }
 
-    this._needNice = false;
-    this._needNiceMax = false;
-    this._needNiceMin = false;
+    this._niceType = null;
     this._niceDomain = null;
-
+    this._domainValidator = null;
     const nextDomain = Array.from(_, toNumber) as [number, number];
 
     this._domain = nextDomain;
@@ -61,39 +57,48 @@ export class LinearScale extends ContinuousScale {
   ticks(count: number = 10, options?: { noDecimals?: boolean }) {
     if (
       (this._rangeFactor && (this._rangeFactor[0] > 0 || this._rangeFactor[1] < 1) && this._range.length === 2) ||
-      (!this._needNice && !this._needNiceMin && !this._needNiceMax)
+      !this._niceType
     ) {
       return this.d3Ticks(count, options);
     }
-    const domain = this._domain;
-    const start = domain[0];
-    const stop = domain[domain.length - 1];
-    let ticksResult = ticks(start, stop, count, options);
+    const curNiceDomain = this._niceDomain ?? this._domain;
+    const originalDomain = this._domain;
+    const start = curNiceDomain[0];
+    const stop = curNiceDomain[curNiceDomain.length - 1];
+    let ticksResult = ticks(originalDomain[0], originalDomain[originalDomain.length - 1], count, options);
+
+    if (!ticksResult.length) {
+      return ticksResult;
+    }
 
     if (
-      ticksResult.length &&
-      ((ticksResult[0] !== start && (this._needNice || this._needNiceMin)) ||
-        (ticksResult[ticksResult.length - 1] !== stop && (this._needNice || this._needNiceMax)))
+      (ticksResult[0] !== start && this._niceType === 'max') ||
+      (ticksResult[ticksResult.length - 1] !== stop && this._niceType === 'min')
     ) {
-      const newNiceDomain = domain.slice();
+      const newNiceDomain = curNiceDomain.slice();
 
-      if (this._needNice || this._needNiceMin) {
+      if (this._niceType === 'min') {
         newNiceDomain[0] = ticksResult[0];
-      }
-
-      if (this._needNice || this._needNiceMax) {
+      } else {
         newNiceDomain[newNiceDomain.length - 1] = ticksResult[ticksResult.length - 1];
       }
 
       this._niceDomain = newNiceDomain;
       this.rescale();
 
-      if (!this._needNice) {
-        const min = Math.min(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
-        const max = Math.max(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
+      const min = Math.min(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
+      const max = Math.max(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
 
-        ticksResult = ticksResult.filter((entry: number) => entry >= min && entry <= max);
-      }
+      ticksResult = ticksResult.filter((entry: number) => entry >= min && entry <= max);
+    } else if (this._niceType === 'all' && (ticksResult[0] !== start || ticksResult[ticksResult.length - 1] !== stop)) {
+      const newNiceDomain = curNiceDomain.slice();
+
+      newNiceDomain[0] = ticksResult[0];
+      newNiceDomain[newNiceDomain.length - 1] = ticksResult[ticksResult.length - 1];
+      this._niceDomain = newNiceDomain;
+      this.rescale();
+    } else if (this._domainValidator) {
+      ticksResult = ticksResult.filter(this._domainValidator);
     }
 
     return ticksResult;
@@ -118,13 +123,36 @@ export class LinearScale extends ContinuousScale {
     return stepTicks(d[0], d[d.length - 1], step);
   }
 
-  nice(count: number = 10): this {
-    this._needNice = true;
-    const niceDomain = niceLinear(this.domain(), count);
+  nice(count: number = 10, option?: NiceOptions): this {
+    const originalDomain = this._domain;
+    let niceMinMax: number[] = [];
 
-    if (niceDomain) {
+    if (option) {
+      const res = parseNiceOptions(originalDomain, option);
+      niceMinMax = res.niceMinMax;
+      this._domainValidator = res.domainValidator;
+      this._niceType = res.niceType;
+
+      if (res.niceDomain) {
+        this._niceDomain = res.niceDomain;
+        this.rescale();
+
+        return this;
+      }
+    } else {
+      this._niceType = 'all';
+    }
+
+    if (this._niceType) {
+      const niceDomain = niceLinear(originalDomain.slice(), count);
+
+      if (this._niceType === 'min') {
+        niceDomain[niceDomain.length - 1] = niceMinMax[1] ?? niceDomain[niceDomain.length - 1];
+      } else if (this._niceType === 'max') {
+        niceDomain[0] = niceMinMax[0] ?? niceDomain[0];
+      }
+
       this._niceDomain = niceDomain;
-
       this.rescale();
     }
     return this;
@@ -136,7 +164,8 @@ export class LinearScale extends ContinuousScale {
    * @param count
    */
   niceMin(count: number = 10): this {
-    this._needNiceMin = true;
+    this._niceType = 'min';
+
     const maxD = this._domain[this._domain.length - 1];
     const niceDomain = niceLinear(this.domain(), count);
 
@@ -158,9 +187,9 @@ export class LinearScale extends ContinuousScale {
    * @returns
    */
   niceMax(count: number = 10): this {
-    this._needNiceMax = true;
+    this._niceType = 'max';
     const minD = this._domain[0];
-    const niceDomain = niceLinear(this.domain(), count);
+    const niceDomain = niceLinear(this._domain.slice(), count);
 
     if (niceDomain) {
       niceDomain[0] = minD;
