@@ -151,3 +151,12 @@ export type ContinuousTicksFunc = (
   count: number,
   options?: { noDecimals?: boolean }
 ) => number[];
+
+export interface NiceOptions {
+  forceMin?: number;
+  forceMax?: number;
+  min?: number;
+  max?: number;
+}
+
+export type NiceType = 'all' | 'min' | 'max';

@@ -1,5 +1,5 @@
-import { range, memoize } from '@visactor/vutils';
-import type { ContinuousTicksFunc } from '../interface';
+import { range, memoize, isNumber } from '@visactor/vutils';
+import type { ContinuousTicksFunc, NiceOptions, NiceType } from '../interface';
 
 const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
@@ -400,4 +400,53 @@ export function niceLinear(d: number[], count: number = 10) {
   }
 
   return;
+}
+
+export function parseNiceOptions(originalDomain: number[], option: NiceOptions) {
+  const hasForceMin = isNumber(option.forceMin);
+  const hasForceMax = isNumber(option.forceMax);
+  let niceType: NiceType = null;
+  const niceMinMax = [];
+  let niceDomain: number[] = null;
+
+  const domainValidator =
+    hasForceMin && hasForceMax
+      ? (x: number) => x >= option.forceMin && x <= option.forceMax
+      : hasForceMin
+      ? (x: number) => x >= option.forceMin
+      : hasForceMax
+      ? (x: number) => x <= option.forceMax
+      : null;
+
+  if (hasForceMin) {
+    niceMinMax[0] = option.forceMin;
+  } else if (
+    isNumber(option.min) &&
+    option.min <= Math.min(originalDomain[0], originalDomain[originalDomain.length - 1])
+  ) {
+    niceMinMax[0] = option.min;
+  }
+
+  if (hasForceMax) {
+    niceMinMax[1] = option.forceMax;
+  } else if (
+    isNumber(option.max) &&
+    option.max >= Math.max(originalDomain[0], originalDomain[originalDomain.length - 1])
+  ) {
+    niceMinMax[1] = option.max;
+  }
+
+  if (isNumber(niceMinMax[0]) && isNumber(niceMinMax[1])) {
+    niceDomain = originalDomain.slice();
+    niceDomain[0] = niceMinMax[0];
+    niceDomain[niceDomain.length - 1] = niceMinMax[1];
+  } else if (!isNumber(niceMinMax[0]) && !isNumber(niceMinMax[1])) {
+    niceType = 'all';
+  } else if (!isNumber(niceMinMax[0])) {
+    niceType = 'min';
+  } else {
+    niceType = 'max';
+  }
+
+  return { niceType, niceDomain, niceMinMax, domainValidator };
 }
