@@ -47,8 +47,9 @@ export class LogScale extends ContinuousScale {
 
     const logs = logp(this._base);
     const pows = powp(this._base);
+    const domain = this._niceDomain ?? this._domain;
 
-    if (this._domain[0] < 0) {
+    if (domain[0] < 0) {
       this._logs = reflect(logs);
       this._pows = reflect(pows);
 
