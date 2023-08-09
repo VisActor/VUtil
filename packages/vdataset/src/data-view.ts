@@ -1,4 +1,4 @@
-import { cloneDeep, EventEmitter } from '@visactor/vutils';
+import { cloneDeep, EventEmitter, merge, isNil } from '@visactor/vutils';
 import type { DataSet } from './data-set';
 import type { ITransformOptions } from './transform';
 import type { DATAVIEW_TYPE } from './constants';
@@ -108,19 +108,7 @@ export class DataView {
     }
 
     this.dataSet.setDataView(name, this);
-
-    if (options?.fields) {
-      this.dataSet.registerTransform('fields', fields);
-      this.transform(
-        {
-          type: 'fields',
-          options: {
-            fields: options.fields
-          }
-        },
-        false
-      );
-    }
+    this.setFields(options.fields);
   }
 
   /**
@@ -177,15 +165,17 @@ export class DataView {
     this.isRunning = true;
     if (options && options.type) {
       // special transform
+      let pushOption = true;
       if (options.type === 'fields') {
         this._fields = options.options.fields;
         // make sure only one fields
         const index = this.transformsArr.findIndex(_op => _op.type === options.type);
         if (index >= 0) {
-          this.transformsArr.splice(index, 1);
+          pushOption = false;
+          this.transformsArr[index].options.fields = this._fields;
         }
       }
-      this.transformsArr.push(options);
+      pushOption && this.transformsArr.push(options);
       if (execute) {
         const lastTag = this.isLastTransform(options);
         options = cloneDeep(options);
@@ -370,6 +360,32 @@ export class DataView {
       return this.rawData[0].getFields();
     }
     return null;
+  }
+
+  setFields(f: IFields, foreMerge: boolean = false) {
+    if (f && foreMerge) {
+      this._fields = merge({}, this._fields, f);
+    } else {
+      this._fields = f;
+    }
+
+    const fieldsOption = this.transformsArr.find(_op => _op.type === 'fields');
+    if (!isNil(this._fields) && isNil(fieldsOption)) {
+      // add
+      this.dataSet.registerTransform('fields', fields);
+      this.transform(
+        {
+          type: 'fields',
+          options: {
+            fields: this._fields
+          }
+        },
+        false
+      );
+    } else if (fieldsOption) {
+      // update
+      fieldsOption.options.fields = this._fields;
+    }
   }
 
   destroy() {
