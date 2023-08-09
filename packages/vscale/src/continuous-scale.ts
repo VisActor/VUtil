@@ -6,7 +6,8 @@ import type {
   TransformType,
   IContinuousScale,
   ContinuousScaleType,
-  TickData
+  TickData,
+  NiceType
 } from './interface';
 import { interpolate } from './utils/interpolate';
 import { bimap, identity, polymap } from './utils/utils';
@@ -18,6 +19,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   protected untransformer: TransformType;
 
   protected _niceDomain: number[];
+  protected _niceType?: NiceType;
   protected _domain: number[];
   protected _range: any[];
   protected _unknown: any = undefined;
@@ -75,7 +77,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     if (!this._input) {
       this._input = (this._piecewise as PolymapType<any>)(
         this._calculateRange(this._range),
-        this._domain.map(this.transformer),
+        (this._niceDomain ?? this._domain).map(this.transformer),
         interpolateNumber
       );
     }
@@ -89,6 +91,8 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
       return (this._niceDomain ?? this._domain).slice();
     }
     this._domainValidator = null;
+    this._niceType = null;
+    this._niceDomain = null;
     const nextDomain = Array.from(_, toNumber) as [number, number];
 
     this._domain = nextDomain;

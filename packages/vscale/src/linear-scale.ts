@@ -1,8 +1,7 @@
 import { ScaleEnum } from './type';
 import { d3Ticks, forceTicks, niceLinear, parseNiceOptions, stepTicks, ticks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
-import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
-import { toNumber } from '@visactor/vutils';
+import type { ContinuousScaleType, NiceOptions } from './interface';
 
 /**
  * TODO:
@@ -11,7 +10,6 @@ import { toNumber } from '@visactor/vutils';
  */
 export class LinearScale extends ContinuousScale {
   readonly type: ContinuousScaleType = ScaleEnum.Linear;
-  protected _niceType?: NiceType;
 
   clone(): LinearScale {
     return new LinearScale()
@@ -27,22 +25,6 @@ export class LinearScale extends ContinuousScale {
     return () => {
       // TODO
     };
-  }
-
-  domain(): any[];
-  domain(_: any[], slience?: boolean): this;
-  domain(_?: any[], slience?: boolean): this | any[] {
-    if (!_) {
-      return (this._niceDomain ?? this._domain).slice();
-    }
-
-    this._niceType = null;
-    this._niceDomain = null;
-    this._domainValidator = null;
-    const nextDomain = Array.from(_, toNumber) as [number, number];
-
-    this._domain = nextDomain;
-    return this.rescale(slience);
   }
 
   d3Ticks(count: number = 10, options?: { noDecimals?: boolean }) {
