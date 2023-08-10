@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Mon, 07 Aug 2023 06:37:52 GMT and should not be manually modified.
+This log was last generated on Thu, 10 Aug 2023 09:49:35 GMT and should not be manually modified.
+
+## 0.15.3
+Thu, 10 Aug 2023 09:49:35 GMT
+
+### Updates
+
+- feat(dataview): support setFields in dataView, details in #62
+
+
 
 ## 0.15.2
 Mon, 07 Aug 2023 06:37:52 GMT
