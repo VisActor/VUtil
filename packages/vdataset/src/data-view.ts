@@ -108,7 +108,7 @@ export class DataView {
     }
 
     this.dataSet.setDataView(name, this);
-    this.setFields(options.fields);
+    this.setFields(options?.fields);
   }
 
   /**
