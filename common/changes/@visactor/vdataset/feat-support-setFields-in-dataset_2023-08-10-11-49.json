@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix(fields): fix the bug of when unset option to get fields\n\n",
+      "type": "none",
+      "packageName": "@visactor/vdataset"
+    }
+  ],
+  "packageName": "@visactor/vdataset",
+  "email": "lixuef1313@163.com"
+}
