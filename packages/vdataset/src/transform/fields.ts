@@ -116,12 +116,12 @@ function sortData(a: object, b: object, sortFields: SortInfoType[]) {
     let v = 0;
     if (sortInfo.type === 'ordinal') {
       // eslint-disable-next-line no-undefined
-      if (sortInfo.sortIndex[a[sortInfo.key]] === undefined) {
-        sortInfo.sortIndex[a[sortInfo.key]] = sortInfo.sortIndexCount++;
-      }
-      // eslint-disable-next-line no-undefined
       if (sortInfo.sortIndex[b[sortInfo.key]] === undefined) {
         sortInfo.sortIndex[b[sortInfo.key]] = sortInfo.sortIndexCount++;
+      }
+      // eslint-disable-next-line no-undefined
+      if (sortInfo.sortIndex[a[sortInfo.key]] === undefined) {
+        sortInfo.sortIndex[a[sortInfo.key]] = sortInfo.sortIndexCount++;
       }
       v = sortInfo.sortIndex[a[sortInfo.key]] - sortInfo.sortIndex[b[sortInfo.key]];
     } else if (sortInfo.type === 'linear') {
