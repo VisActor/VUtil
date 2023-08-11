@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Thu, 10 Aug 2023 09:49:35 GMT and should not be manually modified.
+This log was last generated on Thu, 10 Aug 2023 12:06:21 GMT and should not be manually modified.
+
+## 0.15.4
+Thu, 10 Aug 2023 12:06:21 GMT
+
+### Updates
+
+- fix(fields): fix the bug of when unset option to get fields
+
+
 
 ## 0.15.3
 Thu, 10 Aug 2023 09:49:35 GMT
