@@ -1,7 +1,7 @@
 {
   "changes": [
     {
-      "comment": "fix(fields): fix when fields sort, domain index not math data appear order\n\n",
+      "comment": "fix(fields): fix when the fields are sorted, the domain index does not correspond to the order in which the data appears\n\n",
       "type": "none",
       "packageName": "@visactor/vdataset"
     }
