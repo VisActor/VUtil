@@ -11,6 +11,7 @@ describe('parser', () => {
           domain: ['female']
         },
         value: {
+          type: 'linear',
           sortIndex: 0
         }
       }
