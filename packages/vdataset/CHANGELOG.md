@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Wed, 16 Aug 2023 03:11:05 GMT and should not be manually modified.
+This log was last generated on Wed, 16 Aug 2023 04:17:45 GMT and should not be manually modified.
+
+## 0.15.7
+Wed, 16 Aug 2023 04:17:45 GMT
+
+### Updates
+
+- fix: fix the error when parseOption is nill
+
+
 
 ## 0.15.6
 Wed, 16 Aug 2023 03:11:05 GMT
