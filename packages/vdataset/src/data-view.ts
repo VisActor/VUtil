@@ -125,7 +125,7 @@ export class DataView {
       this.target.emit('beforeParse', []);
     }
     const cloneData = this.cloneParseData(data, options);
-    if (options.type) {
+    if (options?.type) {
       this.parseOption = options;
       options = cloneDeep(options);
       // 默认bytejson
