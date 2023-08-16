@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: fix the problem that the effect of clone configuration in dataview.parserOption is incorrect\n\n",
+      "type": "none",
+      "packageName": "@visactor/vdataset"
+    }
+  ],
+  "packageName": "@visactor/vdataset",
+  "email": "lixuef1313@163.com"
+}
