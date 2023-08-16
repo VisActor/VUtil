@@ -3,7 +3,7 @@
     {
       "packageName": "@visactor/vscale",
       "comment": "feat: band scale support fixed band width",
-      "type": "none"
+      "type": "patch"
     }
   ],
   "packageName": "@visactor/vscale"
