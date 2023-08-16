@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Fri, 11 Aug 2023 08:33:53 GMT and should not be manually modified.
+This log was last generated on Wed, 16 Aug 2023 03:11:05 GMT and should not be manually modified.
+
+## 0.15.6
+Wed, 16 Aug 2023 03:11:05 GMT
+
+### Updates
+
+- fix: fix the problem that the effect of clone configuration in dataview.parserOption is incorrect
+
+
 
 ## 0.15.5
 Fri, 11 Aug 2023 08:33:53 GMT
