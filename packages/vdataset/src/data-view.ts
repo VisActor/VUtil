@@ -125,11 +125,11 @@ export class DataView {
       this.target.emit('beforeParse', []);
     }
     const cloneData = this.cloneParseData(data, options);
-    if (options) {
+    if (options.type) {
       this.parseOption = options;
       options = cloneDeep(options);
       // 默认bytejson
-      const parserFn = this.dataSet.getParser(options.type || 'bytejson');
+      const parserFn = this.dataSet.getParser(options.type) ?? this.dataSet.getParser('bytejson');
 
       const parserData = parserFn(cloneData, options.options, this);
 
@@ -313,11 +313,11 @@ export class DataView {
   }
 
   private cloneParseData(data: any, options?: IParserOptions) {
-    let clone = true;
-    if (data instanceof DataView || options?.clone === false) {
-      clone = false;
+    let clone = false;
+    if (!(data instanceof DataView) && options?.clone === true) {
+      clone = true;
     }
-    return clone ? data : cloneDeep(data);
+    return clone ? cloneDeep(data) : data;
   }
 
   parseNewData(data: any, options?: IParserOptions) {

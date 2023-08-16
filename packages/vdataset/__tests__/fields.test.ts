@@ -1,7 +1,7 @@
 import { DataSet, DataView, csvParser } from '../src';
 
 describe('parser', () => {
-  it('csv-parser', () => {
+  it('set fields will change dataView fields', () => {
     const dataSet = new DataSet();
     dataSet.registerParser('csv', csvParser);
     const dataView = new DataView(dataSet, {
