@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.15.7",
+      "tag": "@visactor/vdataset_v0.15.7",
+      "date": "Wed, 16 Aug 2023 04:17:45 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix the error when parseOption is nill\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.15.6",
       "tag": "@visactor/vdataset_v0.15.6",
       "date": "Wed, 16 Aug 2023 03:11:05 GMT",
