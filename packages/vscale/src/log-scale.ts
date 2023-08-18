@@ -1,9 +1,10 @@
-import { ticks, forceTicks, stepTicks } from './utils/tick-sample';
+import { ticks, forceTicks, stepTicks, ticksBaseTransform, forceTicksBaseTransform } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
 import type { ContinuousScaleType } from './interface';
 import { cloneDeep } from '@visactor/vutils';
+import { LinearScale } from './linear-scale';
 
 /**
  * 逆反函数
@@ -138,7 +139,9 @@ export class LogScale extends ContinuousScale {
   }
 
   ticks(count: number = 10) {
-    return this.d3Ticks(count);
+    // return this.d3Ticks(count);
+    const d = this.calculateVisibleDomain(this._range);
+    return ticksBaseTransform(d[0], d[1], count, this._base, this.transformer, this.untransformer);
   }
 
   /**
@@ -147,7 +150,7 @@ export class LogScale extends ContinuousScale {
    */
   forceTicks(count: number = 10): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return forceTicks(d[0], d[d.length - 1], count);
+    return forceTicksBaseTransform(d[0], d[1], count, this.transformer, this.untransformer);
   }
 
   /**
@@ -156,7 +159,7 @@ export class LogScale extends ContinuousScale {
    */
   stepTicks(step: number): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return stepTicks(d[0], d[d.length - 1], step);
+    return forceTicksBaseTransform(d[0], d[1], step, this.transformer, this.untransformer);
   }
 
   nice(): this {

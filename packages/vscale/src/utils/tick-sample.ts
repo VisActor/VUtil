@@ -1,4 +1,7 @@
-import { range, memoize } from '@visactor/vutils';
+import { range, memoize, isValid } from '@visactor/vutils';
+import { LinearScale } from '../linear-scale';
+import type { TransformType } from '../interface';
+import { niceNumber, restrictNumber } from './utils';
 
 const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
@@ -6,6 +9,23 @@ const e2 = Math.sqrt(2);
 const niceNumbers = [1, 2, 5, 10];
 
 type TicksFunc = (start: number, stop: number, count: number) => number[];
+// eslint-disable-next-line max-len
+type TicksBaseTransformFunc = (
+  start: number,
+  stop: number,
+  count: number,
+  base: number,
+  transformer: TransformType,
+  untransformer: TransformType
+) => number[];
+// eslint-disable-next-line max-len
+type ForceTicksBaseTransformFunc = (
+  start: number,
+  stop: number,
+  count: number,
+  transformer: TransformType,
+  untransformer: TransformType
+) => number[];
 
 export const calculateTicksOfSingleValue = (value: number, tickCount: number, allowDecimals?: boolean) => {
   let step = 1;
@@ -381,3 +401,65 @@ export function niceLinear(d: number[], count: number = 10) {
 
   return;
 }
+
+export const ticksBaseTransform = memoize<TicksBaseTransformFunc>(
+  (
+    start: number,
+    stop: number,
+    count: number,
+    base: number,
+    transformer: TransformType,
+    untransformer: TransformType
+  ) => {
+    const ticksResult: number[] = [];
+    const ticksMap = {};
+    const startExp = transformer(start);
+    const stopExp = transformer(stop);
+    let ticksExp = [];
+    // get ticks exp
+    if (Number.isInteger(base)) {
+      ticksExp = new LinearScale().domain([startExp, stopExp]).ticks(count);
+    } else {
+      const stepExp = (stopExp - startExp) / (count - 1);
+      for (let i = 0; i < count; i++) {
+        ticksExp.push(startExp + i * stepExp);
+      }
+    }
+    ticksExp.forEach((tl: number) => {
+      // get pow
+      const power = untransformer(tl);
+      // nice
+      const nicePower = Number.isInteger(base)
+        ? Math.abs(stop - start) < 1
+          ? +power.toFixed(1)
+          : Math.round(+power)
+        : niceNumber(power);
+      // scope
+      const scopeExp = restrictNumber(nicePower, [start, stop]);
+      // dedupe
+      if (!ticksMap[nicePower] && !isNaN(nicePower) && ticksExp.length > 1) {
+        ticksMap[nicePower] = 1;
+        ticksResult.push(scopeExp);
+      }
+    });
+    return ticksResult;
+  }
+);
+
+export const forceTicksBaseTransform = memoize<ForceTicksBaseTransformFunc>(
+  (start: number, stop: number, count: number, transformer: TransformType, untransformer: TransformType) => {
+    const startExp = transformer(start);
+    const stopExp = transformer(stop);
+    const ticksExp = forceTicks(startExp, stopExp, count);
+    return ticksExp.map((te: number) => niceNumber(untransformer(te)));
+  }
+);
+
+export const forceStepTicksBaseTransform = memoize<ForceTicksBaseTransformFunc>(
+  (start: number, stop: number, step: number, transformer: TransformType, untransformer: TransformType) => {
+    const startExp = transformer(start);
+    const stopExp = transformer(stop);
+    const ticksExp = stepTicks(startExp, stopExp, step);
+    return ticksExp.map((te: number) => niceNumber(untransformer(te)));
+  }
+);
