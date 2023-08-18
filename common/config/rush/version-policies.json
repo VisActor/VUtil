@@ -1,2 +1,1 @@
-[{"definitionName":"lockStepVersion","policyName":"vutilMain","version":"0.15.7","nextBump":"patch"}]
-
+[{"definitionName":"lockStepVersion","policyName":"vutilMain","version":"0.15.7","nextBump":"prerelease"}]
