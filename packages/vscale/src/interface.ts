@@ -49,7 +49,8 @@ export interface IRangeFactor {
 }
 
 export interface IContinuesScaleTicks {
-  d3Ticks: (count?: number) => any[];
+  ticks: (count?: number, options?: { noDecimals?: boolean }) => any[];
+  d3Ticks: (count?: number, options?: { noDecimals?: boolean }) => any[];
   forceTicks: (count?: number) => any[];
   stepTicks: (step: number) => any[];
   nice: (count?: number) => this;
@@ -66,7 +67,6 @@ export interface IBaseScale {
   invert?: (y: any) => any;
   clone?: () => IBaseScale;
   rescale?: (slience?: boolean) => this;
-  ticks?: (count?: number) => any[];
   tickData?: (count?: number) => TickData[];
 }
 
@@ -77,6 +77,7 @@ export interface IOrdinalScale extends IBaseScale {
 export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
   readonly type: DiscreteScaleType;
   rangeRound: (_: any[], slience?: boolean) => this;
+  ticks?: (count?: number) => any[];
   /**
    * 生成tick数组，这个tick数组的长度就是count的长度
    */
@@ -143,3 +144,19 @@ export interface IThresholdScale
   invertExtent: (y: any) => any[];
   clone: () => IQuantizeScale;
 }
+
+export type ContinuousTicksFunc = (
+  start: number,
+  stop: number,
+  count: number,
+  options?: { noDecimals?: boolean }
+) => number[];
+
+export interface NiceOptions {
+  forceMin?: number;
+  forceMax?: number;
+  min?: number;
+  max?: number;
+}
+
+export type NiceType = 'all' | 'min' | 'max';

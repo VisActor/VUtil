@@ -1,6 +1,71 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Fri, 21 Jul 2023 09:19:13 GMT and should not be manually modified.
+This log was last generated on Wed, 16 Aug 2023 04:17:45 GMT and should not be manually modified.
+
+## 0.15.7
+Wed, 16 Aug 2023 04:17:45 GMT
+
+### Updates
+
+- fix: fix the error when parseOption is nill
+
+
+
+## 0.15.6
+Wed, 16 Aug 2023 03:11:05 GMT
+
+### Updates
+
+- fix: fix the problem that the effect of clone configuration in dataview.parserOption is incorrect
+
+
+
+## 0.15.5
+Fri, 11 Aug 2023 08:33:53 GMT
+
+### Updates
+
+- fix(fields): fix when the fields are sorted, the domain index does not correspond to the order in which the data appears
+
+
+
+## 0.15.4
+Thu, 10 Aug 2023 12:06:21 GMT
+
+### Updates
+
+- fix(fields): fix the bug of when unset option to get fields
+
+
+
+## 0.15.3
+Thu, 10 Aug 2023 09:49:35 GMT
+
+### Updates
+
+- feat(dataview): support setFields in dataView, details in #62
+
+
+
+## 0.15.2
+Mon, 07 Aug 2023 06:37:52 GMT
+
+_Version update only_
+
+## 0.15.1
+Mon, 07 Aug 2023 06:27:29 GMT
+
+_Version update only_
+
+## 0.15.0
+Mon, 07 Aug 2023 06:09:42 GMT
+
+_Version update only_
+
+## 0.14.0
+Thu, 03 Aug 2023 08:03:01 GMT
+
+_Version update only_
 
 ## 0.13.4
 Fri, 21 Jul 2023 09:19:13 GMT
@@ -40,6 +105,12 @@ Tue, 20 Jun 2023 08:44:17 GMT
 ### Minor changes
 
 - release version 0.10.1
+
+### Updates
+
+- chore: change the way of import geobuf package
+- release
+- release alpha
 
 ## 0.0.11
 Wed, 31 May 2023 02:35:46 GMT

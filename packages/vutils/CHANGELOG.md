@@ -1,6 +1,51 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Wed, 19 Jul 2023 12:27:59 GMT and should not be manually modified.
+This log was last generated on Wed, 16 Aug 2023 04:17:45 GMT and should not be manually modified.
+
+## 0.15.7
+Wed, 16 Aug 2023 04:17:45 GMT
+
+_Version update only_
+
+## 0.15.6
+Wed, 16 Aug 2023 03:11:05 GMT
+
+_Version update only_
+
+## 0.15.5
+Fri, 11 Aug 2023 08:33:53 GMT
+
+_Version update only_
+
+## 0.15.4
+Thu, 10 Aug 2023 12:06:21 GMT
+
+_Version update only_
+
+## 0.15.3
+Thu, 10 Aug 2023 09:49:35 GMT
+
+_Version update only_
+
+## 0.15.2
+Mon, 07 Aug 2023 06:37:52 GMT
+
+_Version update only_
+
+## 0.15.1
+Mon, 07 Aug 2023 06:27:29 GMT
+
+_Version update only_
+
+## 0.15.0
+Mon, 07 Aug 2023 06:09:42 GMT
+
+_Version update only_
+
+## 0.14.0
+Thu, 03 Aug 2023 08:03:01 GMT
+
+_Version update only_
 
 ## 0.13.3
 Wed, 19 Jul 2023 12:27:59 GMT
@@ -36,6 +81,11 @@ Tue, 20 Jun 2023 08:44:17 GMT
 ### Minor changes
 
 - release version 0.10.1
+
+### Updates
+
+- release
+- release alpha
 
 ## 0.0.49
 Wed, 31 May 2023 02:35:46 GMT

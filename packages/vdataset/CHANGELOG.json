@@ -2,6 +2,90 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.15.7",
+      "tag": "@visactor/vdataset_v0.15.7",
+      "date": "Wed, 16 Aug 2023 04:17:45 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix the error when parseOption is nill\n\n"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.15.6",
+      "tag": "@visactor/vdataset_v0.15.6",
+      "date": "Wed, 16 Aug 2023 03:11:05 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix the problem that the effect of clone configuration in dataview.parserOption is incorrect\n\n"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.15.5",
+      "tag": "@visactor/vdataset_v0.15.5",
+      "date": "Fri, 11 Aug 2023 08:33:53 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix(fields): fix when the fields are sorted, the domain index does not correspond to the order in which the data appears\n\n"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.15.4",
+      "tag": "@visactor/vdataset_v0.15.4",
+      "date": "Thu, 10 Aug 2023 12:06:21 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix(fields): fix the bug of when unset option to get fields\n\n"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.15.3",
+      "tag": "@visactor/vdataset_v0.15.3",
+      "date": "Thu, 10 Aug 2023 09:49:35 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat(dataview): support setFields in dataView, details in #62\n\n"
+          }
+        ]
+      }
+    },
+    {
+      "version": "0.15.2",
+      "tag": "@visactor/vdataset_v0.15.2",
+      "date": "Mon, 07 Aug 2023 06:37:52 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.1",
+      "tag": "@visactor/vdataset_v0.15.1",
+      "date": "Mon, 07 Aug 2023 06:27:29 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.0",
+      "tag": "@visactor/vdataset_v0.15.0",
+      "date": "Mon, 07 Aug 2023 06:09:42 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.14.0",
+      "tag": "@visactor/vdataset_v0.14.0",
+      "date": "Thu, 03 Aug 2023 08:03:01 GMT",
+      "comments": {}
+    },
+    {
       "version": "0.13.4",
       "tag": "@visactor/vdataset_v0.13.4",
       "date": "Fri, 21 Jul 2023 09:19:13 GMT",

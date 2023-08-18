@@ -2,6 +2,60 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.15.7",
+      "tag": "@visactor/vutils_v0.15.7",
+      "date": "Wed, 16 Aug 2023 04:17:45 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.6",
+      "tag": "@visactor/vutils_v0.15.6",
+      "date": "Wed, 16 Aug 2023 03:11:05 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.5",
+      "tag": "@visactor/vutils_v0.15.5",
+      "date": "Fri, 11 Aug 2023 08:33:53 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.4",
+      "tag": "@visactor/vutils_v0.15.4",
+      "date": "Thu, 10 Aug 2023 12:06:21 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.3",
+      "tag": "@visactor/vutils_v0.15.3",
+      "date": "Thu, 10 Aug 2023 09:49:35 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.2",
+      "tag": "@visactor/vutils_v0.15.2",
+      "date": "Mon, 07 Aug 2023 06:37:52 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.1",
+      "tag": "@visactor/vutils_v0.15.1",
+      "date": "Mon, 07 Aug 2023 06:27:29 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.15.0",
+      "tag": "@visactor/vutils_v0.15.0",
+      "date": "Mon, 07 Aug 2023 06:09:42 GMT",
+      "comments": {}
+    },
+    {
+      "version": "0.14.0",
+      "tag": "@visactor/vutils_v0.14.0",
+      "date": "Thu, 03 Aug 2023 08:03:01 GMT",
+      "comments": {}
+    },
+    {
       "version": "0.13.3",
       "tag": "@visactor/vutils_v0.13.3",
       "date": "Wed, 19 Jul 2023 12:27:59 GMT",

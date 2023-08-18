@@ -1,7 +1,8 @@
-import { range, memoize, isValid } from '@visactor/vutils';
+import { range, memoize } from '@visactor/vutils';
 import { LinearScale } from '../linear-scale';
 import type { TransformType } from '../interface';
 import { niceNumber, restrictNumber } from './utils';
+import type { ContinuousTicksFunc } from '../interface';
 
 const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
@@ -27,7 +28,7 @@ type ForceTicksBaseTransformFunc = (
   untransformer: TransformType
 ) => number[];
 
-export const calculateTicksOfSingleValue = (value: number, tickCount: number, allowDecimals?: boolean) => {
+export const calculateTicksOfSingleValue = (value: number, tickCount: number, noDecimals?: boolean) => {
   let step = 1;
   let start = value;
   const middleIndex = Math.floor((tickCount - 1) / 2);
@@ -37,10 +38,10 @@ export const calculateTicksOfSingleValue = (value: number, tickCount: number, al
     start = 0;
   } else if (value < 0 && value >= -Number.MIN_VALUE) {
     start = -(tickCount - 1);
-  } else if (allowDecimals !== false && absVal < 1) {
+  } else if (!noDecimals && absVal < 1) {
     step = getNickStep(absVal).step;
     // middle = new Decimal(Math.floor(middle.div(step).toNumber())).mul(step);
-  } else if (allowDecimals === false || absVal > 1) {
+  } else if (noDecimals || absVal > 1) {
     start = Math.floor(value) - middleIndex * step;
   }
 
@@ -67,72 +68,87 @@ export const calculateTicksOfSingleValue = (value: number, tickCount: number, al
  * @param count
  * @returns
  */
-export const d3Ticks = memoize<TicksFunc>((start: number, stop: number, count: number) => {
-  let reverse;
-  let i = -1;
-  let n;
-  let ticks;
-  let step;
+export const d3Ticks = memoize<ContinuousTicksFunc>(
+  (start: number, stop: number, count: number, options?: { noDecimals?: boolean }) => {
+    let reverse;
+    let i = -1;
+    let n;
+    let ticks;
+    let step;
 
-  stop = +stop;
-  start = +start;
-  count = +count;
+    stop = +stop;
+    start = +start;
+    count = +count;
 
-  // add check for start equal stop
-  if (start === stop) {
-    return calculateTicksOfSingleValue(start, count);
-  }
+    // add check for start equal stop
+    if (start === stop) {
+      return [start];
+    }
 
-  if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
-    return calculateTicksOfSingleValue(start, count);
-  }
-  if ((reverse = stop < start)) {
-    n = start;
-    start = stop;
-    stop = n;
-  }
-  step = tickIncrement(start, stop, count).step;
-  // why return empty array when stop === 0 ?
-  // if (stop === 0 || !isFinite(step)) {
-  if (!isFinite(step)) {
-    return [];
-  }
+    if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
+      return [start];
+    }
+    if ((reverse = stop < start)) {
+      n = start;
+      start = stop;
+      stop = n;
+    }
+    step = tickIncrement(start, stop, count).step;
+    // why return empty array when stop === 0 ?
+    // if (stop === 0 || !isFinite(step)) {
+    if (!isFinite(step)) {
+      return [];
+    }
 
-  if (step > 0) {
-    let r0 = Math.round(start / step);
-    let r1 = Math.round(stop / step);
-    if (r0 * step < start) {
-      ++r0;
-    }
-    if (r1 * step > stop) {
-      --r1;
-    }
-    ticks = new Array((n = r1 - r0 + 1));
-    while (++i < n) {
-      ticks[i] = (r0 + i) * step;
-    }
-  } else {
-    step = -step;
-    let r0 = Math.round(start * step);
-    let r1 = Math.round(stop * step);
-    if (r0 / step < start) {
-      ++r0;
-    }
-    if (r1 / step > stop) {
-      --r1;
-    }
-    ticks = new Array((n = r1 - r0 + 1));
-    while (++i < n) {
-      ticks[i] = (r0 + i) / step;
-    }
-  }
+    if (step > 0) {
+      let r0 = Math.round(start / step);
+      let r1 = Math.round(stop / step);
+      if (r0 * step < start) {
+        ++r0;
+      }
+      if (r1 * step > stop) {
+        --r1;
+      }
+      ticks = new Array((n = r1 - r0 + 1));
+      while (++i < n) {
+        ticks[i] = (r0 + i) * step;
+      }
+    } else if (step < 0 && options?.noDecimals) {
+      step = 1;
+      const r0 = Math.ceil(start);
+      const r1 = Math.floor(stop);
 
-  if (reverse) {
-    ticks.reverse();
-  }
+      if (r0 <= r1) {
+        ticks = new Array((n = r1 - r0 + 1));
+        while (++i < n) {
+          ticks[i] = r0 + i;
+        }
+      } else {
+        return [];
+      }
+    } else {
+      step = -step;
+      let r0 = Math.round(start * step);
+      let r1 = Math.round(stop * step);
+      if (r0 / step < start) {
+        ++r0;
+      }
+      if (r1 / step > stop) {
+        --r1;
+      }
+      ticks = new Array((n = r1 - r0 + 1));
+      while (++i < n) {
+        ticks[i] = (r0 + i) / step;
+      }
+    }
 
-  return ticks;
-});
+    if (reverse) {
+      ticks.reverse();
+    }
+
+    return ticks;
+  }
+);
 
 const calculateTicksByStep = (start: number, stop: number, step: number) => {
   let i = -1;
@@ -213,63 +229,69 @@ export const appendTicksToCount = (ticks: number[], count: number, step: number)
  * @param count
  * @returns
  */
-export const ticks = memoize<TicksFunc>((start: number, stop: number, count: number) => {
-  let reverse;
-  let ticks;
-  let n;
-  const maxIterations = 5;
+export const ticks = memoize<ContinuousTicksFunc>(
+  (start: number, stop: number, count: number, options?: { noDecimals?: boolean }) => {
+    let reverse;
+    let ticks;
+    let n;
+    const maxIterations = 5;
 
-  stop = +stop;
-  start = +start;
-  count = +count;
+    stop = +stop;
+    start = +start;
+    count = +count;
 
-  // add check for start equal stop
-  if (start === stop) {
-    return calculateTicksOfSingleValue(start, count);
-  }
-
-  if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
-    return calculateTicksOfSingleValue(start, count);
-  }
-  if ((reverse = stop < start)) {
-    n = start;
-    start = stop;
-    stop = n;
-  }
-  const stepRes = tickIncrement(start, stop, count);
-  let step = stepRes.step;
-  // why return empty array when stop === 0 ?
-  // if (stop === 0 || !isFinite(step)) {
-  if (!isFinite(step)) {
-    return [];
-  }
-  if (step > 0) {
-    let cur = 1;
-    const { power, gap } = stepRes;
-    const delatStep = gap === 10 ? 5 * 10 ** power : step;
-    while (
-      cur <= maxIterations &&
-      ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count) &&
-      count > 2
-    ) {
-      step += delatStep;
-
-      cur += 1;
+    // add check for start equal stop
+    if (start === stop) {
+      return calculateTicksOfSingleValue(start, count, options?.noDecimals);
     }
 
-    if (ticks.length < count) {
-      ticks = appendTicksToCount(ticks, count, step);
+    if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
+      return calculateTicksOfSingleValue(start, count, options?.noDecimals);
     }
-  } else {
-    ticks = calculateTicksByStep(start, stop, step);
-  }
+    if ((reverse = stop < start)) {
+      n = start;
+      start = stop;
+      stop = n;
+    }
+    const stepRes = tickIncrement(start, stop, count);
+    let step = stepRes.step;
+    // why return empty array when stop === 0 ?
+    // if (stop === 0 || !isFinite(step)) {
+    if (!isFinite(step)) {
+      return [];
+    }
 
-  if (reverse) {
-    ticks.reverse();
-  }
+    if (step > 0) {
+      let cur = 1;
+      const { power, gap } = stepRes;
+      const delatStep = gap === 10 ? 2 * 10 ** power : 1 * 10 ** power;
+      while (
+        cur <= maxIterations &&
+        ((ticks = calculateTicksByStep(start, stop, step)), ticks.length > count + 1) &&
+        count > 2
+      ) {
+        step += delatStep;
 
-  return ticks;
-});
+        cur += 1;
+      }
+
+      if (count > 2 && ticks.length < count - 1) {
+        ticks = appendTicksToCount(ticks, count, step);
+      }
+    } else {
+      if (options?.noDecimals && step < 0) {
+        step = 1;
+      }
+      ticks = calculateTicksByStep(start, stop, step);
+    }
+
+    if (reverse) {
+      ticks.reverse();
+    }
+
+    return ticks;
+  }
+);
 
 const getNickStep = (step: number) => {
   const power = Math.floor(Math.log(step) / Math.LN10); // 对数取整

@@ -6,11 +6,12 @@ import type {
   TransformType,
   IContinuousScale,
   ContinuousScaleType,
-  TickData
+  TickData,
+  NiceType
 } from './interface';
 import { interpolate } from './utils/interpolate';
 import { bimap, identity, polymap } from './utils/utils';
-import { clamper, toNumber, interpolateNumberRound, interpolateNumber, mixin } from '@visactor/vutils';
+import { clamper, toNumber, interpolateNumberRound, interpolateNumber } from '@visactor/vutils';
 
 export class ContinuousScale extends BaseScale implements IContinuousScale {
   readonly type: ContinuousScaleType;
@@ -18,6 +19,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   protected untransformer: TransformType;
 
   protected _niceDomain: number[];
+  protected _niceType?: NiceType;
   protected _domain: number[];
   protected _range: any[];
   protected _unknown: any = undefined;
@@ -27,6 +29,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   protected _input?: (x: number) => number;
   protected _interpolate?: InterpolateType<any>;
   protected _piecewise: BimapType<any> | PolymapType<any>;
+  protected _domainValidator?: (val: number) => boolean;
 
   _clamp?: (x: number) => number;
 
@@ -56,7 +59,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
 
   scale(x: any): any {
     x = Number(x);
-    if (Number.isNaN(x)) {
+    if (Number.isNaN(x) || (this._domainValidator && !this._domainValidator(x))) {
       return this._unknown;
     }
     if (!this._output) {
@@ -74,7 +77,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     if (!this._input) {
       this._input = (this._piecewise as PolymapType<any>)(
         this._calculateRange(this._range),
-        this._domain.map(this.transformer),
+        (this._niceDomain ?? this._domain).map(this.transformer),
         interpolateNumber
       );
     }
@@ -87,7 +90,9 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     if (!_) {
       return (this._niceDomain ?? this._domain).slice();
     }
-
+    this._domainValidator = null;
+    this._niceType = null;
+    this._niceDomain = null;
     const nextDomain = Array.from(_, toNumber) as [number, number];
 
     this._domain = nextDomain;
