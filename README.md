@@ -15,16 +15,9 @@
 
 VUtil is a general visualization tool for VGrammar.
 
-<p align="center">
-  <a href="">Introduction</a> •
-  <a href="">demo</a> •
-  <a href="">Tutorial</a> •
-  <a href="">API</a>•
-  <a href="">Cross-Platform</a>
-</p>
-
-[![npm Version](https://img.shields.io/npm/v/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
-[![npm Download](https://img.shields.io/npm/dm/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
+![unit test](https://github.com/visactor/vutil/actions/workflows/unit-test.yml/badge.svg?event=push)
+[![npm Version](https://img.shields.io/npm/v/@visactor/vutils.svg)](https://www.npmjs.com/package/@visactor/vutils)
+[![npm Download](https://img.shields.io/npm/dm/@visactor/vutils.svg)](https://www.npmjs.com/package/@visactor/vutils)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/visactor/vutil/blob/main/LICENSE)
 
 </div>

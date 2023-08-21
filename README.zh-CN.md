@@ -15,16 +15,9 @@
 
 VUtil 是 VGrammar 的通用可视化工具包。
 
-<p align="center">
-  <a href="">简介</a> •
-  <a href="">demo</a> •
-  <a href="">教程</a> •
-  <a href="">API</a>•
-  <a href="">跨端</a>
-</p>
-
-[![npm Version](https://img.shields.io/npm/v/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
-[![npm Download](https://img.shields.io/npm/dm/@visactor/vutil.svg)](https://www.npmjs.com/package/@visactor/vutils)
+![unit test](https://github.com/visactor/vutil/actions/workflows/unit-test.yml/badge.svg?event=push)
+[![npm Version](https://img.shields.io/npm/v/@visactor/vutils.svg)](https://www.npmjs.com/package/@visactor/vutils)
+[![npm Download](https://img.shields.io/npm/dm/@visactor/vutils.svg)](https://www.npmjs.com/package/@visactor/vutils)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/visactor/vutil/blob/main/LICENSE)
 
 </div>
