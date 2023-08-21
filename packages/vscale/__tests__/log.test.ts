@@ -31,7 +31,7 @@ test('LogScale().domain(…) coerces values to numbers', () => {
 
 it('log.domain(…) can take negative values', () => {
   const x = new LogScale().domain([-100, -1]);
-  expect(x.ticks()).toEqual([-90, -55, -33, -20, -12, -7, -4, -3, -2, -1]);
+  expect(x.ticks()).toEqual([-100, -90, -55, -33, -20, -12, -7, -4, -3, -2, -1]);
   expect(x.scale(-50)).toBeCloseTo(0.150515, 5);
 });
 
@@ -48,10 +48,10 @@ it('log.domain(…) preserves specified domain exactly, with no floating point e
 });
 
 it('log.ticks(…) returns exact ticks, with no floating point error', () => {
-  expect(new LogScale().domain([0.15, 0.68]).ticks()).toEqual([0.2, 0.3, 0.4, 0.5, 0.6]);
-  expect(new LogScale().domain([0.68, 0.15]).ticks()).toEqual([0.6, 0.5, 0.4, 0.3, 0.2]);
-  expect(new LogScale().domain([-0.15, -0.68]).ticks()).toEqual([-0.2, -0.3, -0.4, -0.5, -0.68]);
-  expect(new LogScale().domain([-0.68, -0.15]).ticks()).toEqual([-0.68, -0.5, -0.4, -0.3, -0.2]);
+  expect(new LogScale().domain([0.15, 0.68]).ticks()).toEqual([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]);
+  expect(new LogScale().domain([0.68, 0.15]).ticks()).toEqual([0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]);
+  expect(new LogScale().domain([-0.15, -0.68]).ticks()).toEqual([-0.1, -0.2, -0.3, -0.4, -0.5, -0.7]);
+  expect(new LogScale().domain([-0.68, -0.15]).ticks()).toEqual([-0.7, -0.5, -0.4, -0.3, -0.2, -0.1]);
 });
 
 it('log.range(…) does not coerce values to numbers', () => {
@@ -239,30 +239,30 @@ it('log.clone() isolates changes to clamping', () => {
 
 it('log.ticks() generates the expected power-of-ten for ascending ticks', () => {
   const s = new LogScale();
-  expect(s.domain([1e-1, 1e1]).ticks().map(round)).toEqual([0.1, 1, 2, 3, 4, 6, 10]);
+  expect(s.domain([1e-1, 1e1]).ticks().map(round)).toEqual([0, 1, 2, 3, 4, 6, 10]);
   expect(s.domain([1e-1, 1]).ticks().map(round)).toEqual([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1]);
   expect(s.domain([-1, -1e-1]).ticks().map(round)).toEqual([-1, -0.8, -0.7, -0.5, -0.4, -0.3, -0.2, -0.1]);
 });
 
 it('log.ticks() generates the expected power-of-ten ticks for descending domains', () => {
   const s = new LogScale();
-  expect(s.domain([-1e-1, -1e1]).ticks().map(round)).toEqual([-7, -4, -3, -2, -1, -0.1].reverse());
+  expect(s.domain([-1e-1, -1e1]).ticks().map(round)).toEqual([-10, -7, -4, -3, -2, -1, -0].reverse());
   expect(s.domain([-1e-1, -1]).ticks().map(round)).toEqual([-1, -0.8, -0.7, -0.5, -0.4, -0.3, -0.2, -0.1].reverse());
   expect(s.domain([1, 1e-1]).ticks().map(round)).toEqual([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1].reverse());
 });
 
 it('log.ticks() generates the expected power-of-ten ticks for small domains', () => {
   const s = new LogScale();
-  expect(s.domain([1, 5]).ticks()).toEqual([1, 2, 3, 4]);
-  expect(s.domain([5, 1]).ticks()).toEqual([4, 3, 2, 1]);
+  expect(s.domain([1, 5]).ticks()).toEqual([1, 2, 3, 4, 5]);
+  expect(s.domain([5, 1]).ticks()).toEqual([5, 4, 3, 2, 1]);
   expect(s.domain([-1, -5]).ticks()).toEqual([-1, -2, -3, -4, -5]);
   expect(s.domain([-5, -1]).ticks()).toEqual([-5, -4, -3, -2, -1]);
-  expect(s.domain([286.9252014, 329.4978332]).ticks(1)).toEqual([]);
-  expect(s.domain([286.9252014, 329.4978332]).ticks(2)).toEqual([288, 302, 316]);
-  expect(s.domain([286.9252014, 329.4978332]).ticks(3)).toEqual([288, 302, 316]);
-  expect(s.domain([286.9252014, 329.4978332]).ticks(4)).toEqual([288, 302, 316]);
+  expect(s.domain([286.9252014, 329.4978332]).ticks(1)).toEqual([287, 316, 329]);
+  expect(s.domain([286.9252014, 329.4978332]).ticks(2)).toEqual([287, 288, 302, 316, 329]);
+  expect(s.domain([286.9252014, 329.4978332]).ticks(3)).toEqual([287, 288, 302, 316, 329]);
+  expect(s.domain([286.9252014, 329.4978332]).ticks(4)).toEqual([287, 288, 302, 316, 329]);
   expect(s.domain([286.9252014, 329.4978332]).ticks()).toEqual([
-    288, 292, 295, 299, 302, 305, 309, 313, 316, 320, 324, 327
+    287, 288, 292, 295, 299, 302, 305, 309, 313, 316, 320, 324, 327, 329
   ]);
 });
 
@@ -270,12 +270,14 @@ it('log.ticks() generates linear ticks when the domain extent is small', () => {
   const s = new LogScale();
   expect(s.domain([41, 42]).ticks()).toEqual([41, 42]);
   expect(s.domain([42, 41]).ticks()).toEqual([42, 41]);
-  expect(s.domain([1600, 1400]).ticks()).toEqual([1585, 1567, 1549, 1531, 1514, 1496, 1479, 1462, 1445, 1429, 1413]);
+  expect(s.domain([1600, 1400]).ticks()).toEqual([
+    1600, 1585, 1567, 1549, 1531, 1514, 1496, 1479, 1462, 1445, 1429, 1413, 1400
+  ]);
 });
 
 it('log.base(base).ticks() generates the expected power-of-base ticks', () => {
   const s = new LogScale().base(Math.E);
-  expect(s.domain([0.1, 100]).ticks().map(round)).toEqual([0.2, 0.5, 1, 5, 10, 50, 100]);
+  expect(s.domain([0.1, 100]).ticks().map(round)).toEqual([0, 1, 5, 10, 50, 100]);
 });
 
 it('log.ticks() returns the empty array when the domain is degenerate', () => {

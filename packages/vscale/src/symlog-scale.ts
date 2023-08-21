@@ -42,7 +42,7 @@ export class SymlogScale extends LinearScale {
   ticks(count: number = 10) {
     // return this.d3Ticks(count);
     const d = this.calculateVisibleDomain(this._range);
-    return ticksBaseTransform(d[0], d[1], count, this._const, this.transformer, this.untransformer);
+    return ticksBaseTransform(d[0], d[d.length - 1], count, this._const, this.transformer, this.untransformer);
   }
 
   /**
@@ -51,7 +51,7 @@ export class SymlogScale extends LinearScale {
    */
   forceTicks(count: number = 10): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return forceTicksBaseTransform(d[0], d[1], count, this.transformer, this.untransformer);
+    return forceTicksBaseTransform(d[0], d[d.length - 1], count, this.transformer, this.untransformer);
   }
 
   /**
@@ -64,12 +64,13 @@ export class SymlogScale extends LinearScale {
   }
 
   nice(): this {
-    return this.domain(
-      nice(this.domain(), {
-        floor: (x: number) => this.untransformer(Math.floor(this.transformer(x))),
-        ceil: (x: number) => this.untransformer(Math.ceil(this.transformer(x)))
-      })
-    );
+    const niceDomain = cloneDeep(this._domain);
+    this._niceDomain = nice(niceDomain, {
+      floor: (x: number) => this.untransformer(Math.floor(this.transformer(x))),
+      ceil: (x: number) => this.untransformer(Math.ceil(this.transformer(x)))
+    }) as number[];
+    this.rescale();
+    return this;
   }
 
   /**
@@ -83,7 +84,8 @@ export class SymlogScale extends LinearScale {
 
     if (this._domain) {
       niceDomain[niceDomain.length - 1] = maxD;
-      this.domain(niceDomain);
+      this._niceDomain = niceDomain;
+      this.rescale();
     }
 
     return this;
@@ -100,7 +102,8 @@ export class SymlogScale extends LinearScale {
 
     if (this._domain) {
       niceDomain[0] = minD;
-      this.domain(niceDomain);
+      this._niceDomain = niceDomain;
+      this.rescale();
     }
 
     return this;

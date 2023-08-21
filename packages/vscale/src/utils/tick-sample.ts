@@ -472,6 +472,10 @@ export function parseNiceOptions(originalDomain: number[], option: NiceOptions) 
   return { niceType, niceDomain, niceMinMax, domainValidator };
 }
 
+export const fixPrecision = (start: number, stop: number, value: number) => {
+  return Math.abs(stop - start) < 1 ? +value.toFixed(1) : Math.round(+value);
+};
+
 export const ticksBaseTransform = memoize<TicksBaseTransformFunc>(
   (
     start: number,
@@ -488,7 +492,7 @@ export const ticksBaseTransform = memoize<TicksBaseTransformFunc>(
     let ticksExp = [];
     // get ticks exp
     if (Number.isInteger(base)) {
-      ticksExp = new LinearScale().domain([startExp, stopExp]).ticks(count);
+      ticksExp = ticks(startExp, stopExp, count);
     } else {
       const stepExp = (stopExp - startExp) / (count - 1);
       for (let i = 0; i < count; i++) {
@@ -500,16 +504,14 @@ export const ticksBaseTransform = memoize<TicksBaseTransformFunc>(
       const power = untransformer(tl);
       // nice
       const nicePower = Number.isInteger(base)
-        ? Math.abs(stop - start) < 1
-          ? +power.toFixed(1)
-          : Math.round(+power)
-        : niceNumber(power);
+        ? fixPrecision(start, stop, power)
+        : fixPrecision(start, stop, niceNumber(power));
       // scope
-      const scopeExp = restrictNumber(nicePower, [start, stop]);
+      const scopePower = fixPrecision(start, stop, restrictNumber(nicePower, [start, stop]));
       // dedupe
-      if (!ticksMap[nicePower] && !isNaN(nicePower) && ticksExp.length > 1) {
-        ticksMap[nicePower] = 1;
-        ticksResult.push(scopeExp);
+      if (!ticksMap[scopePower] && !isNaN(scopePower) && ticksExp.length > 1) {
+        ticksMap[scopePower] = 1;
+        ticksResult.push(scopePower);
       }
     });
     return ticksResult;

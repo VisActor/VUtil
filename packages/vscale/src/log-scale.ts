@@ -50,7 +50,9 @@ export class LogScale extends ContinuousScale {
     const logs = logp(this._base);
     const pows = powp(this._base);
 
-    if (this._domain[0] < 0) {
+    const domain = this._niceDomain ?? this._domain;
+
+    if (domain[0] < 0) {
       this._logs = reflect(logs);
       this._pows = reflect(pows);
 
@@ -150,7 +152,7 @@ export class LogScale extends ContinuousScale {
    */
   forceTicks(count: number = 10): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return forceTicksBaseTransform(d[0], d[1], count, this.transformer, this.untransformer);
+    return forceTicksBaseTransform(d[0], d[d.length - 1], count, this.transformer, this.untransformer);
   }
 
   /**
@@ -159,16 +161,17 @@ export class LogScale extends ContinuousScale {
    */
   stepTicks(step: number): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return forceTicksBaseTransform(d[0], d[1], step, this.transformer, this.untransformer);
+    return forceTicksBaseTransform(d[0], d[d.length - 1], step, this.transformer, this.untransformer);
   }
 
   nice(): this {
-    return this.domain(
-      nice(this.domain(), {
-        floor: (x: number) => this._pows(Math.floor(this._logs(x))),
-        ceil: (x: number) => this._pows(Math.ceil(this._logs(x)))
-      })
-    );
+    const niceDomain = cloneDeep(this._domain);
+    this._niceDomain = nice(niceDomain, {
+      floor: (x: number) => this._pows(Math.floor(this._logs(x))),
+      ceil: (x: number) => this._pows(Math.ceil(this._logs(x)))
+    }) as number[];
+    this.rescale();
+    return this;
   }
 
   /**
@@ -182,7 +185,8 @@ export class LogScale extends ContinuousScale {
 
     if (this._domain) {
       niceDomain[niceDomain.length - 1] = maxD;
-      this.domain(niceDomain);
+      this._niceDomain = niceDomain;
+      this.rescale();
     }
 
     return this;
@@ -199,7 +203,8 @@ export class LogScale extends ContinuousScale {
 
     if (this._domain) {
       niceDomain[0] = minD;
-      this.domain(niceDomain);
+      this._niceDomain = niceDomain;
+      this.rescale();
     }
 
     return this;
