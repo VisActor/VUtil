@@ -11,6 +11,7 @@ export { SqrtScale } from './sqrt-scale';
 export { SymlogScale } from './symlog-scale';
 export { ThresholdScale } from './threshold-scale';
 export { TimeScale } from './time-scale';
+export { IdentityScale } from './identity-scale';
 
 export * from './interface';
 // type

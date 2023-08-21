@@ -1,6 +1,6 @@
 export enum ScaleEnum {
   // identity scale
-  // Identity = 'identity',
+  Identity = 'identity',
 
   // continuous scales
   Linear = 'linear',
