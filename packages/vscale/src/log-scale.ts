@@ -143,7 +143,7 @@ export class LogScale extends ContinuousScale {
   ticks(count: number = 10) {
     // return this.d3Ticks(count);
     const d = this.calculateVisibleDomain(this._range);
-    return ticksBaseTransform(d[0], d[1], count, this._base, this.transformer, this.untransformer);
+    return ticksBaseTransform(d[0], d[d.length - 1], count, this._base, this.transformer, this.untransformer);
   }
 
   /**

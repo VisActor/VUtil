@@ -60,7 +60,7 @@ export class SymlogScale extends LinearScale {
    */
   stepTicks(step: number): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return forceTicksBaseTransform(d[0], d[1], step, this.transformer, this.untransformer);
+    return forceTicksBaseTransform(d[0], d[d.length - 1], step, this.transformer, this.untransformer);
   }
 
   nice(): this {

@@ -29,7 +29,7 @@
     "build": "bundle --clean",
     "dev": "bundle --clean -f es -w",
     "start": "vite ./vite",
-    "test": "jest __tests__/symLog.test.ts",
+    "test": "jest",
     "test-check": "DEBUG=jest jest --forceExit --detectOpenHandles --silent false --verbose false --runInBand",
     "test-cov": "jest -w 16 --coverage"
   },
