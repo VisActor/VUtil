@@ -1,8 +1,8 @@
 import { cloneDeep } from '@visactor/vutils';
-import type { ContinuousScaleType } from './interface';
+import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
 import { LinearScale } from './linear-scale';
 import { ScaleEnum } from './type';
-import { forceTicksBaseTransform, stepTicks, ticksBaseTransform } from './utils/tick-sample';
+import { forceTicksBaseTransform, parseNiceOptions, stepTicks, ticksBaseTransform } from './utils/tick-sample';
 import { symlog, symexp, nice } from './utils/utils';
 
 export class SymlogScale extends LinearScale {
@@ -63,13 +63,44 @@ export class SymlogScale extends LinearScale {
     return forceTicksBaseTransform(d[0], d[d.length - 1], step, this.transformer, this.untransformer);
   }
 
-  nice(): this {
-    const niceDomain = cloneDeep(this._domain);
-    this._niceDomain = nice(niceDomain, {
-      floor: (x: number) => this.untransformer(Math.floor(this.transformer(x))),
-      ceil: (x: number) => this.untransformer(Math.ceil(this.transformer(x)))
-    }) as number[];
-    this.rescale();
+  nice(count: number = 10, option?: NiceOptions): this {
+    const originalDomain = this._domain;
+    let niceMinMax: number[] = [];
+    let niceType: NiceType = null;
+
+    if (option) {
+      const res = parseNiceOptions(originalDomain, option);
+      niceMinMax = res.niceMinMax;
+      this._domainValidator = res.domainValidator;
+
+      niceType = res.niceType;
+
+      if (res.niceDomain) {
+        this._niceDomain = res.niceDomain;
+        this.rescale();
+        return this;
+      }
+    } else {
+      niceType = 'all';
+    }
+
+    if (niceType) {
+      const niceDomain = nice(originalDomain.slice(), {
+        floor: (x: number) => this.untransformer(Math.floor(this.transformer(x))),
+        ceil: (x: number) => this.untransformer(Math.ceil(this.transformer(x)))
+      });
+
+      if (niceType === 'min') {
+        niceDomain[niceDomain.length - 1] = niceMinMax[1] ?? niceDomain[niceDomain.length - 1];
+      } else if (niceType === 'max') {
+        niceDomain[0] = niceMinMax[0] ?? niceDomain[0];
+      }
+
+      this._niceDomain = niceDomain as number[];
+      this.rescale();
+      return this;
+    }
+
     return this;
   }
 
