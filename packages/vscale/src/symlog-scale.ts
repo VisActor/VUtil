@@ -1,4 +1,3 @@
-import { cloneDeep } from '@visactor/vutils';
 import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
 import { LinearScale } from './linear-scale';
 import { ScaleEnum } from './type';
@@ -111,7 +110,7 @@ export class SymlogScale extends LinearScale {
   niceMin(): this {
     const maxD = this._domain[this._domain.length - 1];
     this.nice();
-    const niceDomain = cloneDeep(this._domain);
+    const niceDomain = this._domain.slice();
 
     if (this._domain) {
       niceDomain[niceDomain.length - 1] = maxD;
@@ -129,7 +128,7 @@ export class SymlogScale extends LinearScale {
   niceMax(): this {
     const minD = this._domain[0];
     this.nice();
-    const niceDomain = cloneDeep(this._domain);
+    const niceDomain = this._domain.slice();
 
     if (this._domain) {
       niceDomain[0] = minD;

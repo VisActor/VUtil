@@ -3,7 +3,6 @@ import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
 import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
-import { cloneDeep } from '@visactor/vutils';
 
 /**
  * 逆反函数
@@ -211,7 +210,7 @@ export class LogScale extends ContinuousScale {
   niceMin(): this {
     const maxD = this._domain[this._domain.length - 1];
     this.nice();
-    const niceDomain = cloneDeep(this._domain);
+    const niceDomain = this._domain.slice();
 
     if (this._domain) {
       niceDomain[niceDomain.length - 1] = maxD;
@@ -229,7 +228,7 @@ export class LogScale extends ContinuousScale {
   niceMax(): this {
     const minD = this._domain[0];
     this.nice();
-    const niceDomain = cloneDeep(this._domain);
+    const niceDomain = this._domain.slice();
 
     if (this._domain) {
       niceDomain[0] = minD;
