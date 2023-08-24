@@ -1,6 +1,19 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Wed, 16 Aug 2023 04:17:45 GMT and should not be manually modified.
+This log was last generated on Thu, 24 Aug 2023 07:04:39 GMT and should not be manually modified.
+
+## 0.15.8
+Thu, 24 Aug 2023 07:04:39 GMT
+
+### Patches
+
+- feat(symLog): ticks caculation. feat visactor/vchart#508
+
+### Updates
+
+- feat: add identity-scale
+
+
 
 ## 0.15.7
 Wed, 16 Aug 2023 04:17:45 GMT
