@@ -1,10 +1,31 @@
 import { range, memoize, isNumber } from '@visactor/vutils';
-import type { ContinuousTicksFunc, NiceOptions, NiceType } from '../interface';
+import { LinearScale } from '../linear-scale';
+import type { TransformType, ContinuousTicksFunc, NiceOptions, NiceType } from '../interface';
+import { niceNumber, restrictNumber } from './utils';
 
 const e10 = Math.sqrt(50);
 const e5 = Math.sqrt(10);
 const e2 = Math.sqrt(2);
 const niceNumbers = [1, 2, 5, 10];
+
+type TicksFunc = (start: number, stop: number, count: number) => number[];
+// eslint-disable-next-line max-len
+type TicksBaseTransformFunc = (
+  start: number,
+  stop: number,
+  count: number,
+  base: number,
+  transformer: TransformType,
+  untransformer: TransformType
+) => number[];
+// eslint-disable-next-line max-len
+type ForceTicksBaseTransformFunc = (
+  start: number,
+  stop: number,
+  count: number,
+  transformer: TransformType,
+  untransformer: TransformType
+) => number[];
 
 export const calculateTicksOfSingleValue = (value: number, tickCount: number, noDecimals?: boolean) => {
   let step = 1;
@@ -450,3 +471,67 @@ export function parseNiceOptions(originalDomain: number[], option: NiceOptions) 
 
   return { niceType, niceDomain, niceMinMax, domainValidator };
 }
+
+export const fixPrecision = (start: number, stop: number, value: number) => {
+  return Math.abs(stop - start) < 1 ? +value.toFixed(1) : Math.round(+value);
+};
+
+export const ticksBaseTransform = memoize<TicksBaseTransformFunc>(
+  (
+    start: number,
+    stop: number,
+    count: number,
+    base: number,
+    transformer: TransformType,
+    untransformer: TransformType
+  ) => {
+    const ticksResult: number[] = [];
+    const ticksMap = {};
+    const startExp = transformer(start);
+    const stopExp = transformer(stop);
+    let ticksExp = [];
+    // get ticks exp
+    if (Number.isInteger(base)) {
+      ticksExp = ticks(startExp, stopExp, count);
+    } else {
+      const stepExp = (stopExp - startExp) / (count - 1);
+      for (let i = 0; i < count; i++) {
+        ticksExp.push(startExp + i * stepExp);
+      }
+    }
+    ticksExp.forEach((tl: number) => {
+      // get pow
+      const power = untransformer(tl);
+      // nice
+      const nicePower = Number.isInteger(base)
+        ? fixPrecision(start, stop, power)
+        : fixPrecision(start, stop, niceNumber(power));
+      // scope
+      const scopePower = fixPrecision(start, stop, restrictNumber(nicePower, [start, stop]));
+      // dedupe
+      if (!ticksMap[scopePower] && !isNaN(scopePower) && ticksExp.length > 1) {
+        ticksMap[scopePower] = 1;
+        ticksResult.push(scopePower);
+      }
+    });
+    return ticksResult;
+  }
+);
+
+export const forceTicksBaseTransform = memoize<ForceTicksBaseTransformFunc>(
+  (start: number, stop: number, count: number, transformer: TransformType, untransformer: TransformType) => {
+    const startExp = transformer(start);
+    const stopExp = transformer(stop);
+    const ticksExp = forceTicks(startExp, stopExp, count);
+    return ticksExp.map((te: number) => niceNumber(untransformer(te)));
+  }
+);
+
+export const forceStepTicksBaseTransform = memoize<ForceTicksBaseTransformFunc>(
+  (start: number, stop: number, step: number, transformer: TransformType, untransformer: TransformType) => {
+    const startExp = transformer(start);
+    const stopExp = transformer(stop);
+    const ticksExp = stepTicks(startExp, stopExp, step);
+    return ticksExp.map((te: number) => niceNumber(untransformer(te)));
+  }
+);

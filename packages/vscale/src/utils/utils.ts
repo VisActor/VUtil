@@ -160,3 +160,47 @@ export const nice = (domain: number[] | Date[], options: FloorCeilType<any>) => 
 
   return newDomain;
 };
+
+export const niceNumber = (value: number, round: boolean = false) => {
+  const exponent = Math.floor(Math.log10(value));
+  const fraction = value / Math.pow(10, exponent);
+
+  let niceFraction: number;
+
+  if (round) {
+    if (fraction < 1.5) {
+      niceFraction = 1;
+    } else if (fraction < 3) {
+      niceFraction = 2;
+    } else if (fraction < 7) {
+      niceFraction = 5;
+    } else {
+      niceFraction = 10;
+    }
+  } else {
+    if (fraction <= 1) {
+      niceFraction = 1;
+    } else if (fraction <= 2) {
+      niceFraction = 2;
+    } else if (fraction <= 5) {
+      niceFraction = 5;
+    } else {
+      niceFraction = 10;
+    }
+  }
+
+  return niceFraction * Math.pow(10, exponent);
+};
+
+export const restrictNumber = (value: number, domain: [number, number]) => {
+  let min;
+  let max;
+  if (domain[0] < domain[1]) {
+    min = domain[0];
+    max = domain[1];
+  } else {
+    min = domain[1];
+    max = domain[0];
+  }
+  return Math.min(Math.max(value, min), max);
+};

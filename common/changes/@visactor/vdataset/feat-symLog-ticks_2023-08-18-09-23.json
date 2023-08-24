@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "feat(symLog): ticks caculation. feat visactor/vchart#508",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}

@@ -76,12 +76,15 @@ export function compile(
     let sourcesStream = gulp.src(sources);
     for (const [key, value] of Object.entries(envs)) {
       sourcesStream = sourcesStream.pipe(
-        gulpIF(file => {
-          if (gulpMatch(file, '**/*.d.ts')) {
-            return false;
-          }
-          return true;
-        }, gulpReplace(key, value))
+        gulpIF(
+          file => {
+            if (gulpMatch(file, '**/*.d.ts')) {
+              return false;
+            }
+            return true;
+          },
+          gulpReplace(key, value)
+        )
       );
     }
 

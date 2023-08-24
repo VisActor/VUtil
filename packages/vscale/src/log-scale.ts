@@ -1,4 +1,4 @@
-import { ticks, forceTicks, stepTicks, parseNiceOptions } from './utils/tick-sample';
+import { ticks, ticksBaseTransform, forceTicksBaseTransform, parseNiceOptions } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
@@ -47,6 +47,7 @@ export class LogScale extends ContinuousScale {
 
     const logs = logp(this._base);
     const pows = powp(this._base);
+
     const domain = this._niceDomain ?? this._domain;
 
     if (domain[0] < 0) {
@@ -138,7 +139,9 @@ export class LogScale extends ContinuousScale {
   }
 
   ticks(count: number = 10) {
-    return this.d3Ticks(count);
+    // return this.d3Ticks(count);
+    const d = this.calculateVisibleDomain(this._range);
+    return ticksBaseTransform(d[0], d[d.length - 1], count, this._base, this.transformer, this.untransformer);
   }
 
   /**
@@ -147,7 +150,7 @@ export class LogScale extends ContinuousScale {
    */
   forceTicks(count: number = 10): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return forceTicks(d[0], d[d.length - 1], count);
+    return forceTicksBaseTransform(d[0], d[d.length - 1], count, this.transformer, this.untransformer);
   }
 
   /**
@@ -156,7 +159,7 @@ export class LogScale extends ContinuousScale {
    */
   stepTicks(step: number): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return stepTicks(d[0], d[d.length - 1], step);
+    return forceTicksBaseTransform(d[0], d[d.length - 1], step, this.transformer, this.untransformer);
   }
 
   nice(count: number = 10, option?: NiceOptions): this {
@@ -211,7 +214,8 @@ export class LogScale extends ContinuousScale {
 
     if (this._domain) {
       niceDomain[niceDomain.length - 1] = maxD;
-      this.domain(niceDomain);
+      this._niceDomain = niceDomain;
+      this.rescale();
     }
 
     return this;
@@ -228,7 +232,8 @@ export class LogScale extends ContinuousScale {
 
     if (this._domain) {
       niceDomain[0] = minD;
-      this.domain(niceDomain);
+      this._niceDomain = niceDomain;
+      this.rescale();
     }
 
     return this;

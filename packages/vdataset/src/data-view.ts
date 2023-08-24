@@ -94,7 +94,10 @@ export class DataView {
     del: any;
   };
 
-  constructor(public dataSet: DataSet, public options?: IDataViewOptions) {
+  constructor(
+    public dataSet: DataSet,
+    public options?: IDataViewOptions
+  ) {
     let name;
     if (options?.name) {
       name = options.name;
