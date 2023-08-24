@@ -2,6 +2,23 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.15.8",
+      "tag": "@visactor/vscale_v0.15.8",
+      "date": "Thu, 24 Aug 2023 07:04:39 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add identity-scale\n\n"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "feat(symLog): ticks caculation. feat visactor/vchart#508"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.15.7",
       "tag": "@visactor/vscale_v0.15.7",
       "date": "Wed, 16 Aug 2023 04:17:45 GMT",
