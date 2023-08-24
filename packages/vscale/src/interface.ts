@@ -40,7 +40,7 @@ export type ContinuousScaleType =
   | `${ScaleEnum.Symlog}`
   | `${ScaleEnum.Time}`;
 export type DiscretizingScaleType = `${ScaleEnum.Quantile}` | `${ScaleEnum.Quantize}` | `${ScaleEnum.Threshold}`;
-export type ScaleType = DiscreteScaleType | ContinuousScaleType | DiscretizingScaleType;
+export type ScaleType = DiscreteScaleType | ContinuousScaleType | DiscretizingScaleType | `${ScaleEnum.Identity}`;
 
 export interface IRangeFactor {
   calculateVisibleDomain: (range: any[]) => any;
