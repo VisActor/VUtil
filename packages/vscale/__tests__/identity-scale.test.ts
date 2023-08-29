@@ -3,6 +3,8 @@ import { IdentityScale } from '../src/identity-scale';
 test('IdentityScale of any values', () => {
   const scale = new IdentityScale();
 
+  expect(scale.domain()).toBeUndefined();
+  expect(scale.range()).toBeUndefined();
   expect(scale.scale('x')).toBe('x');
   expect(scale.scale(12)).toBe(12);
 });
