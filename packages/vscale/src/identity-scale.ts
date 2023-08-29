@@ -54,7 +54,7 @@ export class IdentityScale implements IBaseScale {
   domain(_: any[]): this;
   domain(_?: any[]): this | any {
     if (!_) {
-      return this._domain.slice();
+      return this._domain ? this._domain.slice() : undefined;
     }
     this._domain = _;
 
@@ -65,7 +65,7 @@ export class IdentityScale implements IBaseScale {
   range(_: any[]): this;
   range(_?: any[]): this | any {
     if (!_) {
-      return this._domain.slice();
+      return undefined;
     }
 
     return this;
