@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.15.10",
+      "tag": "@visactor/vdataset_v0.15.10",
+      "date": "Mon, 04 Sep 2023 11:52:35 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix bug of dataView parse option when the type is undefiend\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.15.9",
       "tag": "@visactor/vdataset_v0.15.9",
       "date": "Tue, 29 Aug 2023 09:23:40 GMT",

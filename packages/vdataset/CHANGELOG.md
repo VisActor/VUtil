@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Tue, 29 Aug 2023 09:23:40 GMT and should not be manually modified.
+This log was last generated on Mon, 04 Sep 2023 11:52:35 GMT and should not be manually modified.
+
+## 0.15.10
+Mon, 04 Sep 2023 11:52:35 GMT
+
+### Updates
+
+- fix: fix bug of dataView parse option when the type is undefiend
+
+
 
 ## 0.15.9
 Tue, 29 Aug 2023 09:23:40 GMT
