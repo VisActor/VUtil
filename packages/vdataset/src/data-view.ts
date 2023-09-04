@@ -94,10 +94,7 @@ export class DataView {
     del: any;
   };
 
-  constructor(
-    public dataSet: DataSet,
-    public options?: IDataViewOptions
-  ) {
+  constructor(public dataSet: DataSet, public options?: IDataViewOptions) {
     let name;
     if (options?.name) {
       name = options.name;
@@ -127,9 +124,9 @@ export class DataView {
     if (emit) {
       this.target.emit('beforeParse', []);
     }
+    options && (this.parseOption = options);
     const cloneData = this.cloneParseData(data, options);
     if (options?.type) {
-      this.parseOption = options;
       options = cloneDeep(options);
       // 默认bytejson
       const parserFn = this.dataSet.getParser(options.type) ?? this.dataSet.getParser('bytejson');
