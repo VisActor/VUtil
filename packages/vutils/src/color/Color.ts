@@ -225,6 +225,14 @@ function rgba(value: number | number[]): RGB {
   return new RGB(255, 255, 255, 1);
 }
 
+function SRGBToLinear(c: number) {
+  return c < 0.04045 ? c * 0.0773993808 : Math.pow(c * 0.9478672986 + 0.0521327014, 2.4);
+}
+
+function LinearToSRGB(c: number) {
+  return c < 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 0.41666) - 0.055;
+}
+
 export class Color {
   color!: RGB;
 
@@ -339,15 +347,35 @@ export class Color {
   toHsl() {
     return this.color.formatHsl();
   }
-  setOpacity(o = 1) {
-    this.color.opacity = o;
-    return this;
-  }
+
   brighter(k: number) {
     const { r, g, b } = this.color;
     this.color.r = Math.max(0, Math.min(255, Math.floor(r * k)));
     this.color.g = Math.max(0, Math.min(255, Math.floor(g * k)));
     this.color.b = Math.max(0, Math.min(255, Math.floor(b * k)));
+    return this;
+  }
+
+  add(color: Color) {
+    const { r, g, b } = this.color;
+    this.color.r += Math.min(255, r + color.color.r);
+    this.color.g += Math.min(255, g + color.color.g);
+    this.color.b += Math.min(255, b + color.color.b);
+    return this;
+  }
+
+  sub(color: Color) {
+    this.color.r = Math.max(0, this.color.r - color.color.r);
+    this.color.g = Math.max(0, this.color.g - color.color.g);
+    this.color.b = Math.max(0, this.color.b - color.color.b);
+    return this;
+  }
+
+  multiply(color: Color) {
+    const { r, g, b } = this.color;
+    this.color.r = Math.max(0, Math.min(255, Math.floor(r * color.color.r)));
+    this.color.g = Math.max(0, Math.min(255, Math.floor(g * color.color.g)));
+    this.color.b = Math.max(0, Math.min(255, Math.floor(b * color.color.b)));
     return this;
   }
 
@@ -378,6 +406,67 @@ export class Color {
     return this;
   }
 
+  setRGB(r: number, g: number, b: number) {
+    !isNil(r) && (this.color.r = r);
+    !isNil(g) && (this.color.g = g);
+    !isNil(b) && (this.color.b = b);
+
+    return this;
+  }
+
+  setHex(value: string) {
+    const formatValue = `${value}`.trim().toLowerCase();
+    const isHex = REG_HEX.exec(formatValue);
+
+    const hex = parseInt(isHex[1], 16);
+    const hexLength = isHex[1].length;
+    // #fff
+    if (hexLength === 3) {
+      return new RGB(
+        ((hex >> 8) & 0xf) + (((hex >> 8) & 0xf) << 4),
+        ((hex >> 4) & 0xf) + (((hex >> 4) & 0xf) << 4),
+        (hex & 0xf) + ((hex & 0xf) << 4),
+        1
+      );
+    }
+    // #ffffff
+    if (hexLength === 6) {
+      return rgb(hex);
+    }
+    // #ffffffaa
+    else if (hexLength === 8) {
+      return new RGB((hex >> 24) & 0xff, (hex >> 16) & 0xff, (hex >> 8) & 0xff, (hex & 0xff) / 0xff);
+    }
+    return this;
+  }
+
+  setColorName(name: string) {
+    // color keywords
+    const hex = DEFAULT_COLORS[name.toLowerCase()];
+
+    if (typeof hex !== 'undefined') {
+      // red
+      this.setHex(hex);
+    } else {
+      // unknown color
+      console.warn('THREE.Color: Unknown color ' + name);
+    }
+
+    return this;
+  }
+
+  setScalar(scalar: number) {
+    this.color.r = scalar;
+    this.color.g = scalar;
+    this.color.b = scalar;
+    return this;
+  }
+
+  setOpacity(o = 1) {
+    this.color.opacity = o;
+    return this;
+  }
+
   getLuminance() {
     return (0.2126 * this.color.r + 0.7152 * this.color.g + 0.0722 * this.color.b) / 255;
   }
@@ -388,6 +477,61 @@ export class Color {
 
   getLuminance3() {
     return (0.299 * this.color.r + 0.587 * this.color.g + 0.114 * this.color.b) / 255;
+  }
+
+  clone() {
+    return new Color(this.color.toString());
+  }
+
+  copyGammaToLinear(color: Color, gammaFactor = 2.0) {
+    this.color.r = Math.pow(color.color.r, gammaFactor);
+    this.color.g = Math.pow(color.color.g, gammaFactor);
+    this.color.b = Math.pow(color.color.b, gammaFactor);
+    return this;
+  }
+
+  copyLinearToGamma(color: Color, gammaFactor = 2.0) {
+    const safeInverse = gammaFactor > 0 ? 1.0 / gammaFactor : 1.0;
+
+    this.color.r = Math.pow(color.color.r, safeInverse);
+    this.color.g = Math.pow(color.color.g, safeInverse);
+    this.color.b = Math.pow(color.color.b, safeInverse);
+
+    return this;
+  }
+
+  convertGammaToLinear(gammaFactor: number) {
+    this.copyGammaToLinear(this, gammaFactor);
+    return this;
+  }
+
+  convertLinearToGamma(gammaFactor: number) {
+    this.copyLinearToGamma(this, gammaFactor);
+    return this;
+  }
+
+  copySRGBToLinear(color: Color) {
+    this.color.r = SRGBToLinear(color.color.r);
+    this.color.g = SRGBToLinear(color.color.g);
+    this.color.b = SRGBToLinear(color.color.b);
+    return this;
+  }
+
+  copyLinearToSRGB(color: Color) {
+    this.color.r = LinearToSRGB(color.color.r);
+    this.color.g = LinearToSRGB(color.color.g);
+    this.color.b = LinearToSRGB(color.color.b);
+    return this;
+  }
+
+  convertSRGBToLinear() {
+    this.copySRGBToLinear(this);
+    return this;
+  }
+
+  convertLinearToSRGB() {
+    this.copyLinearToSRGB(this);
+    return this;
   }
 }
 
