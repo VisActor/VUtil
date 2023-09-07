@@ -125,9 +125,9 @@ export function getDecimalPlaces(n: number): number {
 }
 
 export function precisionAdd(a: number, b: number) {
-  return fixPrecision(a + b, Math.pow(10, Math.max(getDecimalPlaces(a), getDecimalPlaces(b))));
+  return fixPrecision(a + b, 10 ** Math.max(getDecimalPlaces(a), getDecimalPlaces(b)));
 }
 
 export function precisionSub(a: number, b: number) {
-  return fixPrecision(a - b, Math.pow(10, Math.max(getDecimalPlaces(a), getDecimalPlaces(b))));
+  return fixPrecision(a - b, 10 ** Math.max(getDecimalPlaces(a), getDecimalPlaces(b)));
 }
