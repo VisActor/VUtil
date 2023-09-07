@@ -1,7 +1,6 @@
-import { isNil, isValidNumber, bisect, quantileSorted, ascending } from '@visactor/vutils';
+import { isNil, isValidNumber, bisect, quantileSorted, ascending, arrayEqual } from '@visactor/vutils';
 import type { DiscretizingScaleType, IBaseScale } from './interface';
 import { ScaleEnum } from './type';
-import { equalArray } from './utils/array';
 
 export class QuantileScale implements IBaseScale {
   readonly type: DiscretizingScaleType = ScaleEnum.Quantile;
@@ -77,7 +76,7 @@ export class QuantileScale implements IBaseScale {
       return this._range.slice();
     }
     const nextRange = Array.from(_);
-    if (equalArray(this._range, nextRange)) {
+    if (arrayEqual(this._range, nextRange)) {
       return this;
     }
     this._range = nextRange;

@@ -1,6 +1,5 @@
-import { isValidNumber, bisect } from '@visactor/vutils';
+import { isValidNumber, bisect, arrayEqual } from '@visactor/vutils';
 import { ScaleEnum } from './type';
-import { equalArray } from './utils/array';
 import { forceTicks, niceLinear, stepTicks, ticks } from './utils/tick-sample';
 import type { DiscretizingScaleType, IBaseScale } from './interface';
 
@@ -77,7 +76,7 @@ export class QuantizeScale implements IBaseScale {
       return this._range.slice();
     }
     const nextRange = Array.from(_);
-    if (equalArray(this._range, nextRange)) {
+    if (arrayEqual(this._range, nextRange)) {
       return this;
     }
     this.n = nextRange.length - 1;
