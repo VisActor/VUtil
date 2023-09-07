@@ -1,6 +1,5 @@
-import { isNil } from '../../../common';
-import type { ITextMeasureSpec, ITextSize, TextMeasureMethod } from './interface';
-import { TextMeasure } from './textMeasure';
+import type { ITextMeasureSpec, ITextSize, TextMeasureMethod } from '../../src';
+import { TextMeasure, isNil } from '../../src';
 
 const getNumberChar = () => {
   return TestTextMeasure.NUMBERS_CHAR_SET[Math.floor(Math.random() * TestTextMeasure.NUMBERS_CHAR_SET.length)];
