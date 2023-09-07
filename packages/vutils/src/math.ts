@@ -117,3 +117,17 @@ export function fuzzyEqualVec(a: vec2, b: vec2): boolean {
 export function fixPrecision(num: number, precision = 10) {
   return Math.round(num * precision) / precision;
 }
+
+export function getDecimalPlaces(n: number): number {
+  const dStr = n.toString().split(/[eE]/);
+  const s = (dStr[0].split('.')[1] || '').length - (+dStr[1] || 0);
+  return s > 0 ? s : 0;
+}
+
+export function precisionAdd(a: number, b: number) {
+  return fixPrecision(a + b, Math.pow(10, Math.max(getDecimalPlaces(a), getDecimalPlaces(b))));
+}
+
+export function precisionSub(a: number, b: number) {
+  return fixPrecision(a - b, Math.pow(10, Math.max(getDecimalPlaces(a), getDecimalPlaces(b))));
+}
