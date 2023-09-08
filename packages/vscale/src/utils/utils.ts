@@ -119,6 +119,14 @@ export function bandSpace(count: number, paddingInner: number, paddingOuter: num
   return count ? (space > 0 ? space : 1) : 0;
 }
 
+/** 计算 scale 的实际 range 长度 */
+export function scaleWholeRangeSize(count: number, bandwidth: number, paddingInner: number, paddingOuter: number) {
+  const space = bandSpace(count, paddingInner, paddingOuter);
+  const step = bandwidth / (1 - paddingInner);
+  const wholeLength = space * step;
+  return wholeLength;
+}
+
 export function polymap(domain: number[], range: any[], interpolate: InterpolateType<any>): (x: number) => any {
   const j = Math.min(domain.length, range.length) - 1;
   const d = new Array(j);

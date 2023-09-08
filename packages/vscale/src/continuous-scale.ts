@@ -65,7 +65,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     if (!this._output) {
       this._output = (this._piecewise as PolymapType<any>)(
         (this._niceDomain ?? this._domain).map(this.transformer),
-        this._calculateRange(this._range),
+        this._calculateWholeRange(this._range),
         this._interpolate
       );
     }
@@ -76,7 +76,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   invert(y: any): any {
     if (!this._input) {
       this._input = (this._piecewise as PolymapType<any>)(
-        this._calculateRange(this._range),
+        this._calculateWholeRange(this._range),
         (this._niceDomain ?? this._domain).map(this.transformer),
         interpolateNumber
       );
