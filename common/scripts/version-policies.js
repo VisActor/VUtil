@@ -53,12 +53,13 @@ const readNextBumpFromChanges = () => {
 
   changeRoots.forEach(rootPath => {
     try {
-      const filenames = fs.readdirSync(changeRoot);
+      const filenames = fs.readdirSync(rootPath);
+      console.log(filenames)
   
       if (filenames && filenames.length) {
   
         filenames.forEach(fileName => {
-          const json = JSON.parse(fs.readFileSync(path.join(changeRoot, fileName)).toString());
+          const json = JSON.parse(fs.readFileSync(path.join(rootPath, fileName)).toString());
   
           if (json.changes && json.changes.length) {
             json.changes.forEach(change => {
@@ -72,6 +73,7 @@ const readNextBumpFromChanges = () => {
     } catch (e) {
     }
   })
+  
   return changeType.includes(MAJOR) ? MAJOR : changeType.includes(MINOR) ? MINOR : PATCH;
 }
 

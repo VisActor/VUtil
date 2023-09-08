@@ -1,5 +1,8 @@
 /**
- * prelease
+ * release ['patch' | 'minor' | 'major']
+ * release 0.1.3
+ * 
+ * release
  */
 
 const { spawnSync } = require('child_process')
