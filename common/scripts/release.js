@@ -5,6 +5,7 @@
 const { spawnSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
+const checkAndUpdateNextBump = require('./version-policies');
 
 function getPackageJson(pkgJsonPath) {
   const pkgJson = fs.readFileSync(pkgJsonPath, { encoding: 'utf-8' })
@@ -14,11 +15,9 @@ function getPackageJson(pkgJsonPath) {
 
 function run() {
   const cwd = process.cwd();
-  let packageName = process.argv.slice(2)[0];
-  if(packageName){
-    console.log('\x1b[31m[warning]\x1b[0m no package-name supply!')
-    process.exit(1);
-  }
+  let releaseVersion = process.argv.slice(2)[0];
+
+  checkAndUpdateNextBump(releaseVersion);
 
   // 1. update version of package.json, this operation will remove the common/changes
   spawnSync('sh', ['-c', `rush version --bump`], {
@@ -45,11 +44,11 @@ function run() {
     shell: false,
   });
 
-  const rushJson = getPackageJson(`${cwd}/rush.json`);
-  const package = rushJson.projects.find((project) => project.name === `@visactor/${packageName}`);
+  const rushJson = getPackageJson(path.join(__dirname, '../../rush.json'));
+  const package = rushJson.projects.find((project) => project.name === `@visactor/vutils`);
 
   if (package) {
-    const pkgJsonPath = path.resolve(project.projectFolder, 'package.json')
+    const pkgJsonPath = path.join(__dirname, '../../', project.projectFolder, 'package.json')
     const pkgJson = getPackageJson(pkgJsonPath)
 
     // 5. add tag
