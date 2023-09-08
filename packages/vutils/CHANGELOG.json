@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.15.11",
+      "tag": "@visactor/vutils_v0.15.11",
+      "date": "Thu, 07 Sep 2023 07:01:30 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: support precision math of add & sub\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.15.10",
       "tag": "@visactor/vutils_v0.15.10",
       "date": "Mon, 04 Sep 2023 11:52:35 GMT",
