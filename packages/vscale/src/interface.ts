@@ -89,7 +89,7 @@ export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
   padding: (p?: number | [number, number], slience?: boolean) => this | number;
   paddingInner: (_?: number, slience?: boolean) => any;
   paddingOuter: (_?: number, slience?: boolean) => any;
-  bandwidth: () => number;
+  bandwidth: (_?: number | 'auto', slience?: boolean, isRangeFactorReserved?: boolean) => number;
   step: () => number;
   round: (_?: boolean, slience?: boolean) => this | boolean;
   align: (_?: number, slience?: boolean) => this | number;
