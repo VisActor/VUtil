@@ -16,6 +16,7 @@
     "visual",
     "utility"
   ],
+  "sideEffects": false,
   "scripts": {
     "compile": "tsc --noEmit",
     "eslint": "eslint --debug --fix src/",

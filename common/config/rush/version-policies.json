@@ -1,2 +1,8 @@
-[{"definitionName":"lockStepVersion","policyName":"vutilMain","version":"0.15.11","nextBump":"patch"}]
-
+[
+  {
+    "definitionName": "lockStepVersion",
+    "policyName": "vutilMain",
+    "version": "0.15.11",
+    "nextBump": "patch"
+  }
+]
