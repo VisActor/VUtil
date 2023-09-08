@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.15.12",
+      "tag": "@visactor/vutils_v0.15.12",
+      "date": "Fri, 08 Sep 2023 10:02:51 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "chore: add `\"sideEffects\": false` to vdataset and vutils\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.15.11",
       "tag": "@visactor/vutils_v0.15.11",
       "date": "Thu, 07 Sep 2023 07:01:30 GMT",
