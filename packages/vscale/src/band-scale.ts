@@ -293,7 +293,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     }
     super.rangeFactor(_);
 
-    return this.rescale(slience);
+    return this.rescale(slience, true);
   }
 
   bandwidth(): number;
