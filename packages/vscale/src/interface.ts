@@ -76,7 +76,10 @@ export interface IOrdinalScale extends IBaseScale {
 
 export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
   readonly type: DiscreteScaleType;
-  rangeRound: (_: any[], slience?: boolean) => this;
+  domain: (_?: any[], slience?: boolean, isRangeFactorReserved?: boolean) => this | any;
+  range: (_?: any[], slience?: boolean, isRangeFactorReserved?: boolean) => this | any;
+  rescale: (slience?: boolean, isRangeFactorReserved?: boolean) => this;
+  rangeRound: (_: any[], slience?: boolean, isRangeFactorReserved?: boolean) => this;
   ticks?: (count?: number) => any[];
   /**
    * 生成tick数组，这个tick数组的长度就是count的长度
@@ -86,15 +89,14 @@ export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
    * 基于给定step的ticks数组生成
    */
   stepTicks: (step: number) => any[];
-  padding: (p?: number | [number, number], slience?: boolean) => this | number;
-  paddingInner: (_?: number, slience?: boolean) => any;
-  paddingOuter: (_?: number, slience?: boolean) => any;
+  padding: (p?: number | [number, number], slience?: boolean, isRangeFactorReserved?: boolean) => this | number;
+  paddingInner: (_?: number, slience?: boolean, isRangeFactorReserved?: boolean) => any;
+  paddingOuter: (_?: number, slience?: boolean, isRangeFactorReserved?: boolean) => any;
   bandwidth: (_?: number | 'auto', slience?: boolean, isRangeFactorReserved?: boolean) => number;
   step: () => number;
-  round: (_?: boolean, slience?: boolean) => this | boolean;
-  align: (_?: number, slience?: boolean) => this | number;
+  round: (_?: boolean, slience?: boolean, isRangeFactorReserved?: boolean) => this | boolean;
+  align: (_?: number, slience?: boolean, isRangeFactorReserved?: boolean) => this | number;
   clone: () => IBandLikeScale;
-  rescale: () => this;
 }
 
 export interface IContinuousScale extends IBaseScale, IRangeFactor {
