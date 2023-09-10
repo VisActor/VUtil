@@ -1,6 +1,6 @@
-import { range, toNumber, isGreater, isLess } from '@visactor/vutils';
+import { range, toNumber, isGreater, isLess, isNumber } from '@visactor/vutils';
 import { OrdinalScale } from './ordinal-scale';
-import { bandSpace, scaleWholeRangeSize } from './utils/utils';
+import { bandSpace, calculateBandwidthFromWholeRangeSize, scaleWholeRangeSize } from './utils/utils';
 import { ScaleEnum } from './type';
 import { stepTicks, ticks } from './utils/tick-sample-int';
 import type { DiscreteScaleType, IBandLikeScale, TickData } from './interface';
@@ -12,6 +12,10 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   protected _bandwidth?: number;
   /** 是否固定了 bandwidth */
   protected _isFixed?: boolean;
+  /** 用户配置的 bandwidth */
+  protected _userBandwidth?: number | 'auto';
+  protected _maxBandwidth?: number;
+  protected _minBandwidth?: number;
   protected _round: boolean;
   protected _paddingInner: number;
   protected _paddingOuter: number;
@@ -34,12 +38,12 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     this.rescale(slience);
   }
 
-  rescale(slience?: boolean, isRangeFactorReserved?: boolean): this {
+  rescale(slience?: boolean): this {
     if (slience) {
       return this;
     }
     this._wholeRange = null;
-    const wholeRange = this._calculateWholeRange(this._range, isRangeFactorReserved);
+    const wholeRange = this._calculateWholeRange(this._range);
     const n = super.domain().length;
     const reverse = wholeRange[1] < wholeRange[0];
     let start = wholeRange[Number(reverse) - 0];
@@ -51,12 +55,12 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       this._step = Math.floor(this._step);
     }
     start += (stop - start - this._step * (n - this._paddingInner)) * this._align;
-    if (!this._isBandwidthFixed()) {
+    if (!this.isBandwidthFixed()) {
       this._bandwidth = this._step * (1 - this._paddingInner);
     }
     if (this._round) {
       start = Math.round(start);
-      if (!this._isBandwidthFixed()) {
+      if (!this.isBandwidthFixed()) {
         this._bandwidth = Math.round(this._bandwidth);
       }
     }
@@ -70,15 +74,34 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   /**
    * 根据可见 range 计算 scale 的整体 range
    * @param range 可见 range
-   * @param isRangeFactorReserved 是否保留 rangeFactor
    * @returns
    */
-  protected _calculateWholeRange(range: any[], isRangeFactorReserved?: boolean) {
+  protected _calculateWholeRange(range: any[]) {
     if (this._wholeRange) {
       return this._wholeRange;
     }
 
-    if (this._isBandwidthFixed()) {
+    if ((this._minBandwidth || this._maxBandwidth) && !this._isBandwidthFixedByUser()) {
+      const autoBandwidth = calculateBandwidthFromWholeRangeSize(
+        super.domain().length,
+        Math.abs(range[1] - range[0]),
+        this._paddingInner,
+        this._paddingOuter,
+        this._round
+      );
+      if (autoBandwidth < this._minBandwidth) {
+        this._bandwidth = this._minBandwidth;
+        this._isFixed = true;
+      } else if (autoBandwidth > this._maxBandwidth) {
+        this._bandwidth = this._maxBandwidth;
+        this._isFixed = true;
+      } else {
+        this._bandwidth = undefined;
+        this._isFixed = false;
+      }
+    }
+
+    if (this.isBandwidthFixed()) {
       const wholeLength = scaleWholeRangeSize(
         super.domain().length,
         this._bandwidth,
@@ -86,12 +109,22 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
         this._paddingOuter
       );
 
-      if (isRangeFactorReserved && this._rangeFactor?.length) {
-        const r0 = range[0] - wholeLength * this._rangeFactor[0];
+      const rangeFactorSize = Math.min((range[1] - range[0]) / wholeLength, 1);
+      if (this._rangeFactor?.length) {
+        const [rangeFactorStart, rangeFactorEnd] = this._rangeFactor;
+        const r0 = range[0] - wholeLength * rangeFactorStart;
         const r1 = r0 + wholeLength;
         this._wholeRange = [r0, r1];
+
+        if (rangeFactorStart + rangeFactorSize <= 1) {
+          this._rangeFactor = [rangeFactorStart, rangeFactorStart + rangeFactorSize];
+        } else if (rangeFactorEnd - rangeFactorSize >= 0) {
+          this._rangeFactor = [rangeFactorEnd - rangeFactorSize, rangeFactorEnd];
+        } else {
+          this._rangeFactor = [0, rangeFactorSize];
+        }
       } else {
-        this._rangeFactor = [0, Math.min((range[1] - range[0]) / wholeLength, 1)];
+        this._rangeFactor = [0, rangeFactorSize];
         this._wholeRange = [range[0], range[0] + wholeLength];
       }
 
@@ -101,8 +134,8 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     return super._calculateWholeRange(range);
   }
 
-  calculateWholeRangeSize(isRangeFactorReserved?: boolean) {
-    const wholeRange = this._calculateWholeRange(this._range, isRangeFactorReserved);
+  calculateWholeRangeSize() {
+    const wholeRange = this._calculateWholeRange(this._range);
     return wholeRange[1] - wholeRange[0];
   }
 
@@ -120,30 +153,30 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   }
 
   domain(): any[];
-  domain(_: any[], slience?: boolean, isRangeFactorReserved?: boolean): this;
-  domain(_?: any[], slience?: boolean, isRangeFactorReserved?: boolean): this | any[] {
+  domain(_: any[], slience?: boolean): this;
+  domain(_?: any[], slience?: boolean): this | any[] {
     if (_) {
       super.domain(_);
 
-      return this.rescale(slience, isRangeFactorReserved);
+      return this.rescale(slience);
     }
     return super.domain();
   }
 
   range(): any[];
-  range(_: any[], slience?: boolean, isRangeFactorReserved?: boolean): this;
-  range(_?: any[], slience?: boolean, isRangeFactorReserved?: boolean): this | any[] {
+  range(_: any[], slience?: boolean): this;
+  range(_?: any[], slience?: boolean): this | any[] {
     if (_) {
       this._range = [toNumber(_[0]), toNumber(_[1])];
-      return this.rescale(slience, isRangeFactorReserved);
+      return this.rescale(slience);
     }
     return this._range.slice();
   }
 
-  rangeRound(_: any[], slience?: boolean, isRangeFactorReserved?: boolean): this {
+  rangeRound(_: any[], slience?: boolean): this {
     this._range = [toNumber(_[0]), toNumber(_[1])];
     this._round = true;
-    return this.rescale(slience, isRangeFactorReserved);
+    return this.rescale(slience);
   }
 
   ticks(count: number = 10) {
@@ -230,33 +263,33 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     return this._domain[this._getInvertIndex(d)];
   }
 
-  padding(p: number | number[], slience?: boolean, isRangeFactorReserved?: boolean): this;
+  padding(p: number | number[], slience?: boolean): this;
   padding(): number;
-  padding(p?: number | [number, number], slience?: boolean, isRangeFactorReserved?: boolean): this | number {
+  padding(p?: number | [number, number], slience?: boolean): this | number {
     if (p !== undefined) {
       this._paddingOuter = Math.max(0, Math.min(Array.isArray(p) ? Math.min.apply(null, p) : p));
       this._paddingInner = this._paddingOuter;
-      return this.rescale(slience, isRangeFactorReserved);
+      return this.rescale(slience);
     }
     return this._paddingInner;
   }
 
-  paddingInner(p: number, slience?: boolean, isRangeFactorReserved?: boolean): this;
+  paddingInner(p: number, slience?: boolean): this;
   paddingInner(): number;
-  paddingInner(_?: number, slience?: boolean, isRangeFactorReserved?: boolean) {
+  paddingInner(_?: number, slience?: boolean) {
     if (_ !== undefined) {
       this._paddingInner = Math.max(0, Math.min(1, _));
-      return this.rescale(slience, isRangeFactorReserved);
+      return this.rescale(slience);
     }
     return this._paddingInner;
   }
 
-  paddingOuter(p: number, slience?: boolean, isRangeFactorReserved?: boolean): this;
+  paddingOuter(p: number, slience?: boolean): this;
   paddingOuter(): number;
-  paddingOuter(_?: number, slience?: boolean, isRangeFactorReserved?: boolean) {
+  paddingOuter(_?: number, slience?: boolean) {
     if (_ !== undefined) {
       this._paddingOuter = Math.max(0, Math.min(1, _));
-      return this.rescale(slience, isRangeFactorReserved);
+      return this.rescale(slience);
     }
     return this._paddingOuter;
   }
@@ -265,22 +298,22 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     return this._step;
   }
 
-  round(_: boolean, slience?: boolean, isRangeFactorReserved?: boolean): this;
+  round(_: boolean, slience?: boolean): this;
   round(): boolean;
-  round(_?: boolean, slience?: boolean, isRangeFactorReserved?: boolean): this | boolean {
+  round(_?: boolean, slience?: boolean): this | boolean {
     if (_ !== undefined) {
       this._round = _;
-      return this.rescale(slience, isRangeFactorReserved);
+      return this.rescale(slience);
     }
     return this._round;
   }
 
-  align(_: number, slience?: boolean, isRangeFactorReserved?: boolean): this;
+  align(_: number, slience?: boolean): this;
   align(): number;
-  align(_?: number, slience?: boolean, isRangeFactorReserved?: boolean): this | number {
+  align(_?: number, slience?: boolean): this | number {
     if (_ !== undefined) {
       this._align = Math.max(0, Math.min(1, _));
-      return this.rescale(slience, isRangeFactorReserved);
+      return this.rescale(slience);
     }
     return this._align;
   }
@@ -293,26 +326,60 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     }
     super.rangeFactor(_);
 
-    return this.rescale(slience, true);
+    return this.rescale(slience);
   }
 
   bandwidth(): number;
-  bandwidth(_: number, slience?: boolean, isRangeFactorReserved?: boolean): this;
-  bandwidth(_?: number | 'auto', slience?: boolean, isRangeFactorReserved?: boolean): this | number {
+  bandwidth(_: number | 'auto', slience?: boolean): this;
+  bandwidth(_?: number | 'auto', slience?: boolean): this | number {
     if (!_) {
       return this._bandwidth;
     }
     if (_ === 'auto') {
+      this._bandwidth = undefined;
       this._isFixed = false;
     } else {
       this._bandwidth = _;
       this._isFixed = true;
     }
-    return this.rescale(slience, isRangeFactorReserved);
+    this._userBandwidth = _;
+    return this.rescale(slience);
   }
 
-  protected _isBandwidthFixed() {
-    return this._isFixed && this._bandwidth;
+  maxBandwidth(): number;
+  maxBandwidth(_: number | 'auto', slience?: boolean): this;
+  maxBandwidth(_?: number | 'auto', slience?: boolean): this | number {
+    if (!_) {
+      return this._maxBandwidth;
+    }
+    if (_ === 'auto') {
+      this._maxBandwidth = undefined;
+    } else {
+      this._maxBandwidth = _;
+    }
+    return this.rescale(slience);
+  }
+
+  minBandwidth(): number;
+  minBandwidth(_: number | 'auto', slience?: boolean): this;
+  minBandwidth(_?: number | 'auto', slience?: boolean): this | number {
+    if (!_) {
+      return this._minBandwidth;
+    }
+    if (_ === 'auto') {
+      this._minBandwidth = undefined;
+    } else {
+      this._minBandwidth = _;
+    }
+    return this.rescale(slience);
+  }
+
+  isBandwidthFixed() {
+    return this._isFixed && !!this._bandwidth;
+  }
+
+  protected _isBandwidthFixedByUser() {
+    return this._isFixed && this._userBandwidth && isNumber(this._userBandwidth);
   }
 
   clone(): IBandLikeScale {
@@ -322,11 +389,10 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       .round(this._round, true)
       .paddingInner(this._paddingInner, true)
       .paddingOuter(this._paddingOuter, true)
-      .align(this._align, true);
-    if (this._isBandwidthFixed()) {
-      bandScale.bandwidth(this._bandwidth, true);
-    }
-    bandScale.rescale();
+      .align(this._align, true)
+      .bandwidth(this._userBandwidth ?? 'auto', true)
+      .maxBandwidth(this._maxBandwidth ?? 'auto', true)
+      .minBandwidth(this._maxBandwidth ?? 'auto');
     return bandScale;
   }
 }
