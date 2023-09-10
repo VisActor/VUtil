@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: the start value or end value of rangeFactor in band scale is auto-reserved",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
