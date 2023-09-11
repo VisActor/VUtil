@@ -136,7 +136,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
 
   calculateWholeRangeSize() {
     const wholeRange = this._calculateWholeRange(this._range);
-    return wholeRange[1] - wholeRange[0];
+    return Math.abs(wholeRange[1] - wholeRange[0]);
   }
 
   calculateVisibleDomain(range: any[]) {
