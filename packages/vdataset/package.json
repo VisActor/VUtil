@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vdataset",
-  "version": "0.15.13-alpha.3",
+  "version": "0.15.13-alpha.4",
   "main": "cjs/index.js",
   "module": "es/index.js",
   "types": "es/index.d.ts",
@@ -35,7 +35,7 @@
     "test-cov": "jest -w 16 --coverage"
   },
   "dependencies": {
-    "@visactor/vutils": "workspace:0.15.13-alpha.3",
+    "@visactor/vutils": "workspace:0.15.13-alpha.4",
     "@turf/flatten": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "@turf/rewind": "^6.5.0",
