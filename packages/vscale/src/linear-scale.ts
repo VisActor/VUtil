@@ -61,13 +61,17 @@ export class LinearScale extends ContinuousScale {
       if (this._niceType === 'all') {
         newNiceDomain[0] = ticksResult[0];
         newNiceDomain[newNiceDomain.length - 1] = ticksResult[ticksResult.length - 1];
-      } else if (this._niceType === 'min') {
+        this._niceDomain = newNiceDomain;
+        this.rescale();
+      } else if (this._niceType === 'min' && ticksResult[0] !== start) {
         newNiceDomain[0] = ticksResult[0];
-      } else {
+        this._niceDomain = newNiceDomain;
+        this.rescale();
+      } else if (this._niceType === 'max' && ticksResult[ticksResult.length - 1] !== stop) {
         newNiceDomain[newNiceDomain.length - 1] = ticksResult[ticksResult.length - 1];
+        this._niceDomain = newNiceDomain;
+        this.rescale();
       }
-      this._niceDomain = newNiceDomain;
-      this.rescale();
 
       if (this._niceType !== 'all') {
         const min = Math.min(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
