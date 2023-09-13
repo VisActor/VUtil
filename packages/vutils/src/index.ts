@@ -23,6 +23,7 @@ export * from './math';
 export * from './angle';
 
 // color
+// TODO: 后续删除这个导出，避免引入不需要的内容
 export * as ColorUtil from './color';
 
 // methods about graphics
@@ -43,3 +44,5 @@ export * from './time';
 export * from './dom';
 
 export * from './geo';
+
+export * from './color';
