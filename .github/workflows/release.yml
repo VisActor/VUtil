@@ -51,8 +51,9 @@ jobs:
       - name: Update version
         run: node common/scripts/install-run-rush.js version --bump
 
-      - name: Build packages
+      - name: Build and test packages
         run: node common/scripts/install-run-rush.js build --only tag:package
+      - run: node common/scripts/install-run-rush.js test --only tag:package
 
       - name: Publish to npm
         env:
