@@ -1,13 +1,21 @@
-import { range, toNumber, isGreater, isLess } from '@visactor/vutils';
+import { range, toNumber, isGreater, isLess, isNumber } from '@visactor/vutils';
 import { OrdinalScale } from './ordinal-scale';
-import { bandSpace } from './utils/utils';
+import { bandSpace, calculateBandwidthFromWholeRangeSize, scaleWholeRangeSize } from './utils/utils';
 import { ScaleEnum } from './type';
 import { stepTicks, ticks } from './utils/tick-sample-int';
 import type { DiscreteScaleType, IBandLikeScale, TickData } from './interface';
+
+// band scale 各参数参考图示 https://raw.githubusercontent.com/d3/d3-scale/master/img/band.png
 export class BandScale extends OrdinalScale implements IBandLikeScale {
   readonly type: DiscreteScaleType = ScaleEnum.Band;
   protected _step?: number;
   protected _bandwidth?: number;
+  /** 是否固定了 bandwidth */
+  protected _isFixed?: boolean;
+  /** 用户配置的 bandwidth */
+  protected _userBandwidth?: number | 'auto';
+  protected _maxBandwidth?: number;
+  protected _minBandwidth?: number;
   protected _round: boolean;
   protected _paddingInner: number;
   protected _paddingOuter: number;
@@ -19,6 +27,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     this._range = [0, 1];
     this._step = undefined;
     this._bandwidth = undefined;
+    this._isFixed = false;
     this._round = false;
     this._paddingInner = 0;
     this._paddingOuter = 0;
@@ -34,7 +43,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       return this;
     }
     this._wholeRange = null;
-    const wholeRange = this._calculateRange(this._range);
+    const wholeRange = this._calculateWholeRange(this._range);
     const n = super.domain().length;
     const reverse = wholeRange[1] < wholeRange[0];
     let start = wholeRange[Number(reverse) - 0];
@@ -46,16 +55,88 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       this._step = Math.floor(this._step);
     }
     start += (stop - start - this._step * (n - this._paddingInner)) * this._align;
-    this._bandwidth = this._step * (1 - this._paddingInner);
+    if (!this.isBandwidthFixed()) {
+      this._bandwidth = this._step * (1 - this._paddingInner);
+    }
     if (this._round) {
       start = Math.round(start);
-      this._bandwidth = Math.round(this._bandwidth);
+      if (!this.isBandwidthFixed()) {
+        this._bandwidth = Math.round(this._bandwidth);
+      }
     }
-    const values = range(n).map(i => {
+    const values = range(n).map((i: number) => {
       return start + this._step * i;
     });
     super.range(reverse ? values.reverse() : values);
     return this;
+  }
+
+  /**
+   * 根据可见 range 计算 scale 的整体 range
+   * @param range 可见 range
+   * @returns
+   */
+  protected _calculateWholeRange(range: any[]) {
+    if (this._wholeRange) {
+      return this._wholeRange;
+    }
+
+    if ((this._minBandwidth || this._maxBandwidth) && !this._isBandwidthFixedByUser()) {
+      const autoBandwidth = calculateBandwidthFromWholeRangeSize(
+        super.domain().length,
+        Math.abs(range[1] - range[0]),
+        this._paddingInner,
+        this._paddingOuter,
+        this._round
+      );
+      if (autoBandwidth < this._minBandwidth) {
+        this._bandwidth = this._minBandwidth;
+        this._isFixed = true;
+      } else if (autoBandwidth > this._maxBandwidth) {
+        this._bandwidth = this._maxBandwidth;
+        this._isFixed = true;
+      } else {
+        this._bandwidth = undefined;
+        this._isFixed = false;
+      }
+    }
+
+    if (this.isBandwidthFixed()) {
+      const wholeLength = scaleWholeRangeSize(
+        super.domain().length,
+        this._bandwidth,
+        this._paddingInner,
+        this._paddingOuter
+      );
+
+      const rangeFactorSize = Math.min((range[1] - range[0]) / wholeLength, 1);
+      if (this._rangeFactor?.length) {
+        const [rangeFactorStart, rangeFactorEnd] = this._rangeFactor;
+        const r0 = range[0] - wholeLength * rangeFactorStart;
+        const r1 = r0 + wholeLength;
+        this._wholeRange = [r0, r1];
+
+        if (rangeFactorStart + rangeFactorSize <= 1) {
+          this._rangeFactor = [rangeFactorStart, rangeFactorStart + rangeFactorSize];
+        } else if (rangeFactorEnd - rangeFactorSize >= 0) {
+          this._rangeFactor = [rangeFactorEnd - rangeFactorSize, rangeFactorEnd];
+        } else {
+          this._rangeFactor = [0, rangeFactorSize];
+        }
+      } else {
+        this._rangeFactor = [0, rangeFactorSize];
+        this._wholeRange = [range[0], range[0] + wholeLength];
+      }
+
+      return this._wholeRange;
+    }
+
+    return super._calculateWholeRange(range);
+  }
+
+  calculateWholeRangeSize() {
+    const wholeRange = this._calculateWholeRange(this._range);
+    return Math.abs(wholeRange[1] - wholeRange[0]);
   }
 
   calculateVisibleDomain(range: any[]) {
@@ -148,7 +229,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     // 找到index
     let i = 0;
     const halfStep = this.step() / 2;
-    const halfBandWidth = this.bandwidth() / 2;
+    const halfBandwidth = this.bandwidth() / 2;
     const len = this._domain.length;
     const range = this.range();
     const start = range[0];
@@ -156,7 +237,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     const reverse = start > stop;
 
     for (i = 0; i < len; i++) {
-      const r = this.scale(this._domain[i]) + halfBandWidth;
+      const r = this.scale(this._domain[i]) + halfBandwidth;
 
       if (i === 0 && ((!reverse && !isGreater(d, r + halfStep)) || (reverse && !isLess(d, r - halfStep)))) {
         break;
@@ -213,10 +294,6 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     return this._paddingOuter;
   }
 
-  bandwidth(): number {
-    return this._bandwidth;
-  }
-
   step(): number {
     return this._step;
   }
@@ -252,13 +329,70 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     return this.rescale(slience);
   }
 
+  bandwidth(): number;
+  bandwidth(_: number | 'auto', slience?: boolean): this;
+  bandwidth(_?: number | 'auto', slience?: boolean): this | number {
+    if (!_) {
+      return this._bandwidth;
+    }
+    if (_ === 'auto') {
+      this._bandwidth = undefined;
+      this._isFixed = false;
+    } else {
+      this._bandwidth = _;
+      this._isFixed = true;
+    }
+    this._userBandwidth = _;
+    return this.rescale(slience);
+  }
+
+  maxBandwidth(): number;
+  maxBandwidth(_: number | 'auto', slience?: boolean): this;
+  maxBandwidth(_?: number | 'auto', slience?: boolean): this | number {
+    if (!_) {
+      return this._maxBandwidth;
+    }
+    if (_ === 'auto') {
+      this._maxBandwidth = undefined;
+    } else {
+      this._maxBandwidth = _;
+    }
+    return this.rescale(slience);
+  }
+
+  minBandwidth(): number;
+  minBandwidth(_: number | 'auto', slience?: boolean): this;
+  minBandwidth(_?: number | 'auto', slience?: boolean): this | number {
+    if (!_) {
+      return this._minBandwidth;
+    }
+    if (_ === 'auto') {
+      this._minBandwidth = undefined;
+    } else {
+      this._minBandwidth = _;
+    }
+    return this.rescale(slience);
+  }
+
+  isBandwidthFixed() {
+    return this._isFixed && !!this._bandwidth;
+  }
+
+  protected _isBandwidthFixedByUser() {
+    return this._isFixed && this._userBandwidth && isNumber(this._userBandwidth);
+  }
+
   clone(): IBandLikeScale {
-    return new BandScale(true)
+    const bandScale = new BandScale(true)
       .domain(this._domain, true)
       .range(this._range, true)
       .round(this._round, true)
       .paddingInner(this._paddingInner, true)
       .paddingOuter(this._paddingOuter, true)
-      .align(this._align);
+      .align(this._align, true)
+      .bandwidth(this._userBandwidth ?? 'auto', true)
+      .maxBandwidth(this._maxBandwidth ?? 'auto', true)
+      .minBandwidth(this._maxBandwidth ?? 'auto');
+    return bandScale;
   }
 }
