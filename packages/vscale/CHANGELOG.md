@@ -1,6 +1,15 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Wed, 13 Sep 2023 08:43:53 GMT and should not be manually modified.
+This log was last generated on Wed, 13 Sep 2023 09:03:21 GMT and should not be manually modified.
+
+## 0.15.14
+Wed, 13 Sep 2023 09:03:21 GMT
+
+### Updates
+
+- fix: linear-scale should only call rescale() when need
+
+
 
 ## 0.15.13
 Wed, 13 Sep 2023 08:43:53 GMT
