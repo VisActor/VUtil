@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.15.13",
+      "tag": "@visactor/vutils_v0.15.13",
+      "date": "Wed, 13 Sep 2023 08:43:53 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "refactor: re-export color module"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.15.12",
       "tag": "@visactor/vutils_v0.15.12",
       "date": "Fri, 08 Sep 2023 10:02:51 GMT",
