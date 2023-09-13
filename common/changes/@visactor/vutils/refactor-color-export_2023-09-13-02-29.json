@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "refactor: re-export color module",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
