@@ -53,34 +53,28 @@ export class LinearScale extends ContinuousScale {
       return ticksResult;
     }
 
-    if (
-      (ticksResult[0] !== start && this._niceType === 'max') ||
-      (ticksResult[ticksResult.length - 1] !== stop && this._niceType === 'min')
-    ) {
+    if (this._domainValidator) {
+      ticksResult = ticksResult.filter(this._domainValidator);
+    } else if ((ticksResult[0] !== start || ticksResult[ticksResult.length - 1] !== stop) && this._niceType) {
       const newNiceDomain = curNiceDomain.slice();
 
-      if (this._niceType === 'min') {
+      if (this._niceType === 'all') {
+        newNiceDomain[0] = ticksResult[0];
+        newNiceDomain[newNiceDomain.length - 1] = ticksResult[ticksResult.length - 1];
+      } else if (this._niceType === 'min') {
         newNiceDomain[0] = ticksResult[0];
       } else {
         newNiceDomain[newNiceDomain.length - 1] = ticksResult[ticksResult.length - 1];
       }
-
       this._niceDomain = newNiceDomain;
       this.rescale();
 
-      const min = Math.min(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
-      const max = Math.max(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
+      if (this._niceType !== 'all') {
+        const min = Math.min(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
+        const max = Math.max(newNiceDomain[0], newNiceDomain[newNiceDomain.length - 1]);
 
-      ticksResult = ticksResult.filter((entry: number) => entry >= min && entry <= max);
-    } else if (this._niceType === 'all' && (ticksResult[0] !== start || ticksResult[ticksResult.length - 1] !== stop)) {
-      const newNiceDomain = curNiceDomain.slice();
-
-      newNiceDomain[0] = ticksResult[0];
-      newNiceDomain[newNiceDomain.length - 1] = ticksResult[ticksResult.length - 1];
-      this._niceDomain = newNiceDomain;
-      this.rescale();
-    } else if (this._domainValidator) {
-      ticksResult = ticksResult.filter(this._domainValidator);
+        ticksResult = ticksResult.filter((entry: number) => entry >= min && entry <= max);
+      }
     }
 
     return ticksResult;
