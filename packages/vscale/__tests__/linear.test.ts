@@ -810,3 +810,16 @@ test('linear.ticks(count) will filter ticks when niceMax is true', function () {
   expect(newTicks).toEqual([4, 6, 8, 10, 12]);
   expect(s.domain()).toEqual([originDomain[0], newTicks[newTicks.length - 1]]);
 });
+
+test('linear.ticks(count) will filter ticks when niceMax is true', function () {
+  const originDomain = [0, 45];
+  const s = new LinearScale().domain(originDomain);
+
+  expect(s.domain()).toEqual(originDomain);
+  s.niceMax();
+  expect(s.domain()).toEqual([originDomain[0], 45]);
+
+  const newTicks = s.ticks(5);
+  expect(newTicks).toEqual([0, 10, 20, 30, 40, 50]);
+  expect(s.domain()).toEqual([originDomain[0], newTicks[newTicks.length - 1]]);
+});
