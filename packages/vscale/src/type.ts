@@ -53,6 +53,7 @@ export function isValidScaleType(type: string) {
     case ScaleEnum.Ordinal:
     case ScaleEnum.Point:
     case ScaleEnum.Band:
+    case ScaleEnum.Threshold:
       return true;
     default:
       return false;
