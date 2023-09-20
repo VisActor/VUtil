@@ -9,7 +9,7 @@ export abstract class BaseScale implements IRangeFactor {
   abstract domain(): any[];
   abstract invert(d: any): any;
 
-  protected _calculateRange(range: any[]) {
+  protected _calculateWholeRange(range: any[]) {
     if (this._wholeRange) {
       return this._wholeRange;
     }

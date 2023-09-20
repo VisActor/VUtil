@@ -76,6 +76,9 @@ export interface IOrdinalScale extends IBaseScale {
 
 export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
   readonly type: DiscreteScaleType;
+  domain: (_?: any[], slience?: boolean) => this | any;
+  range: (_?: any[], slience?: boolean) => this | any;
+  rescale: (slience?: boolean) => this;
   rangeRound: (_: any[], slience?: boolean) => this;
   ticks?: (count?: number) => any[];
   /**
@@ -89,12 +92,15 @@ export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
   padding: (p?: number | [number, number], slience?: boolean) => this | number;
   paddingInner: (_?: number, slience?: boolean) => any;
   paddingOuter: (_?: number, slience?: boolean) => any;
-  bandwidth: () => number;
+  bandwidth: (_?: number | 'auto', slience?: boolean) => number;
+  maxBandwidth: (_?: number | 'auto', slience?: boolean) => number;
+  minBandwidth: (_?: number | 'auto', slience?: boolean) => number;
+  /** 当前 bandwidth 是否被固定 */
+  isBandwidthFixed: () => boolean;
   step: () => number;
   round: (_?: boolean, slience?: boolean) => this | boolean;
   align: (_?: number, slience?: boolean) => this | number;
   clone: () => IBandLikeScale;
-  rescale: () => this;
 }
 
 export interface IContinuousScale extends IBaseScale, IRangeFactor {

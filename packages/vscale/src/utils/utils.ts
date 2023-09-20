@@ -1,4 +1,4 @@
-import { bisect } from '@visactor/vutils';
+import { bisect, range } from '@visactor/vutils';
 import type { FloorCeilType, InterpolateType } from '../interface';
 
 export function identity(x: any) {
@@ -117,6 +117,34 @@ export function bandSpace(count: number, paddingInner: number, paddingOuter: num
     space = count - paddingInner + paddingOuter * 2;
   }
   return count ? (space > 0 ? space : 1) : 0;
+}
+
+/** 计算 scale 的实际 range 长度 */
+export function scaleWholeRangeSize(count: number, bandwidth: number, paddingInner: number, paddingOuter: number) {
+  const space = bandSpace(count, paddingInner, paddingOuter);
+  const step = bandwidth / (1 - paddingInner);
+  const wholeSize = space * step;
+  return wholeSize;
+}
+
+/** 根据 scale 的实际 range 长度计算 bandwidth */
+export function calculateBandwidthFromWholeRangeSize(
+  count: number,
+  wholeSize: number,
+  paddingInner: number,
+  paddingOuter: number,
+  round: boolean
+) {
+  const space = bandSpace(count, paddingInner, paddingOuter);
+  let step = wholeSize / Math.max(1, space || 1);
+  if (round) {
+    step = Math.floor(step);
+  }
+  let bandwidth = step * (1 - paddingInner);
+  if (round) {
+    bandwidth = Math.round(bandwidth);
+  }
+  return bandwidth;
 }
 
 export function polymap(domain: number[], range: any[], interpolate: InterpolateType<any>): (x: number) => any {

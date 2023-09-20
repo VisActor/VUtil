@@ -1,6 +1,17 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Wed, 13 Sep 2023 09:03:21 GMT and should not be manually modified.
+This log was last generated on Thu, 14 Sep 2023 08:04:22 GMT and should not be manually modified.
+
+## 0.16.0
+Thu, 14 Sep 2023 08:04:22 GMT
+
+### Updates
+
+- feat: band scale support fixed band width
+- fix: solve the invalid rangeFactor() method of band scale
+- fix: update exported types of `IBandLikeScale`
+- fix: the start value or end value of rangeFactor in band scale is auto-reserved
+- fix: keep the `bandScale.calculateWholeRangeSize()` return result positive
 
 ## 0.15.14
 Wed, 13 Sep 2023 09:03:21 GMT
