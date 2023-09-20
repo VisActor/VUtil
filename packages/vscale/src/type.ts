@@ -28,6 +28,11 @@ export enum ScaleEnum {
   // BinOrdinal = 'bin-ordinal',
 }
 
+const EnableScaleMap = {};
+Object.values(ScaleEnum).forEach(v => {
+  EnableScaleMap[v] = true;
+});
+
 export function isContinuous(type: string) {
   switch (type) {
     case ScaleEnum.Linear:
@@ -43,21 +48,7 @@ export function isContinuous(type: string) {
 }
 
 export function isValidScaleType(type: string) {
-  switch (type) {
-    case ScaleEnum.Linear:
-    case ScaleEnum.Log:
-    case ScaleEnum.Pow:
-    case ScaleEnum.Sqrt:
-    case ScaleEnum.Symlog:
-    case ScaleEnum.Time:
-    case ScaleEnum.Ordinal:
-    case ScaleEnum.Point:
-    case ScaleEnum.Band:
-    case ScaleEnum.Threshold:
-      return true;
-    default:
-      return false;
-  }
+  return !!EnableScaleMap[type];
 }
 
 export function isDiscrete(type: string) {
