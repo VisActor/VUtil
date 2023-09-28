@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.16.1",
+      "tag": "@visactor/vscale_v0.16.1",
+      "date": "Wed, 20 Sep 2023 07:58:12 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix isValidScale did not include threshold scale\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.16.0",
       "tag": "@visactor/vscale_v0.16.0",
       "date": "Thu, 14 Sep 2023 08:04:22 GMT",
