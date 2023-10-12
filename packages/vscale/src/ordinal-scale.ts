@@ -67,7 +67,9 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
       i = this._domain.push(d);
       this._index.set(key, i);
     }
-    return this._ordinalRange[(i - 1) % this._ordinalRange.length];
+    const output = this._ordinalRange[(i - 1) % this._ordinalRange.length];
+
+    return this._fishEyeTransform ? this._fishEyeTransform(output) : output;
   }
 
   // d3-scale里没有对ordinal-scale添加invert能力，这里只做简单的映射

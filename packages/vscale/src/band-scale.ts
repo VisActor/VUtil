@@ -3,7 +3,7 @@ import { OrdinalScale } from './ordinal-scale';
 import { bandSpace, calculateBandwidthFromWholeRangeSize, scaleWholeRangeSize } from './utils/utils';
 import { ScaleEnum } from './type';
 import { stepTicks, ticks } from './utils/tick-sample-int';
-import type { DiscreteScaleType, IBandLikeScale, TickData } from './interface';
+import type { DiscreteScaleType, IBandLikeScale, ScaleFishEyeOptions, TickData } from './interface';
 
 // band scale 各参数参考图示 https://raw.githubusercontent.com/d3/d3-scale/master/img/band.png
 export class BandScale extends OrdinalScale implements IBandLikeScale {
@@ -68,6 +68,9 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       return start + this._step * i;
     });
     super.range(reverse ? values.reverse() : values);
+
+    this.generateFishEyeTransform();
+
     return this;
   }
 
@@ -372,6 +375,19 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       this._minBandwidth = _;
     }
     return this.rescale(slience);
+  }
+
+  fishEye(): ScaleFishEyeOptions;
+  fishEye(options: ScaleFishEyeOptions, slience?: boolean, clear?: boolean): this;
+  fishEye(options?: ScaleFishEyeOptions, slience?: boolean, clear?: boolean): this | ScaleFishEyeOptions {
+    if (options || clear) {
+      this._fishEyeOptions = options;
+      this._fishEyeTransform = null;
+
+      return this.rescale(slience);
+    }
+
+    return this._fishEyeOptions;
   }
 
   isBandwidthFixed() {

@@ -7,7 +7,8 @@ import type {
   IContinuousScale,
   ContinuousScaleType,
   TickData,
-  NiceType
+  NiceType,
+  ScaleFishEyeOptions
 } from './interface';
 import { interpolate } from './utils/interpolate';
 import { bimap, identity, polymap } from './utils/utils';
@@ -57,6 +58,19 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     return this._niceDomain ?? this._domain;
   }
 
+  fishEye(): ScaleFishEyeOptions;
+  fishEye(options: ScaleFishEyeOptions, slience?: boolean, clear?: boolean): this;
+  fishEye(options?: ScaleFishEyeOptions, slience?: boolean, clear?: boolean): this | ScaleFishEyeOptions {
+    if (options || clear) {
+      this._fishEyeOptions = options;
+      this._fishEyeTransform = null;
+
+      return this.rescale(slience);
+    }
+
+    return this._fishEyeOptions;
+  }
+
   scale(x: any): any {
     x = Number(x);
     if (Number.isNaN(x) || (this._domainValidator && !this._domainValidator(x))) {
@@ -69,8 +83,9 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
         this._interpolate
       );
     }
+    const output = this._output(this.transformer(this._clamp(x)));
 
-    return this._output(this.transformer(this._clamp(x)));
+    return this._fishEyeTransform ? this._fishEyeTransform(output) : output;
   }
 
   invert(y: any): any {
@@ -145,6 +160,8 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     this._piecewise = n > 2 ? polymap : bimap;
     this._output = this._input = null;
     this._wholeRange = null;
+
+    this.generateFishEyeTransform();
     return this;
   }
 
