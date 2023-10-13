@@ -1,6 +1,15 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Wed, 20 Sep 2023 07:58:12 GMT and should not be manually modified.
+This log was last generated on Fri, 13 Oct 2023 01:57:05 GMT and should not be manually modified.
+
+## 0.16.2
+Fri, 13 Oct 2023 01:57:05 GMT
+
+### Updates
+
+- feat: add fish eye effect of scale
+
+
 
 ## 0.16.1
 Wed, 20 Sep 2023 07:58:12 GMT
