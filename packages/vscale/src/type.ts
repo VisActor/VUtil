@@ -72,3 +72,18 @@ export function isDiscretizing(type: string) {
       return false;
   }
 }
+export function supportRangeFactor(type: string) {
+  switch (type) {
+    case ScaleEnum.Linear:
+    case ScaleEnum.Log:
+    case ScaleEnum.Pow:
+    case ScaleEnum.Sqrt:
+    case ScaleEnum.Symlog:
+    case ScaleEnum.Time:
+    case ScaleEnum.Ordinal:
+    case ScaleEnum.Point:
+      return true;
+    default:
+      return false;
+  }
+}

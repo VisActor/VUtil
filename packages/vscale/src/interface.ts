@@ -44,7 +44,7 @@ export type ScaleType = DiscreteScaleType | ContinuousScaleType | DiscretizingSc
 
 export interface IRangeFactor {
   calculateVisibleDomain: (range: any[]) => any;
-  rangeFactor: (_?: [number, number], slience?: boolean) => this | any;
+  rangeFactor: (_?: [number, number], slience?: boolean, clear?: boolean) => this | any;
   unknown: (_?: any) => this | any;
 }
 
@@ -101,6 +101,7 @@ export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
   round: (_?: boolean, slience?: boolean) => this | boolean;
   align: (_?: number, slience?: boolean) => this | number;
   clone: () => IBandLikeScale;
+  fishEye: (options?: ScaleFishEyeOptions, slience?: boolean, clear?: boolean) => this | ScaleFishEyeOptions;
 }
 
 export interface IContinuousScale extends IBaseScale, IRangeFactor {
@@ -111,6 +112,7 @@ export interface IContinuousScale extends IBaseScale, IRangeFactor {
   interpolate: (_?: InterpolateType<any>, slience?: boolean) => this | InterpolateType<any>;
   clone?: () => IContinuousScale;
   rescale: () => this;
+  fishEye: (options?: ScaleFishEyeOptions, slience?: boolean, clear?: boolean) => this | ScaleFishEyeOptions;
 }
 
 export type ILinearScale = IContinuousScale & IContinuesScaleTicks;
@@ -166,3 +168,10 @@ export interface NiceOptions {
 }
 
 export type NiceType = 'all' | 'min' | 'max';
+
+export interface ScaleFishEyeOptions {
+  distortion?: number;
+  focus?: number;
+  radius?: number;
+  radiusRatio?: number;
+}
