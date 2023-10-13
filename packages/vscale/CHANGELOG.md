@@ -1,6 +1,15 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Fri, 13 Oct 2023 01:57:05 GMT and should not be manually modified.
+This log was last generated on Fri, 13 Oct 2023 06:09:58 GMT and should not be manually modified.
+
+## 0.16.3
+Fri, 13 Oct 2023 06:09:58 GMT
+
+### Updates
+
+- fix: fix the fucntion `supportRangeFactor()`
+
+
 
 ## 0.16.2
 Fri, 13 Oct 2023 01:57:05 GMT
