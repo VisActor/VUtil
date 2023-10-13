@@ -80,7 +80,7 @@ export function supportRangeFactor(type: string) {
     case ScaleEnum.Sqrt:
     case ScaleEnum.Symlog:
     case ScaleEnum.Time:
-    case ScaleEnum.Ordinal:
+    case ScaleEnum.Band:
     case ScaleEnum.Point:
       return true;
     default:
