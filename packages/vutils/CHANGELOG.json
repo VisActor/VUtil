@@ -2,6 +2,12 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.16.4",
+      "tag": "@visactor/vutils_v0.16.4",
+      "date": "Mon, 16 Oct 2023 08:53:51 GMT",
+      "comments": {}
+    },
+    {
       "version": "0.16.3",
       "tag": "@visactor/vutils_v0.16.3",
       "date": "Fri, 13 Oct 2023 06:09:58 GMT",
