@@ -99,7 +99,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
         this._bandwidth = this._maxBandwidth;
         this._isFixed = true;
       } else {
-        this._bandwidth = undefined;
+        this._bandwidth = autoBandwidth;
         this._isFixed = false;
       }
     }
