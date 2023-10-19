@@ -63,7 +63,7 @@ export class DataView {
   /**
    * 中间态数据，默认 history false 不存储
    */
-  historyData: any[] = [];
+  historyData: any[];
 
   /**
    * parser后的数据
@@ -81,10 +81,10 @@ export class DataView {
   protected _fields: IFields = null;
 
   // diff用数据id
-  private _diffData: boolean = false;
-  private _diffKeys: string[] = null;
-  _diffMap: Map<string, any> = new Map();
-  _diffRank: number = 0;
+  private _diffData: boolean;
+  private _diffKeys: string[];
+  _diffMap: Map<string, any>;
+  _diffRank: number;
 
   // tag
 
@@ -105,6 +105,7 @@ export class DataView {
 
     if (options?.history) {
       this.history = options.history;
+      this.historyData = [];
     }
 
     this.dataSet.setDataView(name, this);
@@ -127,7 +128,6 @@ export class DataView {
     options && (this.parseOption = options);
     const cloneData = this.cloneParseData(data, options);
     if (options?.type) {
-      options = cloneDeep(options);
       // 默认bytejson
       const parserFn = this.dataSet.getParser(options.type) ?? this.dataSet.getParser('bytejson');
 
@@ -178,7 +178,7 @@ export class DataView {
       pushOption && this.transformsArr.push(options);
       if (execute) {
         const lastTag = this.isLastTransform(options);
-        options = cloneDeep(options);
+
         this.executeTransform(options);
         if (lastTag) {
           this.diffLastData();
@@ -195,7 +195,9 @@ export class DataView {
   }
 
   sortTransform() {
-    this.transformsArr.sort((a, b) => (a.level ?? 0) - (b.level ?? 0));
+    if (this.transformsArr.length >= 2) {
+      this.transformsArr.sort((a, b) => (a.level ?? 0) - (b.level ?? 0));
+    }
   }
 
   private executeTransform(
@@ -234,24 +236,29 @@ export class DataView {
     this.isRunning = true;
     this.resetTransformData();
     this.transformsArr.forEach(t => {
-      this.executeTransform(t, { ...opt, emitMessage: false });
+      this.executeTransform(t, { pushHistory: opt.pushHistory, emitMessage: false });
       if (this.isLastTransform(t)) {
         this.diffLastData();
       }
     });
     this.isRunning = false;
-    opt?.emitMessage !== false && this.target.emit('change', []);
+
+    opt.emitMessage !== false && this.target.emit('change', []);
     return this;
   };
 
   enableDiff(keys: string[]) {
     this._diffData = true;
     this._diffKeys = keys;
+
+    this._diffMap = new Map();
+    this._diffRank = 0;
   }
 
   disableDiff() {
     this._diffData = false;
-    this.resetDiff();
+    this._diffMap = null;
+    this._diffRank = null;
   }
 
   resetDiff() {
@@ -390,7 +397,8 @@ export class DataView {
 
   destroy() {
     this.dataSet.removeDataView(this.name);
-    this.resetDiff();
+    this._diffMap = null;
+    this._diffRank = null;
     this.latestData = null;
     this.rawData = null;
     this.parserData = null;
