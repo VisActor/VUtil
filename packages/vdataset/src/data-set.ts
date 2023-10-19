@@ -40,7 +40,7 @@ export class DataSet {
    * 多 DataView消息监听工具
    */
   // eslint-disable-next-line @typescript-eslint/ban-types
-  _callMap: Map<Function, (...args: any[]) => void> = new Map();
+  _callMap: Map<Function, (...args: any[]) => void>;
 
   constructor(public options?: IDataSetOptions) {
     let name;
@@ -144,6 +144,10 @@ export class DataSet {
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   multipleDataViewAddListener(list: DataView[], event: string, call: Function) {
+    if (!this._callMap) {
+      this._callMap = new Map();
+    }
+
     let callAd = this._callMap.get(call);
     if (!callAd) {
       callAd = () => {
@@ -159,19 +163,21 @@ export class DataSet {
     this._callMap.set(call, callAd);
   }
 
-  allDataViewAddListener(event: string, call: Function) {
+  allDataViewAddListener(event: string, call: () => void) {
     this.multipleDataViewAddListener(Object.values(this.dataViewMap), event, call);
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   multipleDataViewRemoveListener(list: DataView[], event: string, call: Function) {
-    const callAd = this._callMap.get(call);
-    if (callAd) {
-      list.forEach(l => {
-        l.target.removeListener(event, callAd);
-      });
+    if (this._callMap) {
+      const callAd = this._callMap.get(call);
+      if (callAd) {
+        list.forEach(l => {
+          l.target.removeListener(event, callAd);
+        });
+      }
+      this._callMap.delete(call);
     }
-    this._callMap.delete(call);
   }
 
   multipleDataViewUpdateInParse(newData: { name: string; data: any; options?: IParserOptions }[]) {
