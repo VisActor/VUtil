@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Thu, 19 Oct 2023 02:37:41 GMT and should not be manually modified.
+This log was last generated on Thu, 26 Oct 2023 07:42:04 GMT and should not be manually modified.
+
+## 0.16.6
+Thu, 26 Oct 2023 07:42:04 GMT
+
+### Updates
+
+- fix: fix is base64 reg issue
 
 ## 0.16.5
 Thu, 19 Oct 2023 02:37:41 GMT
