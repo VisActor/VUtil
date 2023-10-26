@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix: fix is base64 reg issue",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
