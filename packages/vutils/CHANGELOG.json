@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.16.6",
+      "tag": "@visactor/vutils_v0.16.6",
+      "date": "Thu, 26 Oct 2023 07:42:04 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix is base64 reg issue"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.16.5",
       "tag": "@visactor/vutils_v0.16.5",
       "date": "Thu, 19 Oct 2023 02:37:41 GMT",
