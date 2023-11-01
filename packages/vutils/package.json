@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vutils",
-  "version": "0.16.6",
+  "version": "0.16.7-alpha.0",
   "main": "cjs/index.js",
   "module": "es/index.js",
   "types": "es/index.d.ts",
