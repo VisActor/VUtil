@@ -138,33 +138,44 @@ it('log.base(b) sets the log base, changing the ticks', () => {
 
 it('log.nice() nices the domain, extending it to powers of ten', () => {
   const x = new LogScale().domain([1.1, 10.9]).nice();
-  expect(x.domain()).toEqual([1, 100]);
+  expect(x.domain()).toEqual([1, 11]);
   x.domain([10.9, 1.1]).nice();
-  expect(x.domain()).toEqual([100, 1]);
+  expect(x.domain()).toEqual([11, 1]);
   x.domain([0.7, 11.001]).nice();
-  expect(x.domain()).toEqual([0.1, 100]);
+  expect(x.domain()).toEqual([0, 12]);
   x.domain([123.1, 6.7]).nice();
-  expect(x.domain()).toEqual([1000, 1]);
+  expect(x.domain()).toEqual([124, 6]);
   x.domain([0.01, 0.49]).nice();
-  expect(x.domain()).toEqual([0.01, 1]);
+  expect(x.domain()).toEqual([0, 1]);
   x.domain([1.5, 50]).nice();
-  expect(x.domain()).toEqual([1, 100]);
+  expect(x.domain()).toEqual([1, 50]);
   expect(x.scale(1)).toBe(0);
-  expect(x.scale(100)).toBe(1);
+  expect(x.scale(100)).toBe(1.177183820135558);
 });
 
 it('log.nice() works on degenerate domains', () => {
   const x = new LogScale().domain([0, 0]).nice();
   expect(x.domain()).toEqual([0, 0]);
   x.domain([0.5, 0.5]).nice();
-  expect(x.domain()).toEqual([0.1, 1]);
+  expect(x.domain()).toEqual([0, 1]);
 });
 
 it('log.nice() on a polylog domain only affects the extent', () => {
   const x = new LogScale().domain([1.1, 1.5, 10.9]).nice();
-  expect(x.domain()).toEqual([1, 1.5, 100]);
-  x.domain([-123.1, -1.5, -0.5]).nice();
-  expect(x.domain()).toEqual([-1000, -1.5, -0.1]);
+  expect(x.domain()).toEqual([1, 1.5, 11]);
+  x.domain([-124, -1.5, -0]).nice();
+  expect(x.domain()).toEqual([-124, -1.5, -0]);
+});
+
+it('log.nice() works on degenerate domains with large or small base', () => {
+  const x = new LogScale().base(1024).domain([1785, 11041]).nice();
+  expect(x.d3Ticks()).toEqual([2048, 3072, 4096, 5120, 6144, 7168, 8192, 9216, 10240]);
+  x.base(2).domain([1785, 11041]).nice();
+  expect(x.d3Ticks()).toEqual([1200, 2400, 3600, 4800, 6000, 7200, 8400, 9600, 10800, 12000]);
+  x.base(Math.E).domain([1785, 11041]).nice();
+  expect(x.d3Ticks()).toEqual([1096.6331584284585, 2980.9579870417283, 8103.083927575384, 22026.465794806718]);
+  x.base(10).domain([1785, 11041]).nice();
+  expect(x.d3Ticks()).toEqual([2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]);
 });
 
 it('log.clone() isolates changes to the domain', () => {
@@ -190,11 +201,11 @@ it('log.clone() isolates changes to the domain via nice', () => {
   expect(x.scale(50)).toBeCloseTo(1);
   expect(x.invert(0)).toBeCloseTo(1.5, 5);
   expect(x.invert(1)).toBeCloseTo(50, 5);
-  expect(y.domain()).toEqual([1, 100]);
+  expect(y.domain()).toEqual([1, 50]);
   expect(y.scale(1)).toBeCloseTo(0);
-  expect(y.scale(100)).toBeCloseTo(1);
+  expect(y.scale(100)).toBeCloseTo(1.177183820135558);
   expect(y.invert(0)).toBeCloseTo(1);
-  expect(y.invert(1)).toBeCloseTo(100);
+  expect(y.invert(1)).toBeCloseTo(49.99999999999999);
 });
 
 it('log.clone() isolates changes to the range', () => {

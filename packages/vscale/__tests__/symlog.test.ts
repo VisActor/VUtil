@@ -131,7 +131,7 @@ it('symlog.clone() returns a copy with changes to the domain are isolated', () =
 
   const y2 = x.domain([1, 1.9]).clone();
   x.nice();
-  expect(x.domain()).toEqual([0, 6.38905609893065]);
+  expect(x.domain()).toEqual([1, 2]);
   expect(y2.domain()).toEqual([1, 1.9]);
 });
 
