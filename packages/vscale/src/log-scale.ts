@@ -185,8 +185,8 @@ export class LogScale extends ContinuousScale {
 
     if (niceType) {
       const niceDomain = nice(originalDomain.slice(), {
-        floor: (x: number) => this._pows(Math.floor(this._logs(x))),
-        ceil: (x: number) => this._pows(Math.ceil(this._logs(x)))
+        floor: (x: number) => Math.floor(x),
+        ceil: (x: number) => Math.ceil(x)
       });
 
       if (niceType === 'min') {

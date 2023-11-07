@@ -85,8 +85,8 @@ export class SymlogScale extends LinearScale {
 
     if (niceType) {
       const niceDomain = nice(originalDomain.slice(), {
-        floor: (x: number) => this.untransformer(Math.floor(this.transformer(x))),
-        ceil: (x: number) => this.untransformer(Math.ceil(this.transformer(x)))
+        floor: (x: number) => Math.floor(x),
+        ceil: (x: number) => Math.ceil(x)
       });
 
       if (niceType === 'min') {
