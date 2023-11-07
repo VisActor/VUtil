@@ -167,7 +167,7 @@ it('log.nice() on a polylog domain only affects the extent', () => {
   expect(x.domain()).toEqual([-124, -1.5, -0]);
 });
 
-it('log.nice() works on degenerate domains with large or small base', () => {
+it('log.nice() works on large domains with large or small base', () => {
   const x = new LogScale().base(1024).domain([1785, 11041]).nice();
   expect(x.d3Ticks()).toEqual([2048, 3072, 4096, 5120, 6144, 7168, 8192, 9216, 10240]);
   x.base(2).domain([1785, 11041]).nice();
@@ -176,6 +176,17 @@ it('log.nice() works on degenerate domains with large or small base', () => {
   expect(x.d3Ticks()).toEqual([1096.6331584284585, 2980.9579870417283, 8103.083927575384, 22026.465794806718]);
   x.base(10).domain([1785, 11041]).nice();
   expect(x.d3Ticks()).toEqual([2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]);
+});
+
+it('log.nice() works on small domains with large or small base', () => {
+  const x = new LogScale().base(1024).domain([1, 5]).nice();
+  expect(x.d3Ticks()).toEqual([1, 2, 3, 4, 5]);
+  x.base(2).domain([1, 5]).nice();
+  expect(x.d3Ticks()).toEqual([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
+  x.base(Math.E).domain([1, 5]).nice();
+  expect(x.d3Ticks()).toEqual([1, 2.718281828459045, 7.38905609893065]);
+  x.base(10).domain([1, 5]).nice();
+  expect(x.d3Ticks()).toEqual([1, 2, 3, 4, 5]);
 });
 
 it('log.clone() isolates changes to the domain', () => {
