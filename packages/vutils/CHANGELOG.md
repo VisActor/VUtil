@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Thu, 26 Oct 2023 07:42:04 GMT and should not be manually modified.
+This log was last generated on Tue, 07 Nov 2023 03:54:21 GMT and should not be manually modified.
+
+## 0.16.7
+Tue, 07 Nov 2023 03:54:21 GMT
+
+### Updates
+
+- feat: change static class lru to object
 
 ## 0.16.6
 Thu, 26 Oct 2023 07:42:04 GMT
