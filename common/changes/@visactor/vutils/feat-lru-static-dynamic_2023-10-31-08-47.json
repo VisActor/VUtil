@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "feat: change static class lru to object",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}

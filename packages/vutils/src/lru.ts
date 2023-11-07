@@ -6,13 +6,13 @@ interface Threshold {
 }
 // LRU清除
 export class LRU {
-  private static CLEAN_THRESHOLD = 1e3;
-  private static L_TIME = 1000; // 1000ms以内
-  private static R_COUNT = 1; // 使用次数为0
-  private static R_TIMESTAMP_MAX_SIZE = 20; // timestamp最大长度
+  private CLEAN_THRESHOLD = 1e3;
+  private L_TIME = 1000; // 1000ms以内
+  private R_COUNT = 1; // 使用次数为0
+  private R_TIMESTAMP_MAX_SIZE = 20; // timestamp最大长度
 
-  static clearCache<TK, TV extends { timestamp: number[] }>(cache: Map<TK, TV>, params: Threshold): number {
-    const { CLEAN_THRESHOLD = LRU.CLEAN_THRESHOLD, L_TIME = LRU.L_TIME, R_COUNT = LRU.R_COUNT } = params;
+  clearCache<TK, TV extends { timestamp: number[] }>(cache: Map<TK, TV>, params: Threshold): number {
+    const { CLEAN_THRESHOLD = this.CLEAN_THRESHOLD, L_TIME = this.L_TIME, R_COUNT = this.R_COUNT } = params;
     if (cache.size < CLEAN_THRESHOLD) {
       return 0;
     }
@@ -46,8 +46,8 @@ export class LRU {
     return clearNum;
   }
 
-  static addLimitedTimestamp<T extends { timestamp: number[] }>(cacheItem: T, t: number, params: Threshold) {
-    const { R_TIMESTAMP_MAX_SIZE = LRU.R_TIMESTAMP_MAX_SIZE } = params;
+  addLimitedTimestamp<T extends { timestamp: number[] }>(cacheItem: T, t: number, params: Threshold) {
+    const { R_TIMESTAMP_MAX_SIZE = this.R_TIMESTAMP_MAX_SIZE } = params;
     if (cacheItem.timestamp.length > R_TIMESTAMP_MAX_SIZE) {
       // cacheItem.timestamp[cacheItem.timestamp.length-1] =
       cacheItem.timestamp.shift();
@@ -55,8 +55,8 @@ export class LRU {
     cacheItem.timestamp.push(t);
   }
 
-  static clearTimeStamp<TK, TV extends { timestamp: number[] }>(cache: Map<TK, TV>, params: Threshold) {
-    const { L_TIME = LRU.L_TIME } = params;
+  clearTimeStamp<TK, TV extends { timestamp: number[] }>(cache: Map<TK, TV>, params: Threshold) {
+    const { L_TIME = this.L_TIME } = params;
     const now = Date.now();
     cache.forEach(item => {
       while (now - item.timestamp[0] > L_TIME) {
@@ -65,8 +65,8 @@ export class LRU {
     });
   }
 
-  static clearItemTimestamp<T extends { timestamp: number[] }>(cacheItem: T, params: Threshold) {
-    const { L_TIME = LRU.L_TIME } = params;
+  clearItemTimestamp<T extends { timestamp: number[] }>(cacheItem: T, params: Threshold) {
+    const { L_TIME = this.L_TIME } = params;
     const now = Date.now();
     while (now - cacheItem.timestamp[0] > L_TIME) {
       cacheItem.timestamp.shift();
