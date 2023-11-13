@@ -33,7 +33,7 @@ export interface ITextMeasureSpec extends Partial<ITextFontParams> {
   textBaseline: string;
   ellipsis?: string | boolean;
   limit?: number;
-  lineHeight?: number;
+  lineHeight?: number | string;
 }
 
 export interface ITextMeasureOption {

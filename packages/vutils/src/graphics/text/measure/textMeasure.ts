@@ -1,4 +1,4 @@
-import { isArray, isNil, isValid } from '../../../common';
+import { isArray, isNil, isString, isValid } from '../../../common';
 import type { Maybe } from '../../../type';
 import { eastAsianCharacterInfo } from '../stringWidth';
 import type { ITextMeasureOption, ITextMeasureSpec, ITextSize, TextMeasureInput, TextMeasureMethod } from './interface';
@@ -108,9 +108,14 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       baseline,
       textBaseline = baseline ?? 'middle',
       ellipsis,
-      limit,
-      lineHeight = fontSize
+      limit
     } = this._userSpec;
+
+    let { lineHeight = fontSize } = this._userSpec;
+    if (isString(lineHeight) && lineHeight[lineHeight.length - 1] === '%') {
+      const scale = Number.parseFloat(lineHeight.substring(0, lineHeight.length - 1)) / 100;
+      lineHeight = fontSize * scale;
+    }
 
     return {
       fontStyle,
@@ -182,7 +187,7 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
     }
     const metrics = this._context!.measureText(text);
     const { fontSize, lineHeight } = this.textSpec;
-    return { width: metrics.width, height: lineHeight ?? fontSize };
+    return { width: metrics.width, height: (lineHeight as number) ?? fontSize };
   }
 
   /** 快速估算文本宽高 */
@@ -234,7 +239,7 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       const size = ['F', 'W'].includes(eastAsianCharacterInfo(char)) ? 1 : 0.53;
       totalSize.width += size * fontSize;
     }
-    totalSize.height = lineHeight ?? fontSize;
+    totalSize.height = (lineHeight as number) ?? fontSize;
     return totalSize;
   }
 
@@ -253,7 +258,7 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       }
       return {
         width: textArr.reduce((maxWidth, cur) => Math.max(maxWidth, processor(cur).width), 0),
-        height: textArr.length * ((lineHeight ?? fontSize) + 1) + 1 // 经验值
+        height: textArr.length * (((lineHeight as number) ?? fontSize) + 1) + 1 // 经验值
       };
     }
     return processor(text.toString());
