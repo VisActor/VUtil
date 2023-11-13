@@ -2,6 +2,7 @@ import { ScaleEnum } from './type';
 import { d3Ticks, forceTicks, niceLinear, parseNiceOptions, stepTicks, ticks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import type { ContinuousScaleType, NiceOptions } from './interface';
+import { isValid } from '@visactor/vutils';
 
 /**
  * TODO:
@@ -38,7 +39,10 @@ export class LinearScale extends ContinuousScale {
    */
   ticks(count: number = 10, options?: { noDecimals?: boolean }) {
     if (
-      (this._rangeFactor && (this._rangeFactor[0] > 0 || this._rangeFactor[1] < 1) && this._range.length === 2) ||
+      (isValid(this._rangeFactorStart) &&
+        isValid(this._rangeFactorEnd) &&
+        (this._rangeFactorStart > 0 || this._rangeFactorEnd < 1) &&
+        this._range.length === 2) ||
       !this._niceType
     ) {
       return this.d3Ticks(count, options);

@@ -1,6 +1,7 @@
 import { ScaleEnum } from './type';
 import type { DiscreteScaleType, IBaseScale } from './interface';
 import { BaseScale } from './base-scale';
+import { isValid } from '@visactor/vutils';
 
 export const implicit = Symbol('implicit');
 
@@ -42,7 +43,7 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
   }
 
   calculateVisibleDomain(range: any[]) {
-    if (this._rangeFactor && range.length === 2) {
+    if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd) && range.length === 2) {
       const d0 = this.invert(range[0]);
       const d1 = this.invert(range[1]);
 
