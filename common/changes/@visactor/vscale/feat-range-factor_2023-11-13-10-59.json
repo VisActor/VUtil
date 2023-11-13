@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "feat: add configure rangeFactorStart and rangeFactorEnd to band scale",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
