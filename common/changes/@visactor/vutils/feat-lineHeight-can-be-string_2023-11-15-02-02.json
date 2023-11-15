@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "feat: lineHeight can be a string",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
