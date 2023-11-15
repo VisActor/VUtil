@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: change log nice floor logic",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
