@@ -1,6 +1,13 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Tue, 07 Nov 2023 03:54:21 GMT and should not be manually modified.
+This log was last generated on Wed, 15 Nov 2023 09:15:26 GMT and should not be manually modified.
+
+## 0.16.8
+Wed, 15 Nov 2023 09:15:26 GMT
+
+### Updates
+
+- feat: add configure rangeFactorStart and rangeFactorEnd to band scale
 
 ## 0.16.7
 Tue, 07 Nov 2023 03:54:21 GMT
