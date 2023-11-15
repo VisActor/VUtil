@@ -1,9 +1,11 @@
-import { clamp, isNil } from '@visactor/vutils';
+import { clamp, isNil, isValid } from '@visactor/vutils';
 import type { IRangeFactor, ScaleFishEyeOptions } from './interface';
+import { calculateWholeRangeFromRangeFactor } from './utils/utils';
 
 export abstract class BaseScale implements IRangeFactor {
   protected _wholeRange: any[];
-  protected _rangeFactor?: number[];
+  protected _rangeFactorStart?: number = null;
+  protected _rangeFactorEnd?: number = null;
   protected _unknown: any;
   protected _fishEyeOptions?: ScaleFishEyeOptions;
   protected _fishEyeTransform?: (output: number) => number;
@@ -17,13 +19,8 @@ export abstract class BaseScale implements IRangeFactor {
       return this._wholeRange;
     }
 
-    if (this._rangeFactor && range.length === 2) {
-      const k = (range[1] - range[0]) / (this._rangeFactor[1] - this._rangeFactor[0]);
-      const b = range[0] - k * this._rangeFactor[0];
-      const r0 = b;
-      const r1 = k + b;
-      this._wholeRange = [r0, r1];
-
+    if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd) && range.length === 2) {
+      this._wholeRange = calculateWholeRangeFromRangeFactor(range, [this._rangeFactorStart, this._rangeFactorEnd]);
       return this._wholeRange;
     }
     return range;
@@ -37,15 +34,63 @@ export abstract class BaseScale implements IRangeFactor {
     if (!_) {
       if (clear) {
         this._wholeRange = null;
-        this._rangeFactor = null;
+        this._rangeFactorStart = null;
+        this._rangeFactorEnd = null;
         return this;
       }
 
-      return this._rangeFactor;
+      if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd)) {
+        return [this._rangeFactorStart, this._rangeFactorEnd];
+      }
+      return null;
     }
     if (_.length === 2 && _.every(r => r >= 0 && r <= 1)) {
       this._wholeRange = null;
-      this._rangeFactor = _[0] === 0 && _[1] === 1 ? null : _;
+      if (_[0] === 0 && _[1] === 1) {
+        this._rangeFactorStart = null;
+        this._rangeFactorEnd = null;
+      } else {
+        this._rangeFactorStart = _[0];
+        this._rangeFactorEnd = _[1];
+      }
+    }
+
+    return this;
+  }
+
+  rangeFactorStart(): number;
+  rangeFactorStart(_: number, slience?: boolean): this;
+  rangeFactorStart(_?: number, slience?: boolean): this | any {
+    if (!_) {
+      return this._rangeFactorStart;
+    }
+    if (_ >= 0 && _ <= 1) {
+      this._wholeRange = null;
+      if (_ === 0 && (isNil(this._rangeFactorEnd) || this._rangeFactorEnd === 1)) {
+        this._rangeFactorStart = null;
+        this._rangeFactorEnd = null;
+      } else {
+        this._rangeFactorStart = _;
+      }
+    }
+
+    return this;
+  }
+
+  rangeFactorEnd(): number;
+  rangeFactorEnd(_: number, slience?: boolean): this;
+  rangeFactorEnd(_?: number, slience?: boolean): this | any {
+    if (!_) {
+      return this._rangeFactorEnd;
+    }
+    if (_ >= 0 && _ <= 1) {
+      this._wholeRange = null;
+      if (_ === 0 && (isNil(this._rangeFactorStart) || this._rangeFactorStart === 0)) {
+        this._rangeFactorStart = null;
+        this._rangeFactorEnd = null;
+      } else {
+        this._rangeFactorEnd = _;
+      }
     }
 
     return this;

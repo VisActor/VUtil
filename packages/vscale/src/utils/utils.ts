@@ -147,6 +147,15 @@ export function calculateBandwidthFromWholeRangeSize(
   return bandwidth;
 }
 
+/** 根据可见 range 和 rangeFactor 计算整体 range */
+export function calculateWholeRangeFromRangeFactor(range: number[], rangeFactor: number[]): [number, number] {
+  const k = (range[1] - range[0]) / (rangeFactor[1] - rangeFactor[0]);
+  const b = range[0] - k * rangeFactor[0];
+  const r0 = b;
+  const r1 = k + b;
+  return [r0, r1];
+}
+
 export function polymap(domain: number[], range: any[], interpolate: InterpolateType<any>): (x: number) => any {
   const j = Math.min(domain.length, range.length) - 1;
   const d = new Array(j);

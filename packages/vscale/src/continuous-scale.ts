@@ -12,7 +12,7 @@ import type {
 } from './interface';
 import { interpolate } from './utils/interpolate';
 import { bimap, identity, polymap } from './utils/utils';
-import { clamper, toNumber, interpolateNumberRound, interpolateNumber } from '@visactor/vutils';
+import { clamper, toNumber, interpolateNumberRound, interpolateNumber, isValid } from '@visactor/vutils';
 
 export class ContinuousScale extends BaseScale implements IContinuousScale {
   readonly type: ContinuousScaleType;
@@ -48,7 +48,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   }
 
   calculateVisibleDomain(range: any[]) {
-    if (this._rangeFactor && range.length === 2) {
+    if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd) && range.length === 2) {
       const d0 = this.invert(range[0]);
       const d1 = this.invert(range[1]);
 

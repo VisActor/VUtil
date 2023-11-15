@@ -45,6 +45,8 @@ export type ScaleType = DiscreteScaleType | ContinuousScaleType | DiscretizingSc
 export interface IRangeFactor {
   calculateVisibleDomain: (range: any[]) => any;
   rangeFactor: (_?: [number, number], slience?: boolean, clear?: boolean) => this | any;
+  rangeFactorStart: (_?: number, slience?: boolean) => this | any;
+  rangeFactorEnd: (_?: number, slience?: boolean) => this | any;
   unknown: (_?: any) => this | any;
 }
 

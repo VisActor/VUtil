@@ -1,6 +1,11 @@
-import { range, toNumber, isGreater, isLess, isNumber } from '@visactor/vutils';
+import { range, toNumber, isGreater, isLess, isNumber, isValid } from '@visactor/vutils';
 import { OrdinalScale } from './ordinal-scale';
-import { bandSpace, calculateBandwidthFromWholeRangeSize, scaleWholeRangeSize } from './utils/utils';
+import {
+  bandSpace,
+  calculateBandwidthFromWholeRangeSize,
+  calculateWholeRangeFromRangeFactor,
+  scaleWholeRangeSize
+} from './utils/utils';
 import { ScaleEnum } from './type';
 import { stepTicks, ticks } from './utils/tick-sample-int';
 import type { DiscreteScaleType, IBandLikeScale, ScaleFishEyeOptions, TickData } from './interface';
@@ -38,12 +43,12 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     this.rescale(slience);
   }
 
-  rescale(slience?: boolean): this {
+  rescale(slience?: boolean, changeProperty?: keyof IBandLikeScale): this {
     if (slience) {
       return this;
     }
     this._wholeRange = null;
-    const wholeRange = this._calculateWholeRange(this._range);
+    const wholeRange = this._calculateWholeRange(this._range, changeProperty);
     const n = super.domain().length;
     const reverse = wholeRange[1] < wholeRange[0];
     let start = wholeRange[Number(reverse) - 0];
@@ -79,15 +84,22 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
    * @param range 可见 range
    * @returns
    */
-  protected _calculateWholeRange(range: any[]) {
+  protected _calculateWholeRange(range: any[], changeProperty?: keyof IBandLikeScale) {
     if (this._wholeRange) {
       return this._wholeRange;
     }
 
     if ((this._minBandwidth || this._maxBandwidth) && !this._isBandwidthFixedByUser()) {
+      let wholeSize: number;
+      if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd) && range.length === 2) {
+        const wholeRange = calculateWholeRangeFromRangeFactor(range, [this._rangeFactorStart, this._rangeFactorEnd]);
+        wholeSize = Math.abs(wholeRange[1] - wholeRange[0]);
+      } else {
+        wholeSize = Math.abs(range[1] - range[0]);
+      }
       const autoBandwidth = calculateBandwidthFromWholeRangeSize(
         super.domain().length,
-        Math.abs(range[1] - range[0]),
+        wholeSize,
         this._paddingInner,
         this._paddingOuter,
         this._round
@@ -113,21 +125,26 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       );
 
       const rangeFactorSize = Math.min((range[1] - range[0]) / wholeLength, 1);
-      if (this._rangeFactor?.length) {
-        const [rangeFactorStart, rangeFactorEnd] = this._rangeFactor;
-        const r0 = range[0] - wholeLength * rangeFactorStart;
+      if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd)) {
+        const r0 = range[0] - wholeLength * this._rangeFactorStart;
         const r1 = r0 + wholeLength;
         this._wholeRange = [r0, r1];
 
-        if (rangeFactorStart + rangeFactorSize <= 1) {
-          this._rangeFactor = [rangeFactorStart, rangeFactorStart + rangeFactorSize];
-        } else if (rangeFactorEnd - rangeFactorSize >= 0) {
-          this._rangeFactor = [rangeFactorEnd - rangeFactorSize, rangeFactorEnd];
+        if (changeProperty === 'rangeFactorStart' && this._rangeFactorStart + rangeFactorSize <= 1) {
+          this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
+        } else if (changeProperty === 'rangeFactorEnd' && this._rangeFactorEnd - rangeFactorSize >= 0) {
+          this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
+        } else if (this._rangeFactorStart + rangeFactorSize <= 1) {
+          this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
+        } else if (this._rangeFactorEnd - rangeFactorSize >= 0) {
+          this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
         } else {
-          this._rangeFactor = [0, rangeFactorSize];
+          this._rangeFactorStart = 0;
+          this._rangeFactorEnd = rangeFactorSize;
         }
       } else {
-        this._rangeFactor = [0, rangeFactorSize];
+        this._rangeFactorStart = 0;
+        this._rangeFactorEnd = rangeFactorSize;
         this._wholeRange = [range[0], range[0] + wholeLength];
       }
 
@@ -145,7 +162,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   calculateVisibleDomain(range: any[]) {
     const domain = this._domain;
 
-    if (this._rangeFactor && domain.length) {
+    if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd) && domain.length) {
       const d0 = this._getInvertIndex(range[0]);
       const d1 = this._getInvertIndex(range[1]);
 
@@ -328,8 +345,27 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       return super.rangeFactor();
     }
     super.rangeFactor(_);
-
     return this.rescale(slience);
+  }
+
+  rangeFactorStart(): number;
+  rangeFactorStart(_: number, slience?: boolean): this;
+  rangeFactorStart(_?: number, slience?: boolean): this | any {
+    if (!_) {
+      return super.rangeFactorStart();
+    }
+    super.rangeFactorStart(_);
+    return this.rescale(slience, 'rangeFactorStart');
+  }
+
+  rangeFactorEnd(): number;
+  rangeFactorEnd(_: number, slience?: boolean): this;
+  rangeFactorEnd(_?: number, slience?: boolean): this | any {
+    if (!_) {
+      return super.rangeFactorEnd();
+    }
+    super.rangeFactorEnd(_);
+    return this.rescale(slience, 'rangeFactorEnd');
   }
 
   bandwidth(): number;
