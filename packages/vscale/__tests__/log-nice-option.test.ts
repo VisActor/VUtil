@@ -41,20 +41,20 @@ test('log.nice() width option forceMax', function () {
 
   scale.nice(10, { forceMax: 700 });
 
-  expect(scale.domain()).toEqual([231, 700]);
-  expect(scale.ticks(5)).toEqual([231, 251, 316, 398, 501, 631, 700]);
-  expect(scale.domain()).toEqual([231, 700]);
-  expect(scale.scale(10)).toBeCloseTo(-2.832090257288676);
-  expect(scale.scale(200)).toBeCloseTo(-0.1299767312314118);
+  expect(scale.domain()).toEqual([100, 700]);
+  expect(scale.ticks(5)).toEqual([100, 158, 251, 398, 631, 700]);
+  expect(scale.domain()).toEqual([100, 700]);
+  expect(scale.scale(10)).toBeCloseTo(-1.1832946624549383);
+  expect(scale.scale(200)).toBeCloseTo(0.3562071871080222);
   expect(scale.scale(789)).toBeUndefined();
 
   scale.nice(10, { forceMax: 1123 });
 
-  expect(scale.domain()).toEqual([231, 1123]);
-  expect(scale.ticks(5)).toEqual([231, 251, 316, 398, 501, 631, 794, 1000, 1123]);
-  expect(scale.domain()).toEqual([231, 1123]);
-  expect(scale.scale(10)).toBeCloseTo(-1.9855503225574376);
-  expect(scale.scale(200)).toBeCloseTo(-0.0911253940291301);
+  expect(scale.domain()).toEqual([100, 1123]);
+  expect(scale.ticks(5)).toEqual([100, 158, 251, 398, 631, 1000, 1123]);
+  expect(scale.domain()).toEqual([100, 1123]);
+  expect(scale.scale(10)).toBeCloseTo(-0.952036626790323);
+  expect(scale.scale(200)).toBeCloseTo(0.28659158163464227);
   expect(scale.scale(1200)).toBeUndefined();
 });
 
@@ -64,7 +64,7 @@ test('log.nice() width option min and max', function () {
   // only max is valid
   scale.nice(10, { min: 28, max: 23456 });
 
-  expect(scale.domain()).toEqual([20, 23456]);
+  expect(scale.domain()).toEqual([10, 23456]);
 
   // min and max area valid
   scale.nice(10, { min: 13, max: 34677 });
@@ -80,5 +80,5 @@ test('log.nice() width option min and max', function () {
 
   scale.nice(10, { min: 23, max: 1000 });
 
-  expect(scale.domain()).toEqual([20, 18990]);
+  expect(scale.domain()).toEqual([10, 18990]);
 });

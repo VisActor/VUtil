@@ -135,6 +135,7 @@ export class LogScale extends ContinuousScale {
     } else {
       z = ticks(i, j, Math.min(j - i, count)).map(this._pows);
     }
+    z = z.filter((t: number) => t !== 0);
     return r ? z.reverse() : z;
   }
 
@@ -185,7 +186,7 @@ export class LogScale extends ContinuousScale {
 
     if (niceType) {
       const niceDomain = nice(originalDomain.slice(), {
-        floor: (x: number) => Math.floor(x),
+        floor: (x: number) => this._pows(Math.floor(this._logs(x))),
         ceil: (x: number) => Math.ceil(x)
       });
 
