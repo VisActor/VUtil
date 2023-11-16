@@ -12,7 +12,7 @@ function objectKeys(obj: any) {
 
 // Adapted from https://github.com/antvis/F2/blob/master/packages/f2/src/base/equal.ts by zengyue
 // License: https://github.com/antvis/F2/blob/master/packages/f2/LICENSE
-export function isEqual(a: any, b: any): boolean {
+export function isEqual(a: any, b: any, options?: { skipFunction?: boolean }): boolean {
   if (a === b) {
     return true;
   }
@@ -37,7 +37,7 @@ export function isEqual(a: any, b: any): boolean {
 
   // 如果是function，则不相等
   if (isFunction(a)) {
-    return false;
+    return !!options?.skipFunction;
   }
 
   // 值类型，Number String Boolean
@@ -50,7 +50,7 @@ export function isEqual(a: any, b: any): boolean {
       return false;
     }
     for (let i = a.length - 1; i >= 0; i--) {
-      if (!isEqual(a[i], b[i])) {
+      if (!isEqual(a[i], b[i], options)) {
         return false;
       }
     }
@@ -82,7 +82,7 @@ export function isEqual(a: any, b: any): boolean {
   // equivalent values for every corresponding key, and ~~~possibly expensive deep test
   for (let i = ka.length - 1; i >= 0; i--) {
     const key = ka[i];
-    if (!isEqual(a[key], b[key])) {
+    if (!isEqual(a[key], b[key], options)) {
       return false;
     }
   }
