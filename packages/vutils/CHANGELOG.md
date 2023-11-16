@@ -1,6 +1,15 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Wed, 15 Nov 2023 12:34:59 GMT and should not be manually modified.
+This log was last generated on Thu, 16 Nov 2023 09:50:48 GMT and should not be manually modified.
+
+## 0.16.10
+Thu, 16 Nov 2023 09:50:48 GMT
+
+### Updates
+
+- feat: add options `skipFunction` to function `isEqual()`
+
+
 
 ## 0.16.9
 Wed, 15 Nov 2023 12:34:59 GMT
