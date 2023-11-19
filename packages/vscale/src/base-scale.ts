@@ -71,6 +71,7 @@ export abstract class BaseScale implements IRangeFactor {
         this._rangeFactorEnd = null;
       } else {
         this._rangeFactorStart = _;
+        this._rangeFactorEnd = this._rangeFactorEnd ?? 1;
       }
     }
 
@@ -90,6 +91,7 @@ export abstract class BaseScale implements IRangeFactor {
         this._rangeFactorEnd = null;
       } else {
         this._rangeFactorEnd = _;
+        this._rangeFactorStart = this._rangeFactorStart ?? 0;
       }
     }
 
