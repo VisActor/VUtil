@@ -218,6 +218,30 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
     return this;
   }
 
+  rangeFactorStart(): number;
+  rangeFactorStart(_: number, slience?: boolean): this;
+  rangeFactorStart(_?: number, slience?: boolean): this | any {
+    if (!_) {
+      return super.rangeFactorStart();
+    }
+    super.rangeFactorStart(_);
+    this._output = this._input = null;
+
+    return this;
+  }
+
+  rangeFactorEnd(): number;
+  rangeFactorEnd(_: number, slience?: boolean): this;
+  rangeFactorEnd(_?: number, slience?: boolean): this | any {
+    if (!_) {
+      return super.rangeFactorEnd();
+    }
+    super.rangeFactorEnd(_);
+    this._output = this._input = null;
+
+    return this;
+  }
+
   forceAlignDomainRange(): boolean;
   forceAlignDomainRange(enable: boolean): this;
   forceAlignDomainRange(forceAlign?: boolean): this | boolean {
