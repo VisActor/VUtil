@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: inaccurate wholeRange in band scale",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
