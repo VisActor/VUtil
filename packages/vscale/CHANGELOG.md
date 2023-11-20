@@ -1,6 +1,13 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Mon, 20 Nov 2023 04:58:01 GMT and should not be manually modified.
+This log was last generated on Mon, 20 Nov 2023 06:23:53 GMT and should not be manually modified.
+
+## 0.16.12
+Mon, 20 Nov 2023 06:23:53 GMT
+
+### Updates
+
+- fix: one of the two endpoints of rangeFactor is null during initialization
 
 ## 0.16.12
 Mon, 20 Nov 2023 04:58:01 GMT
