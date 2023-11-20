@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: one of the two endpoints of rangeFactor is null during initialization",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
