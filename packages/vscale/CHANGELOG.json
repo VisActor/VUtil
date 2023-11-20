@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.16.12",
+      "tag": "@visactor/vscale_v0.16.12",
+      "date": "Mon, 20 Nov 2023 06:23:53 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: one of the two endpoints of rangeFactor is null during initialization"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.16.11",
       "tag": "@visactor/vscale_v0.16.11",
       "date": "Mon, 20 Nov 2023 03:24:54 GMT",

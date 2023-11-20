@@ -117,18 +117,20 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
     }
 
     if (this.isBandwidthFixed()) {
-      const wholeLength = scaleWholeRangeSize(
-        super.domain().length,
-        this._bandwidth,
-        this._paddingInner,
-        this._paddingOuter
-      );
-
+      const wholeLength =
+        scaleWholeRangeSize(super.domain().length, this._bandwidth, this._paddingInner, this._paddingOuter) *
+        Math.sign(range[1] - range[0]);
       const rangeFactorSize = Math.min((range[1] - range[0]) / wholeLength, 1);
       if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd)) {
-        const r0 = range[0] - wholeLength * this._rangeFactorStart;
-        const r1 = r0 + wholeLength;
-        this._wholeRange = [r0, r1];
+        if (wholeLength > 0) {
+          const r0 = range[0] - wholeLength * this._rangeFactorStart;
+          const r1 = r0 + wholeLength;
+          this._wholeRange = [r0, r1];
+        } else {
+          const r1 = range[1] + wholeLength * (1 - this._rangeFactorEnd);
+          const r0 = r1 - wholeLength;
+          this._wholeRange = [r0, r1];
+        }
 
         if (changeProperty === 'rangeFactorStart' && this._rangeFactorStart + rangeFactorSize <= 1) {
           this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
