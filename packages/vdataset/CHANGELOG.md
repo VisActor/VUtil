@@ -1,6 +1,11 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Thu, 16 Nov 2023 09:50:48 GMT and should not be manually modified.
+This log was last generated on Mon, 20 Nov 2023 03:24:54 GMT and should not be manually modified.
+
+## 0.16.11
+Mon, 20 Nov 2023 03:24:54 GMT
+
+_Version update only_
 
 ## 0.16.10
 Thu, 16 Nov 2023 09:50:48 GMT
