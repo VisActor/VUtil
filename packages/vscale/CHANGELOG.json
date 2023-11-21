@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.16.14",
+      "tag": "@visactor/vscale_v0.16.14",
+      "date": "Tue, 21 Nov 2023 09:06:00 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: range factor will not be changed if value is 0"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.16.13",
       "tag": "@visactor/vscale_v0.16.13",
       "date": "Mon, 20 Nov 2023 16:06:24 GMT",
