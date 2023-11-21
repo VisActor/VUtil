@@ -61,7 +61,7 @@ export abstract class BaseScale implements IRangeFactor {
   rangeFactorStart(): number;
   rangeFactorStart(_: number, slience?: boolean): this;
   rangeFactorStart(_?: number, slience?: boolean): this | any {
-    if (!_) {
+    if (isNil(_)) {
       return this._rangeFactorStart;
     }
     if (_ >= 0 && _ <= 1) {
@@ -81,7 +81,7 @@ export abstract class BaseScale implements IRangeFactor {
   rangeFactorEnd(): number;
   rangeFactorEnd(_: number, slience?: boolean): this;
   rangeFactorEnd(_?: number, slience?: boolean): this | any {
-    if (!_) {
+    if (isNil(_)) {
       return this._rangeFactorEnd;
     }
     if (_ >= 0 && _ <= 1) {

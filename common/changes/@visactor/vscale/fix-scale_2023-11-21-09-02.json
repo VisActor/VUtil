@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: range factor will not be changed if value is 0",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
