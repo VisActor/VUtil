@@ -81,3 +81,6 @@ export { toValidNumber } from './toValidNumber';
 // string
 export { default as lowerFirst } from './lowerFirst';
 export { default as upperFirst } from './upperFirst';
+
+// string format
+export { default as substitute } from './substitute';
