@@ -142,12 +142,12 @@ test('band.range(values) makes a copy of the specified range values', function (
   expect(s.range()).toEqual([1, 2]);
 });
 
-test('band.range() returns a copy of the range', function () {
+test('band.range() should not returns a copy of the range', function () {
   const s = new BandScale().range([1, 2]);
   const range = s.range();
   expect(range).toEqual([1, 2]);
   range.push('blue');
-  expect(s.range()).toEqual([1, 2]);
+  expect(s.range()).toEqual([1, 2, 'blue']);
 });
 
 test('band.range(values) accepts an iterable', function () {
