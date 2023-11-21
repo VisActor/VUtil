@@ -1,5 +1,5 @@
-import { range, toNumber, isGreater, isLess, isNumber, isValid, isNil } from '@visactor/vutils';
-import { OrdinalScale } from './ordinal-scale';
+import { toNumber, isGreater, isLess, isNumber, isValid, isNil } from '@visactor/vutils';
+import { OrdinalScale, implicit } from './ordinal-scale';
 import {
   bandSpace,
   calculateBandwidthFromWholeRangeSize,
@@ -26,6 +26,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   protected _paddingOuter: number;
   protected _align: number;
   protected _range: Array<number>;
+  protected _bandRangeState?: { reverse: boolean; start: number; count: number };
 
   constructor(slience?: boolean) {
     super();
@@ -69,14 +70,42 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
         this._bandwidth = Math.round(this._bandwidth);
       }
     }
-    const values = range(n).map((i: number) => {
-      return start + this._step * i;
-    });
-    super.range(reverse ? values.reverse() : values);
+
+    this._bandRangeState = {
+      reverse,
+      start: reverse ? start + this._step * (n - 1) : start,
+      count: n
+    };
 
     this.generateFishEyeTransform();
 
     return this;
+  }
+
+  scale(d: any): any {
+    if (!this._bandRangeState) {
+      return undefined;
+    }
+    const key = `${d}`;
+    const special = this._getSpecifiedValue(key);
+    if (special !== undefined) {
+      return special;
+    }
+    let i = this._index.get(key);
+    if (!i) {
+      if (this._unknown !== implicit) {
+        return this._unknown;
+      }
+      // TODO checkPoint
+      i = this._domain.push(d);
+      this._index.set(key, i);
+    }
+    const { count, start, reverse } = this._bandRangeState;
+    const stepIndex = (i - 1) % count;
+
+    const output = start + (reverse ? -1 : 1) * stepIndex * this._step;
+
+    return this._fishEyeTransform ? this._fishEyeTransform(output) : output;
   }
 
   /**
@@ -192,7 +221,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       this._range = [toNumber(_[0]), toNumber(_[1])];
       return this.rescale(slience);
     }
-    return this._range.slice();
+    return this._range;
   }
 
   rangeRound(_: any[], slience?: boolean): this {
@@ -206,7 +235,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
 
     if (count === -1) {
       // return domain as ticks when count is -1
-      return d.slice();
+      return d;
     }
 
     const tickIndexList = ticks(0, d.length - 1, count, false);
