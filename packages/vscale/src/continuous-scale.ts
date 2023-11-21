@@ -12,7 +12,7 @@ import type {
 } from './interface';
 import { interpolate } from './utils/interpolate';
 import { bimap, identity, polymap } from './utils/utils';
-import { clamper, toNumber, interpolateNumberRound, interpolateNumber, isValid } from '@visactor/vutils';
+import { clamper, toNumber, interpolateNumberRound, interpolateNumber, isValid, isNil } from '@visactor/vutils';
 
 export class ContinuousScale extends BaseScale implements IContinuousScale {
   readonly type: ContinuousScaleType;
@@ -221,7 +221,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   rangeFactorStart(): number;
   rangeFactorStart(_: number, slience?: boolean): this;
   rangeFactorStart(_?: number, slience?: boolean): this | any {
-    if (!_) {
+    if (isNil(_)) {
       return super.rangeFactorStart();
     }
     super.rangeFactorStart(_);
@@ -233,7 +233,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   rangeFactorEnd(): number;
   rangeFactorEnd(_: number, slience?: boolean): this;
   rangeFactorEnd(_?: number, slience?: boolean): this | any {
-    if (!_) {
+    if (isNil(_)) {
       return super.rangeFactorEnd();
     }
     super.rangeFactorEnd(_);

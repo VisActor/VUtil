@@ -1,4 +1,4 @@
-import { range, toNumber, isGreater, isLess, isNumber, isValid } from '@visactor/vutils';
+import { range, toNumber, isGreater, isLess, isNumber, isValid, isNil } from '@visactor/vutils';
 import { OrdinalScale } from './ordinal-scale';
 import {
   bandSpace,
@@ -353,7 +353,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   rangeFactorStart(): number;
   rangeFactorStart(_: number, slience?: boolean): this;
   rangeFactorStart(_?: number, slience?: boolean): this | any {
-    if (!_) {
+    if (isNil(_)) {
       return super.rangeFactorStart();
     }
     super.rangeFactorStart(_);
@@ -363,7 +363,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   rangeFactorEnd(): number;
   rangeFactorEnd(_: number, slience?: boolean): this;
   rangeFactorEnd(_?: number, slience?: boolean): this | any {
-    if (!_) {
+    if (isNil(_)) {
       return super.rangeFactorEnd();
     }
     super.rangeFactorEnd(_);
