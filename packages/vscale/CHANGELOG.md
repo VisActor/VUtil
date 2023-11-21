@@ -1,6 +1,13 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Mon, 20 Nov 2023 06:23:53 GMT and should not be manually modified.
+This log was last generated on Mon, 20 Nov 2023 16:06:24 GMT and should not be manually modified.
+
+## 0.16.13
+Mon, 20 Nov 2023 16:06:24 GMT
+
+### Updates
+
+- fix: inaccurate wholeRange in band scale
 
 ## 0.16.12
 Mon, 20 Nov 2023 06:23:53 GMT
