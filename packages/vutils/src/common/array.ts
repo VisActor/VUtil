@@ -40,28 +40,44 @@ export const span = (arr: number[]) => {
 };
 
 /**
- * 计算数组中的最大值，如果传入值不合法，则放回 undefined
- * @param arr
+ * 获取数组中的最大值
+ * @param arr 数组
+ * @param compareFn 比较函数，返回正数表示 a > b，返回负数表示 a < b，返回 0 表示相等
  * @returns
  */
-export function maxInArray(arr: number[]): number | undefined {
-  if (!arr || !isArray(arr)) {
+export const maxInArray = <T>(arr: T[], compareFn?: (a: T, b: T) => number): T | undefined => {
+  if (arr.length === 0) {
     return undefined;
   }
-  return arr.reduce((prev, curr) => Math.max(prev, curr), -Infinity);
-}
+  let max = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    const value = arr[i];
+    if (compareFn?.(value, max) ?? (value as number) - (max as number) > 0) {
+      max = value;
+    }
+  }
+  return max;
+};
 
 /**
- * 计算数组中的最小值，如果传入值不合法，则放回 undefined
- * @param arr
+ * 获取数组中的最小值
+ * @param arr 数组
+ * @param compareFn 比较函数，返回正数表示 a > b，返回负数表示 a < b，返回 0 表示相等
  * @returns
  */
-export function minInArray(arr: number[]): number | undefined {
-  if (!arr || !isArray(arr)) {
+export const minInArray = <T>(arr: T[], compareFn?: (a: T, b: T) => number): T | undefined => {
+  if (arr.length === 0) {
     return undefined;
   }
-  return arr.reduce((prev, curr) => Math.min(prev, curr), Infinity);
-}
+  let min = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    const value = arr[i];
+    if (compareFn?.(value, min) ?? (value as number) - (min as number) < 0) {
+      min = value;
+    }
+  }
+  return min;
+};
 
 /**
  * 判断两个数组是否相同

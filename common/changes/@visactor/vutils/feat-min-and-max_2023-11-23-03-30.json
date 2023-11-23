@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "feat: optimize `maxInArray` and `minInArray`",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
