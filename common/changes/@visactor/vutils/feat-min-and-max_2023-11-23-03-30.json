@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@visactor/vutils",
-      "comment": "feat: add new functions `max` and `min`",
+      "comment": "feat: optimize `maxInArray` and `minInArray`",
       "type": "none"
     }
   ],
