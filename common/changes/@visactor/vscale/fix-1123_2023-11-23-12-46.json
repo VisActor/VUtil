@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: fix the scale problem in version 0.16.17",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}

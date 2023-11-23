@@ -141,16 +141,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
           this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
         } else {
           // 判断 scale 方向来决定边界检测顺序
-          if (range[1] > range[0]) {
-            if (canAlignEnd) {
-              this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
-            } else if (canAlignStart) {
-              this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
-            } else {
-              this._rangeFactorStart = 1 - rangeFactorSize;
-              this._rangeFactorEnd = 1;
-            }
-          } else {
+          if (range[0] <= range[1]) {
             if (canAlignStart) {
               this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
             } else if (canAlignEnd) {
@@ -158,6 +149,15 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
             } else {
               this._rangeFactorStart = 0;
               this._rangeFactorEnd = rangeFactorSize;
+            }
+          } else {
+            if (canAlignEnd) {
+              this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
+            } else if (canAlignStart) {
+              this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
+            } else {
+              this._rangeFactorStart = 1 - rangeFactorSize;
+              this._rangeFactorEnd = 1;
             }
           }
         }
