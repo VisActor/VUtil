@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: fix the problems of the inverse case",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
