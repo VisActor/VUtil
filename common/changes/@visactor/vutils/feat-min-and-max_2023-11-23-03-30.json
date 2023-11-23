@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "feat: add new functions `max` and `min`",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
