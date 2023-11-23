@@ -43,6 +43,8 @@ export { bisect } from './bisect';
 export { deviation } from './deviation';
 export { median } from './median';
 export { variance } from './variance';
+export { max } from './max';
+export { min } from './min';
 
 // tick
 export { tickStep } from './tickStep';
