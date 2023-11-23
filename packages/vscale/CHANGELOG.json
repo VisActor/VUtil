@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.16.17",
+      "tag": "@visactor/vscale_v0.16.17",
+      "date": "Thu, 23 Nov 2023 08:52:19 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix the problems of the inverse case"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.16.16",
       "tag": "@visactor/vscale_v0.16.16",
       "date": "Thu, 23 Nov 2023 04:14:47 GMT",

@@ -1,6 +1,11 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Thu, 23 Nov 2023 04:14:47 GMT and should not be manually modified.
+This log was last generated on Thu, 23 Nov 2023 08:52:19 GMT and should not be manually modified.
+
+## 0.16.17
+Thu, 23 Nov 2023 08:52:19 GMT
+
+_Version update only_
 
 ## 0.16.16
 Thu, 23 Nov 2023 04:14:47 GMT
