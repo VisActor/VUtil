@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "feat: support set logger in DataSet\n\n",
+      "type": "none",
+      "packageName": "@visactor/vdataset"
+    }
+  ],
+  "packageName": "@visactor/vdataset",
+  "email": "lixuef1313@163.com"
+}

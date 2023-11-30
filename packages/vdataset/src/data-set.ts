@@ -1,4 +1,4 @@
-import { EventEmitter } from '@visactor/vutils';
+import { EventEmitter, Logger } from '@visactor/vutils';
 import type { DataView } from './data-view';
 import { getUUID } from './utils/uuid';
 import type { Transform } from './transform';
@@ -6,6 +6,7 @@ import type { IParserOptions, Parser } from './parser';
 
 interface IDataSetOptions {
   name?: string;
+  logger?: Logger;
 }
 
 /**
@@ -42,6 +43,8 @@ export class DataSet {
   // eslint-disable-next-line @typescript-eslint/ban-types
   _callMap: Map<Function, (...args: any[]) => void>;
 
+  protected _logger: Logger;
+
   constructor(public options?: IDataSetOptions) {
     let name;
     if (options?.name) {
@@ -50,6 +53,12 @@ export class DataSet {
       name = getUUID('dataset');
     }
     this.name = name;
+
+    this._logger = options?.logger ?? Logger.getInstance();
+  }
+
+  setLogger(logger: Logger) {
+    this._logger = logger;
   }
 
   /**
@@ -67,7 +76,7 @@ export class DataSet {
    */
   setDataView(name: string | number, dataView: DataView): void {
     if (this.dataViewMap[name]) {
-      throw new Error(`Error: dataView ${name} 之前已存在，请重新命名`);
+      this._logger?.error(`Error: dataView ${name} 之前已存在，请重新命名`);
     }
     this.dataViewMap[name] = dataView;
   }
@@ -89,7 +98,7 @@ export class DataSet {
    */
   registerParser(name: string, parser: Parser): void {
     if (this.parserMap[name]) {
-      console.warn(`Warn: transform ${name} 之前已注册，执行覆盖逻辑`);
+      this._logger?.warn(`Warn: transform ${name} 之前已注册，执行覆盖逻辑`);
     }
     this.parserMap[name] = parser;
   }
@@ -119,7 +128,7 @@ export class DataSet {
    */
   registerTransform(name: string, transform: Transform): void {
     if (this.transformMap[name]) {
-      console.warn(`Warn: transform ${name} 之前已注册，执行覆盖逻辑`);
+      this._logger?.warn(`Warn: transform ${name} 之前已注册，执行覆盖逻辑`);
     }
     this.transformMap[name] = transform;
   }
