@@ -1,3 +1,4 @@
+import type { ILogger } from '@visactor/vutils';
 import { EventEmitter, Logger } from '@visactor/vutils';
 import type { DataView } from './data-view';
 import { getUUID } from './utils/uuid';
@@ -43,7 +44,7 @@ export class DataSet {
   // eslint-disable-next-line @typescript-eslint/ban-types
   _callMap: Map<Function, (...args: any[]) => void>;
 
-  protected _logger: Logger;
+  protected _logger: ILogger;
 
   constructor(public options?: IDataSetOptions) {
     let name;
