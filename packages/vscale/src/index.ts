@@ -16,3 +16,5 @@ export { IdentityScale } from './identity-scale';
 export * from './interface';
 // type
 export * from './type';
+
+export * from './utils';
