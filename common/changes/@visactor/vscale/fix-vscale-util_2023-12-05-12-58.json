@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: update `scaleWholeRangeSize` method in vscale",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
