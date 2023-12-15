@@ -2,6 +2,12 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.16.19",
+      "tag": "@visactor/vscale_v0.16.19",
+      "date": "Fri, 15 Dec 2023 06:37:27 GMT",
+      "comments": {}
+    },
+    {
       "version": "0.16.18",
       "tag": "@visactor/vscale_v0.16.18",
       "date": "Thu, 23 Nov 2023 13:01:59 GMT",
