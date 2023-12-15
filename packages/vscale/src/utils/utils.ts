@@ -121,6 +121,9 @@ export function bandSpace(count: number, paddingInner: number, paddingOuter: num
 
 /** 计算 scale 的实际 range 长度 */
 export function scaleWholeRangeSize(count: number, bandwidth: number, paddingInner: number, paddingOuter: number) {
+  if (paddingInner === 1) {
+    paddingInner = 0; // 保护
+  }
   const space = bandSpace(count, paddingInner, paddingOuter);
   const step = bandwidth / (1 - paddingInner);
   const wholeSize = space * step;
