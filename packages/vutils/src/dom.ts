@@ -19,17 +19,23 @@ export function getContainerSize(el: HTMLElement | null, defaultWidth: number = 
   // clientWidth/clientHeight: 默认整数，会向上取整，导致canvas > container
   // getBoundingClientRect：默认小数，但是在container上有css类似 transform: scale(0.5)时，获取结果不对
   // getComputedStyle：默认小数，获取最终结果，但是会包含padding；
-  const computedWidth =
-    parseFloat(style.width) - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) || el.clientWidth - 1;
 
-  const computedHeight =
-    parseFloat(style.height) - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) || el.clientHeight - 1;
+  if (/^(\d*\.?\d+)(px)$/.exec(style.width)) {
+    // 当dom元素的 display: 'none' 的时候，获取到的宽高会变成原始的样式配置，而不是计算后的像素值
+    const computedWidth =
+      parseFloat(style.width) - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) || el.clientWidth - 1;
 
-  // 理论上不用向下取整，目前没加。
-  return {
-    width: computedWidth <= 0 ? defaultWidth : computedWidth,
-    height: computedHeight <= 0 ? defaultHeight : computedHeight
-  };
+    const computedHeight =
+      parseFloat(style.height) - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) || el.clientHeight - 1;
+
+    // 理论上不用向下取整，目前没加。
+    return {
+      width: computedWidth <= 0 ? defaultWidth : computedWidth,
+      height: computedHeight <= 0 ? defaultHeight : computedHeight
+    };
+  }
+
+  return { width: defaultWidth, height: defaultHeight };
 }
 
 /**
