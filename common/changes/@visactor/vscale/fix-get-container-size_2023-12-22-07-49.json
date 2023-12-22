@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: fix bug of `getContainerSize()` when the container has `display: none`\n\n",
+      "type": "none",
+      "packageName": "@visactor/vscale"
+    }
+  ],
+  "packageName": "@visactor/vscale",
+  "email": "dingling112@gmail.com"
+}
