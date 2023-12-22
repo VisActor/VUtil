@@ -1,6 +1,15 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Fri, 15 Dec 2023 06:37:27 GMT and should not be manually modified.
+This log was last generated on Fri, 22 Dec 2023 09:14:59 GMT and should not be manually modified.
+
+## 0.16.20
+Fri, 22 Dec 2023 09:14:59 GMT
+
+### Updates
+
+- fix: fix bug of `getContainerSize()` when the container has `display: none`
+
+
 
 ## 0.16.19
 Fri, 15 Dec 2023 06:37:27 GMT

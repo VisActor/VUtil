@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.16.20",
+      "tag": "@visactor/vdataset_v0.16.20",
+      "date": "Fri, 22 Dec 2023 09:14:59 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix bug of `getContainerSize()` when the container has `display: none`\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.16.19",
       "tag": "@visactor/vdataset_v0.16.19",
       "date": "Fri, 15 Dec 2023 06:37:27 GMT",
