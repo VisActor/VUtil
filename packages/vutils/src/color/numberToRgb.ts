@@ -1,5 +1,5 @@
 import { isArray, isNumber } from '../common';
-import { RGB } from './RGB';
+import { RGB } from './rgb';
 
 /**
  * Converts hexadecimal number or decimal number array into RGB

@@ -1,6 +1,12 @@
-import { ColorUtil, isNil, interpolateNumber, interpolateDate } from '@visactor/vutils';
-
-const { interpolateRgb } = ColorUtil;
+import {
+  isNil,
+  interpolateNumber,
+  interpolateDate,
+  parseColorString,
+  interpolateRgb,
+  RGB,
+  Color
+} from '@visactor/vutils';
 
 export function interpolate(a: any, b: any) {
   const t = typeof b;
@@ -15,8 +21,8 @@ export function interpolate(a: any, b: any) {
   }
 
   if (t === 'string') {
-    if ((c = ColorUtil.Color.parseColorString(b))) {
-      const rgb = interpolateRgb(ColorUtil.Color.parseColorString(a as string), c);
+    if ((c = parseColorString(b))) {
+      const rgb = interpolateRgb(parseColorString(a as string), c);
 
       return (t: number) => {
         // #rrggbbaa 格式在部分浏览器存在兼容性问题，rgba()字符串兼容性更好，所以还是支持rgba()字符串
@@ -27,11 +33,11 @@ export function interpolate(a: any, b: any) {
     return interpolateNumber(Number(a), Number(b));
   }
 
-  if (b instanceof ColorUtil.RGB) {
+  if (b instanceof RGB) {
     return interpolateRgb(a, b);
   }
 
-  if (b instanceof ColorUtil.Color) {
+  if (b instanceof Color) {
     return interpolateRgb(a.color, b.color);
   }
 

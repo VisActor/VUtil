@@ -1,5 +1,5 @@
 import { isValid } from '../common';
-import { RGB } from './RGB';
+import { RGB } from './rgb';
 import { DEFAULT_COLORS } from './defaultColors';
 import hslToRgb from './hslToRgb';
 import { rgb, rgba } from './numberToRgb';
