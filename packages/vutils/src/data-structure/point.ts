@@ -86,6 +86,7 @@ export class Point implements IPoint {
   }
 }
 
+// TODO: 删除，使用单个 ../graphics/distance 替代
 export class PointService {
   /* distance */
   static distancePP(p1: IPointLike, p2: IPointLike): number {
@@ -94,14 +95,14 @@ export class PointService {
   static distanceNN(x: number, y: number, x1: number, y1: number) {
     return sqrt(pow(x - x1, 2) + pow(y - y1, 2));
   }
-  static distancePN(point: IPointLike, x: number, y: number) {
-    return sqrt(pow(x - point.x, 2) + pow(y - point.y, 2));
-  }
-
   /* point at */
   static pointAtPP(p1: IPointLike, p2: IPointLike, t: number): IPoint {
     return new Point((p2.x - p1.x) * t + p1.x, (p2.y - p1.y) * t + p1.y);
   }
+}
+
+export function pointAtPP(p1: IPointLike, p2: IPointLike, t: number): IPoint {
+  return new Point((p2.x - p1.x) * t + p1.x, (p2.y - p1.y) * t + p1.y);
 }
 
 export interface IPolarPoint {
