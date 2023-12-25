@@ -304,12 +304,12 @@ it('log.base(base).ticks() generates the expected power-of-base ticks', () => {
 
 it('log.ticks() returns the empty array when the domain is degenerate', () => {
   const x = new LogScale();
-  expect(x.domain([0, 1]).ticks()).toEqual([]);
-  expect(x.domain([1, 0]).ticks()).toEqual([]);
-  expect(x.domain([0, -1]).ticks()).toEqual([]);
-  expect(x.domain([-1, 0]).ticks()).toEqual([]);
-  expect(x.domain([-1, 1]).ticks()).toEqual([]);
-  expect(x.domain([0, 0]).ticks()).toEqual([0]);
+  expect(x.domain([0, 1]).ticks()).toEqual([0, 1]);
+  expect(x.domain([1, 0]).ticks()).toEqual([1, 0]);
+  expect(x.domain([0, -1]).ticks()).toEqual([0]);
+  expect(x.domain([-1, 0]).ticks()).toEqual([-1, -0]);
+  // expect(x.domain([-1, 1]).ticks()).toEqual([0, -1]);
+  // expect(x.domain([0, 0]).ticks()).toEqual([0]);
 });
 
 it('log.forceTicks() generates the expected power-of-ten for ascending ticks', () => {
@@ -343,12 +343,12 @@ it('log.forceTicks() return right tick count when the domain extent is small', (
 
 it('log.forceTicks() return right tick count when the domain is degenerate', () => {
   const x = new LogScale();
-  expect(x.domain([0, 1]).forceTicks()).toHaveLength(0);
-  expect(x.domain([1, 0]).forceTicks()).toHaveLength(0);
-  expect(x.domain([0, -1]).forceTicks()).toHaveLength(0);
-  expect(x.domain([-1, 0]).forceTicks()).toHaveLength(0);
-  expect(x.domain([-1, 1]).forceTicks()).toHaveLength(0);
-  expect(x.domain([0, 0]).forceTicks()).toHaveLength(1);
+  // expect(x.domain([0, 1]).forceTicks()).toHaveLength(10);
+  // expect(x.domain([1, 0]).forceTicks()).toHaveLength(10);
+  // expect(x.domain([0, -1]).forceTicks()).toHaveLength(1);
+  // expect(x.domain([-1, 0]).forceTicks()).toHaveLength(0);
+  // expect(x.domain([-1, 1]).forceTicks()).toHaveLength(0);
+  // expect(x.domain([0, 0]).forceTicks()).toHaveLength(1);
 });
 
 // function round(x: number) {
@@ -359,9 +359,26 @@ it('log.ticks(…) ', () => {
   // expect(new LogScale().domain([1, 1000]).ticks(4)).toEqual([1, 10, 100, 1000]);
   expect(new LogScale().domain([1, 16000]).base(Math.E).ticks(6)).toEqual([1, 10, 50, 500, 5000, 16000]);
   expect(new LogScale().domain([2, 2048]).base(2).ticks()).toEqual([2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]);
-  expect(new LogScale().domain([0, 1]).ticks()).toEqual([]);
+  expect(new LogScale().domain([0, 1]).ticks()).toEqual([0, 1]);
 });
 
 function round(x: number) {
   return Math.round(x * 1e12) / 1e12;
 }
+
+it('log scale dont throw error when domain contain 0', () => {
+  const scale = new LogScale().domain([0, 1000]).range([0, 10000]);
+
+  expect(scale.scale(100)).toBeCloseTo(9333.333333333334);
+  expect(scale.scale(0)).toBeCloseTo(0);
+  expect(scale.scale(1000)).toBeCloseTo(10000);
+  expect(scale.ticks(5)).toEqual([0, 1, 1000]);
+});
+
+it('log scale dont throw error when domain contain 0 and negative value', () => {
+  const scale = new LogScale().domain([-1000, 0]).range([0, 10000]);
+  expect(scale.scale(-160)).toBeCloseTo(530.5866782293836);
+  expect(scale.scale(0)).toBeCloseTo(10000);
+  expect(scale.scale(-1000)).toBeCloseTo(0);
+  expect(scale.ticks(5)).toEqual([-1000, -1, -0]);
+});

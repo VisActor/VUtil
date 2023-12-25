@@ -2,7 +2,7 @@ import { ticks, ticksBaseTransform, forceTicksBaseTransform, parseNiceOptions } 
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
-import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
+import type { ContinuousScaleType, NiceOptions, NiceType, PolymapType } from './interface';
 
 /**
  * 逆反函数
@@ -13,16 +13,30 @@ function reflect(f: (x: number) => number) {
   return (x: number) => -f(-x);
 }
 
+function limitPositiveZero(min: number = 1e-12) {
+  return (x: number) => {
+    return Math.max(x, min);
+  };
+}
+
+function limitNegativeZero(min: number = 1e-12) {
+  return (x: number) => {
+    return Math.min(x, -min);
+  };
+}
+
 export class LogScale extends ContinuousScale {
   readonly type: ContinuousScaleType = ScaleEnum.Log;
 
   _base: number;
   _logs: (x: number) => number;
   _pows: (x: number) => number;
+  _limit: (x: number) => number;
 
   constructor() {
     super(logp(10), powp(10));
 
+    this._limit = limitPositiveZero();
     this._logs = this.transformer;
     this._pows = this.untransformer;
     this._domain = [1, 10];
@@ -53,18 +67,37 @@ export class LogScale extends ContinuousScale {
     if (domain[0] < 0) {
       this._logs = reflect(logs);
       this._pows = reflect(pows);
+      this._limit = limitNegativeZero();
 
       this.transformer = logNegative;
       this.untransformer = expNegative;
     } else {
       this._logs = logs;
       this._pows = pows;
+      this._limit = limitPositiveZero();
 
-      this.transformer = logs;
+      this.transformer = this._logs;
       this.untransformer = pows;
     }
 
     return this;
+  }
+
+  scale(x: any): any {
+    x = Number(x);
+    if (Number.isNaN(x) || (this._domainValidator && !this._domainValidator(x))) {
+      return this._unknown;
+    }
+    if (!this._output) {
+      this._output = (this._piecewise as PolymapType<any>)(
+        (this._niceDomain ?? this._domain).map(this._limit).map(this.transformer),
+        this._calculateWholeRange(this._range),
+        this._interpolate
+      );
+    }
+    const output = this._output(this.transformer(this._limit(this._clamp(x))));
+
+    return this._fishEyeTransform ? this._fishEyeTransform(output) : output;
   }
 
   base(): number;
@@ -142,7 +175,14 @@ export class LogScale extends ContinuousScale {
   ticks(count: number = 10) {
     // return this.d3Ticks(count);
     const d = this.calculateVisibleDomain(this._range);
-    return ticksBaseTransform(d[0], d[d.length - 1], count, this._base, this.transformer, this.untransformer);
+    return ticksBaseTransform(
+      this._limit(d[0]),
+      this._limit(d[d.length - 1]),
+      count,
+      this._base,
+      this.transformer,
+      this.untransformer
+    );
   }
 
   /**
@@ -160,7 +200,13 @@ export class LogScale extends ContinuousScale {
    */
   stepTicks(step: number): any[] {
     const d = this.calculateVisibleDomain(this._range);
-    return forceTicksBaseTransform(d[0], d[d.length - 1], step, this.transformer, this.untransformer);
+    return forceTicksBaseTransform(
+      this._limit(d[0]),
+      this._limit(d[d.length - 1]),
+      step,
+      this.transformer,
+      this.untransformer
+    );
   }
 
   nice(count: number = 10, option?: NiceOptions): this {
