@@ -13,9 +13,6 @@ export * from './common';
 // data structure
 export * from './data-structure';
 
-// algorithm
-export * from './lru';
-
 // math
 export * from './math';
 
