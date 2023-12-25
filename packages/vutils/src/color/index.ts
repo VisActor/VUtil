@@ -1,5 +1,5 @@
 export { Color } from './Color';
-export { RGB } from './RGB';
+export { RGB } from './rgb';
 export { default as hexToRgb } from './hexToRgb';
 export { default as hslToRgb } from './hslToRgb';
 export { default as rgbToHex } from './rgbToHex';

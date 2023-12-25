@@ -33,7 +33,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 16进制/rgb 转化为r，g，b， o
  */
 import { clamp, isNil } from '../common';
-import { RGB } from './RGB';
+import { RGB } from './rgb';
 import { DEFAULT_COLORS } from './defaultColors';
 import hslToRgb from './hslToRgb';
 import { rgb } from './numberToRgb';

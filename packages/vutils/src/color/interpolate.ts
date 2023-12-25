@@ -1,4 +1,4 @@
-import { RGB } from './Color';
+import { RGB } from './rgb';
 
 export function interpolateRgb(colorA: RGB, colorB: RGB): (x: number) => RGB {
   const redA = colorA.r;

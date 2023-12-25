@@ -1,4 +1,4 @@
-import { ColorUtil } from '@visactor/vutils';
+import { Color, RGB } from '@visactor/vutils';
 export interface IColorRGBObj {
   r: number;
   g: number;
@@ -46,19 +46,19 @@ export function colorLinearGenerator(startColor: string, endColor: string, data:
   }
   if (total === 1) {
     data[0].colorObj = {
-      color: new ColorUtil.Color(new ColorUtil.RGB(startR, startG, startB).toString()),
+      color: new Color(new RGB(startR, startG, startB).toString()),
       transparent: true,
       opacity: startOpacity
     };
     return;
   } else if (total === 2) {
     data[0].colorObj = {
-      color: new ColorUtil.Color(new ColorUtil.RGB(startR, startG, startB).toString()),
+      color: new Color(new RGB(startR, startG, startB).toString()),
       transparent: true,
       opacity: startOpacity
     };
     data[1].colorObj = {
-      color: new ColorUtil.Color(new ColorUtil.RGB(endR, endG, endB).toString()),
+      color: new Color(new RGB(endR, endG, endB).toString()),
       transparent: true,
       opacity: endOpacity
     };
@@ -114,14 +114,14 @@ export function ColorObjGenerator(color: string): IColorObjGenerator {
   }
 
   return {
-    color: new ColorUtil.Color(color),
+    color: new Color(color),
     transparent: !!rgbaColor,
     opacity: rgbaColor ? rgbaColor.a : 1 // alpha 没有的话 默认为1
   };
 }
 
 export interface IColorObjGenerator {
-  color: ColorUtil.Color;
+  color: Color;
   transparent: boolean;
   opacity: number;
 }
