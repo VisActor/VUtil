@@ -73,6 +73,7 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
         isNil(this._canvas) &&
         typeof window !== 'undefined' &&
         typeof window.document !== 'undefined' &&
+        globalThis &&
         isValid(globalThis.document)
       ) {
         // 默认创建方法
