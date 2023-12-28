@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.17.3",
+      "tag": "@visactor/vscale_v0.17.3",
+      "date": "Thu, 28 Dec 2023 09:14:51 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix the bug of log-scale ticks\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.17.2",
       "tag": "@visactor/vscale_v0.17.2",
       "date": "Thu, 28 Dec 2023 07:59:41 GMT",
