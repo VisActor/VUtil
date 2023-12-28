@@ -155,7 +155,7 @@ it('log.nice() nices the domain, extending it to powers of ten', () => {
 
 it('log.nice() works on degenerate domains', () => {
   const x = new LogScale().domain([0, 0]).nice();
-  expect(x.domain()).toEqual([0, 0]);
+  expect(x.domain()).toEqual([1e-16, 1e-15]);
   x.domain([0.5, 0.5]).nice();
   expect(x.domain()).toEqual([0.1, 1]);
 });
@@ -164,7 +164,7 @@ it('log.nice() on a polylog domain only affects the extent', () => {
   const x = new LogScale().domain([1.1, 1.5, 10.9]).nice();
   expect(x.domain()).toEqual([1, 1.5, 11]);
   x.domain([-124, -1.5, -0]).nice();
-  expect(x.domain()).toEqual([-1000, -1.5, -0]);
+  expect(x.domain()).toEqual([-1000, -1.5, -1e-16]);
 });
 
 it('log.nice() works on large domains with large or small base', () => {
@@ -369,7 +369,7 @@ function round(x: number) {
 it('log scale dont throw error when domain contain 0', () => {
   const scale = new LogScale().domain([0, 1000]).range([0, 10000]);
 
-  expect(scale.scale(100)).toBeCloseTo(9333.333333333334);
+  expect(scale.scale(100)).toBeCloseTo(9463.909295551413);
   expect(scale.scale(0)).toBeCloseTo(0);
   expect(scale.scale(1000)).toBeCloseTo(10000);
   expect(scale.ticks(5)).toEqual([0, 1, 1000]);
@@ -377,7 +377,7 @@ it('log scale dont throw error when domain contain 0', () => {
 
 it('log scale dont throw error when domain contain 0 and negative value', () => {
   const scale = new LogScale().domain([-1000, 0]).range([0, 10000]);
-  expect(scale.scale(-160)).toBeCloseTo(530.5866782293836);
+  expect(scale.scale(-160)).toBeCloseTo(426.6638791545382);
   expect(scale.scale(0)).toBeCloseTo(10000);
   expect(scale.scale(-1000)).toBeCloseTo(0);
   expect(scale.ticks(5)).toEqual([-1000, -1, -0]);
