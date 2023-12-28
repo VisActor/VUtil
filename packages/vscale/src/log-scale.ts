@@ -13,13 +13,13 @@ function reflect(f: (x: number) => number) {
   return (x: number) => -f(-x);
 }
 
-function limitPositiveZero(min: number = 1e-12) {
+function limitPositiveZero(min: number = Number.EPSILON) {
   return (x: number) => {
     return Math.max(x, min);
   };
 }
 
-function limitNegativeZero(min: number = 1e-12) {
+function limitNegativeZero(min: number = Number.EPSILON) {
   return (x: number) => {
     return Math.min(x, -min);
   };
@@ -118,8 +118,8 @@ export class LogScale extends ContinuousScale {
 
   d3Ticks(count: number = 10) {
     const d = this.domain();
-    let u = d[0];
-    let v = d[d.length - 1];
+    let u = this._limit(d[0]);
+    let v = this._limit(d[d.length - 1]);
     const r = v < u;
 
     if (r) {
@@ -232,8 +232,8 @@ export class LogScale extends ContinuousScale {
 
     if (niceType) {
       const niceDomain = nice(originalDomain.slice(), {
-        floor: (x: number) => this._pows(Math.floor(this._logs(x))),
-        ceil: (x: number) => Math.ceil(x)
+        floor: (x: number) => this._pows(Math.floor(this._logs(this._limit(x)))),
+        ceil: (x: number) => (Math.abs(x) >= 1 ? Math.ceil(x) : this._pows(Math.ceil(this._logs(this._limit(x)))))
       });
 
       if (niceType === 'min') {
