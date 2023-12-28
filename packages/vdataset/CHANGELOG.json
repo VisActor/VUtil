@@ -2,6 +2,12 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.17.2",
+      "tag": "@visactor/vdataset_v0.17.2",
+      "date": "Thu, 28 Dec 2023 07:59:41 GMT",
+      "comments": {}
+    },
+    {
       "version": "0.17.1",
       "tag": "@visactor/vdataset_v0.17.1",
       "date": "Tue, 05 Dec 2023 13:02:13 GMT",

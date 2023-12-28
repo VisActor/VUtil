@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.17.2",
+      "tag": "@visactor/vutils_v0.17.2",
+      "date": "Thu, 28 Dec 2023 07:59:41 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix bug of `getContainerSize()` when the container has `display: none`\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.17.1",
       "tag": "@visactor/vutils_v0.17.1",
       "date": "Tue, 05 Dec 2023 13:02:13 GMT",
