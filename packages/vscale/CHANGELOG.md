@@ -1,6 +1,13 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Thu, 28 Dec 2023 09:14:51 GMT and should not be manually modified.
+This log was last generated on Thu, 25 Jan 2024 06:33:00 GMT and should not be manually modified.
+
+## 0.17.4
+Thu, 25 Jan 2024 06:33:00 GMT
+
+### Updates
+
+- fix: symlog tick. fix#@visactor/vchart#1563
 
 ## 0.17.3
 Thu, 28 Dec 2023 09:14:51 GMT

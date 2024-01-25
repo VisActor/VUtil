@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.17.4",
+      "tag": "@visactor/vscale_v0.17.4",
+      "date": "Thu, 25 Jan 2024 06:33:00 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: symlog tick. fix#@visactor/vchart#1563"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.17.3",
       "tag": "@visactor/vscale_v0.17.3",
       "date": "Thu, 28 Dec 2023 09:14:51 GMT",
