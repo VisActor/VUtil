@@ -1,7 +1,13 @@
 import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
 import { LinearScale } from './linear-scale';
 import { ScaleEnum } from './type';
-import { forceTicksBaseTransform, parseNiceOptions, stepTicks, ticksBaseTransform } from './utils/tick-sample';
+import {
+  d3TicksForLog,
+  forceTicksBaseTransform,
+  parseNiceOptions,
+  tickIncrement,
+  ticksBaseTransform
+} from './utils/tick-sample';
 import { symlog, symexp, nice } from './utils/utils';
 
 export class SymlogScale extends LinearScale {
@@ -36,6 +42,13 @@ export class SymlogScale extends LinearScale {
     this.untransformer = symexp(_);
 
     return this.rescale(slience);
+  }
+
+  d3Ticks(count: number = 10, options?: { noDecimals?: boolean }) {
+    const d = this.domain();
+    const u = d[0];
+    const v = d[d.length - 1];
+    return d3TicksForLog(u, v, count, this._const, this.transformer, this.untransformer, options);
   }
 
   ticks(count: number = 10) {

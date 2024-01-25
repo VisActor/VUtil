@@ -1,3 +1,4 @@
+import exp from 'constants';
 import { SymlogScale } from '../src/symlog-scale';
 
 it('new SymlogScale() has the expected defaults', () => {
@@ -278,6 +279,42 @@ it('symLog.forceTicks() return right tick count when the domain is degenerate', 
   expect(x.domain([-1, 0]).forceTicks()).toHaveLength(10);
   expect(x.domain([-1, 1]).forceTicks()).toHaveLength(10);
   expect(x.domain([0, 0]).forceTicks()).toHaveLength(1);
+});
+
+it('symLog.d3Ticks() return right tick count when the domain is degenerate', () => {
+  const x = new SymlogScale();
+
+  x.constant(1024).domain([-133405, 2668340]);
+  expect(x.d3Ticks()).toEqual([
+    -3051476.97873073, -412087.08453656075, -54884.5056339397, -6542.393445304986, 6542.393445304986, 54884.5056339397,
+    412087.08453656075, 3051476.97873073, 22554076.97388208
+  ]);
+
+  x.constant(2).domain([-1, 5]);
+  expect(x.d3Ticks()).toEqual([-1, -0.5, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]);
+  x.constant(Math.E).domain([-1, 5]);
+  expect(x.d3Ticks()).toEqual([-4.670774270471604, 4.670774270471604, 17.367255094728623]);
+  x.constant(10).domain([-1, 5]);
+  expect(x.d3Ticks()).toEqual([
+    -0.5237790361823939, -0.4655813654954612, -0.40738369480852854, -0.3491860241215959, -0.2909883534346632,
+    -0.2327906827477306, -0.17459301206079794, -0.1163953413738653, -0.05819767068693265
+  ]);
+});
+
+it('symLog.d3Ticks() with noDecimals return right tick count when the domain is degenerate', () => {
+  const x = new SymlogScale();
+
+  x.constant(1024).domain([-133405, 2668340]);
+  expect(x.d3Ticks(10, { noDecimals: true })).toEqual([
+    -3051477, -412088, -54885, -6543, 6542, 54884, 412087, 3051476, 22554076
+  ]);
+
+  x.constant(2).domain([-1, 5]);
+  expect(x.d3Ticks(10, { noDecimals: true })).toEqual([-1, 0, 1, 2, 3, 4, 5]);
+  x.constant(Math.E).domain([-1, 5]);
+  expect(x.d3Ticks(10, { noDecimals: true })).toEqual([-5, 4, 17]);
+  x.constant(10).domain([-1, 5]);
+  expect(x.d3Ticks(10, { noDecimals: true })).toEqual([-1]);
 });
 
 function round(x: number) {
