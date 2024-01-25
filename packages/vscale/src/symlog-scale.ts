@@ -1,7 +1,13 @@
 import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
 import { LinearScale } from './linear-scale';
 import { ScaleEnum } from './type';
-import { forceTicksBaseTransform, parseNiceOptions, stepTicks, ticksBaseTransform } from './utils/tick-sample';
+import {
+  d3TicksForLog,
+  forceTicksBaseTransform,
+  parseNiceOptions,
+  tickIncrement,
+  ticksBaseTransform
+} from './utils/tick-sample';
 import { symlog, symexp, nice } from './utils/utils';
 
 export class SymlogScale extends LinearScale {
@@ -36,6 +42,94 @@ export class SymlogScale extends LinearScale {
     this.untransformer = symexp(_);
 
     return this.rescale(slience);
+  }
+
+  d3TicksX = (start: number, stop: number, count: number, options?: { noDecimals?: boolean }) => {
+    let reverse;
+    let i = -1;
+    let n;
+    let ticks;
+    let step;
+
+    stop = +stop;
+    start = +start;
+    count = +count;
+
+    // add check for start equal stop
+    if (start === stop) {
+      return [start];
+    }
+
+    if (Math.abs(start - stop) <= Number.MIN_VALUE && count > 0) {
+      return [start];
+    }
+    if ((reverse = stop < start)) {
+      n = start;
+      start = stop;
+      stop = n;
+    }
+    // step = 10000
+    step = tickIncrement(start, stop, count).step;
+    // why return empty array when stop === 0 ?
+    // if (stop === 0 || !isFinite(step)) {
+    if (!isFinite(step)) {
+      return [];
+    }
+
+    if (step > 0) {
+      let r0 = Math.round(start / step);
+      let r1 = Math.round(stop / step);
+      if (r0 * step < start) {
+        ++r0;
+      }
+      if (r1 * step > stop) {
+        --r1;
+      }
+      ticks = new Array((n = r1 - r0 + 1));
+      while (++i < n) {
+        ticks[i] = (r0 + i) * step;
+      }
+    } else if (step < 0 && options?.noDecimals) {
+      step = 1;
+      const r0 = Math.ceil(start);
+      const r1 = Math.floor(stop);
+
+      if (r0 <= r1) {
+        ticks = new Array((n = r1 - r0 + 1));
+        while (++i < n) {
+          ticks[i] = r0 + i;
+        }
+      } else {
+        return [];
+      }
+    } else {
+      step = -step;
+      let r0 = Math.round(start * step);
+      let r1 = Math.round(stop * step);
+      if (r0 / step < start) {
+        ++r0;
+      }
+      if (r1 / step > stop) {
+        --r1;
+      }
+      ticks = new Array((n = r1 - r0 + 1));
+      while (++i < n) {
+        ticks[i] = (r0 + i) / step;
+      }
+    }
+
+    if (reverse) {
+      ticks.reverse();
+    }
+
+    return ticks;
+  };
+
+  d3Ticks(count: number = 10, options?: { noDecimals?: boolean }) {
+    const d = this.domain();
+    const u = d[0];
+    const v = d[d.length - 1];
+    return d3TicksForLog(u, v, count, this._const, this.transformer, this.untransformer, options);
   }
 
   ticks(count: number = 10) {

@@ -1,5 +1,4 @@
 import { range, memoize, isNumber } from '@visactor/vutils';
-import { LinearScale } from '../linear-scale';
 import type { TransformType, ContinuousTicksFunc, NiceOptions, NiceType } from '../interface';
 import { niceNumber, restrictNumber } from './utils';
 
@@ -25,6 +24,17 @@ type ForceTicksBaseTransformFunc = (
   count: number,
   transformer: TransformType,
   untransformer: TransformType
+) => number[];
+type D3TicksForLogTransformFunc = (
+  start: number,
+  stop: number,
+  count: number,
+  base: number,
+  transformer: TransformType,
+  untransformer: TransformType,
+  options?: {
+    noDecimals?: boolean;
+  }
 ) => number[];
 
 export const calculateTicksOfSingleValue = (value: number, tickCount: number, noDecimals?: boolean) => {
@@ -475,6 +485,74 @@ export function parseNiceOptions(originalDomain: number[], option: NiceOptions) 
 export const fixPrecision = (start: number, stop: number, value: number) => {
   return Math.abs(stop - start) < 1 ? +value.toFixed(1) : Math.round(+value);
 };
+
+export const d3TicksForLog = memoize<D3TicksForLogTransformFunc>(
+  (
+    start: number,
+    stop: number,
+    count: number,
+    base: number,
+    transformer: TransformType,
+    untransformer: TransformType,
+    options?: { noDecimals?: boolean }
+  ) => {
+    let u = start;
+    let v = stop;
+    const r = v < u;
+
+    if (r) {
+      [u, v] = [v, u];
+    }
+
+    let i = transformer(u);
+    let j = transformer(v);
+    let k;
+    let t;
+    let z = [];
+
+    if (!(base % 1) && j - i < count) {
+      // this._base is integer
+      (i = Math.floor(i)), (j = Math.ceil(j));
+      if (u > 0) {
+        for (; i <= j; ++i) {
+          for (k = 1; k < base; ++k) {
+            t = i < 0 ? k / untransformer(-i) : k * untransformer(i);
+            if (t < u) {
+              continue;
+            }
+            if (t > v) {
+              break;
+            }
+            z.push(t);
+          }
+        }
+      } else {
+        for (; i <= j; ++i) {
+          for (k = base - 1; k >= 1; --k) {
+            t = i > 0 ? k / untransformer(-i) : k * untransformer(i);
+            if (t < u) {
+              continue;
+            }
+            if (t > v) {
+              break;
+            }
+            z.push(t);
+          }
+        }
+      }
+      if (z.length * 2 < count) {
+        z = ticks(u, v, count);
+      }
+    } else {
+      z = ticks(i, j, Math.min(j - i, count)).map(untransformer);
+    }
+    z = z.filter((t: number) => t !== 0);
+    if (options?.noDecimals) {
+      z = Array.from(new Set(z.map((t: number) => Math.floor(t))));
+    }
+    return r ? z.reverse() : z;
+  }
+);
 
 export const ticksBaseTransform = memoize<TicksBaseTransformFunc>(
   (

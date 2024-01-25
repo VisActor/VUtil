@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: symlog tick. fix#@visactor/vchart#1563",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}

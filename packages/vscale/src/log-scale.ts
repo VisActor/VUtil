@@ -1,4 +1,4 @@
-import { ticks, ticksBaseTransform, forceTicksBaseTransform, parseNiceOptions } from './utils/tick-sample';
+import { ticksBaseTransform, forceTicksBaseTransform, parseNiceOptions, d3TicksForLog } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
@@ -116,60 +116,11 @@ export class LogScale extends ContinuousScale {
     return identity;
   }
 
-  d3Ticks(count: number = 10) {
+  d3Ticks(count: number = 10, options?: { noDecimals?: boolean }) {
     const d = this.domain();
-    let u = this._limit(d[0]);
-    let v = this._limit(d[d.length - 1]);
-    const r = v < u;
-
-    if (r) {
-      [u, v] = [v, u];
-    }
-
-    let i = this._logs(u);
-    let j = this._logs(v);
-    let k;
-    let t;
-    let z = [];
-
-    if (!(this._base % 1) && j - i < count) {
-      // this._base is integer
-      (i = Math.floor(i)), (j = Math.ceil(j));
-      if (u > 0) {
-        for (; i <= j; ++i) {
-          for (k = 1; k < this._base; ++k) {
-            t = i < 0 ? k / this._pows(-i) : k * this._pows(i);
-            if (t < u) {
-              continue;
-            }
-            if (t > v) {
-              break;
-            }
-            z.push(t);
-          }
-        }
-      } else {
-        for (; i <= j; ++i) {
-          for (k = this._base - 1; k >= 1; --k) {
-            t = i > 0 ? k / this._pows(-i) : k * this._pows(i);
-            if (t < u) {
-              continue;
-            }
-            if (t > v) {
-              break;
-            }
-            z.push(t);
-          }
-        }
-      }
-      if (z.length * 2 < count) {
-        z = ticks(u, v, count);
-      }
-    } else {
-      z = ticks(i, j, Math.min(j - i, count)).map(this._pows);
-    }
-    z = z.filter((t: number) => t !== 0);
-    return r ? z.reverse() : z;
+    const u = this._limit(d[0]);
+    const v = this._limit(d[d.length - 1]);
+    return d3TicksForLog(u, v, count, this._base, this.transformer, this.untransformer, options);
   }
 
   ticks(count: number = 10) {
