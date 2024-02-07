@@ -42,7 +42,7 @@ export class NumberUtil {
   private decimal = this.locale.decimal === undefined ? '.' : this.locale.decimal + '';
   private numerals =
     this.locale.numerals === undefined
-      ? (numerals: string[]) => numerals
+      ? (numerals: any) => numerals
       : formatNumerals([...this.locale.numerals].map(String));
   private percent = this.locale.percent === undefined ? '%' : this.locale.percent + '';
   private minus = this.locale.minus === undefined ? '−' : this.locale.minus + '';
