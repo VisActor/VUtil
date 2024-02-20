@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "feat: export type defination of `IParserOptions`",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}
