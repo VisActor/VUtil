@@ -40,7 +40,7 @@ export type { IDataViewParserOptions } from './parser/data-view';
 export { DataSet } from './data-set';
 export { DataView } from './data-view';
 export type { IDataViewOptions, IFields, IFieldsMeta } from './data-view';
-export type { Parser } from './parser';
+export type { Parser, IParserOptions } from './parser';
 
 // util
 export { readCSVTopNLine } from './utils/csv';
