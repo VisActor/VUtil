@@ -33,6 +33,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
   protected _domainValidator?: (val: number) => boolean;
 
   _clamp?: (x: number) => number;
+  _autoClamp?: boolean;
 
   constructor(transformer: TransformType = identity, untransformer: TransformType = identity) {
     super();
@@ -154,7 +155,7 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
       n = rangeLength;
     }
 
-    if (this._clamp === undefined) {
+    if (this._autoClamp) {
       this._clamp = clamper(domain[0], domain[n - 1]);
     }
     this._piecewise = n > 2 ? polymap : bimap;
@@ -172,8 +173,10 @@ export class ContinuousScale extends BaseScale implements IContinuousScale {
       return this._clamp !== identity;
     }
     if (f) {
+      this._autoClamp = false;
       this._clamp = f;
     } else {
+      this._autoClamp = !!_;
       this._clamp = _ ? undefined : identity;
     }
 

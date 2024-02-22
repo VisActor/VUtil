@@ -1,6 +1,11 @@
 # Change Log - @visactor/vscale
 
-This log was last generated on Thu, 25 Jan 2024 06:33:00 GMT and should not be manually modified.
+This log was last generated on Wed, 21 Feb 2024 07:17:30 GMT and should not be manually modified.
+
+## 0.17.5
+Wed, 21 Feb 2024 07:17:30 GMT
+
+_Version update only_
 
 ## 0.17.4
 Thu, 25 Jan 2024 06:33:00 GMT
