@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.18.1",
+      "tag": "@visactor/vscale_v0.18.1",
+      "date": "Mon, 26 Feb 2024 09:44:58 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: support the index api to get the index of value in ordianlScale.domain\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.0",
       "tag": "@visactor/vscale_v0.18.0",
       "date": "Thu, 22 Feb 2024 03:43:15 GMT",
