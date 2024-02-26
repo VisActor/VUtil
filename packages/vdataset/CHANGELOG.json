@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.18.0",
+      "tag": "@visactor/vdataset_v0.18.0",
+      "date": "Thu, 22 Feb 2024 03:43:15 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: export type defination of `IParserOptions`"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.17.5",
       "tag": "@visactor/vdataset_v0.17.5",
       "date": "Wed, 21 Feb 2024 07:17:30 GMT",

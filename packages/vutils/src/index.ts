@@ -46,3 +46,6 @@ export * from './dom';
 export * from './geo';
 
 export * from './color';
+
+export * from './format/time';
+export * from './format/number';
