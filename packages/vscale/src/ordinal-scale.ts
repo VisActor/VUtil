@@ -1,11 +1,11 @@
 import { ScaleEnum } from './type';
-import type { DiscreteScaleType, IBaseScale } from './interface';
+import type { DiscreteScaleType, IOrdinalScale } from './interface';
 import { BaseScale } from './base-scale';
 import { isValid } from '@visactor/vutils';
 
 export const implicit = Symbol('implicit');
 
-export class OrdinalScale extends BaseScale implements IBaseScale {
+export class OrdinalScale extends BaseScale implements IOrdinalScale {
   readonly type: DiscreteScaleType = ScaleEnum.Ordinal;
   protected _index: Map<string, number>;
   protected _domain: Array<number>;
@@ -38,8 +38,11 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
   }
 
   // TODO checkPoint
-  clone(): IBaseScale {
-    return new OrdinalScale().domain(this._domain).range(this._ordinalRange).unknown(this._unknown);
+  clone(): IOrdinalScale {
+    const s = new OrdinalScale().domain(this._domain).range(this._ordinalRange).unknown(this._unknown);
+    // _specified 为空时，不会返回this
+    this._specified && s.specified(this._specified);
+    return s;
   }
 
   calculateVisibleDomain(range: any[]) {
@@ -111,5 +114,12 @@ export class OrdinalScale extends BaseScale implements IBaseScale {
 
     this._ordinalRange = nextRange;
     return this;
+  }
+
+  index(x: any): number {
+    if (!this._index) {
+      return -1;
+    }
+    return this._index.get(`${x}`) ?? -1;
   }
 }
