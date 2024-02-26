@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "feat: support the index api to get the index of value in ordianlScale.domain\n\n",
+      "type": "none",
+      "packageName": "@visactor/vscale"
+    }
+  ],
+  "packageName": "@visactor/vscale",
+  "email": "lixuef1313@163.com"
+}
