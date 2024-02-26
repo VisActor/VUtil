@@ -224,3 +224,20 @@ test('ordinal.specified could set & get the special map and work well', function
   expect(s.scale('a')).toEqual('white');
   expect(s.scale('b')).toEqual(null);
 });
+
+test('ordinal.index() work well', function () {
+  const s = new OrdinalScale().domain(['a', 'b']).range(['white', 'black']).specified({ a: 'red' });
+  expect(s.index('a')).toEqual(1);
+  expect(s.index('b')).toEqual(2);
+  expect(s.index('c')).toEqual(-1);
+
+  const s1 = new OrdinalScale().domain([0, 1]).range(['white', 'black']);
+  expect(s1.index(0)).toEqual(1);
+  expect(s1.index('0')).toEqual(1);
+  expect(s1.index(1)).toEqual(2);
+  expect(s1.index('')).toEqual(-1);
+
+  const s2 = new OrdinalScale().range(['white', 'black']);
+  expect(s2.index('')).toEqual(-1);
+  expect(s2.index(0)).toEqual(-1);
+});

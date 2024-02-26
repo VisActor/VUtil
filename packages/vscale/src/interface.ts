@@ -74,6 +74,12 @@ export interface IBaseScale {
 
 export interface IOrdinalScale extends IBaseScale {
   specified: (_?: Record<string, unknown>) => this | Record<string, unknown>;
+  /**
+   * 获取domain中值的序号, 历史原因序号从 1 开始
+   * @param x 输入值
+   * @returns 序号，如果不存在，返回 -1
+   */
+  index: (x: any) => number;
 }
 
 export interface IBandLikeScale extends IOrdinalScale, IRangeFactor {
