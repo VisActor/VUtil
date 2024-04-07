@@ -161,29 +161,33 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
           this._wholeRange = [r0, r1];
         }
 
-        const canAlignStart = this._rangeFactorStart + rangeFactorSize <= 1;
-        const canAlignEnd = this._rangeFactorEnd - rangeFactorSize >= 0;
+        const rangeFactorMiddleValue = (this._rangeFactorStart + this._rangeFactorEnd) / 2;
+        const newRangeFactorStart = rangeFactorMiddleValue - rangeFactorSize / 2;
+        const newRangeFactorEnd = rangeFactorMiddleValue + rangeFactorSize / 2;
+
+        const canAlignStart = newRangeFactorEnd <= 1;
+        const canAlignEnd = newRangeFactorStart >= 0;
 
         if (changeProperty === 'rangeFactorStart' && canAlignStart) {
-          this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
+          this._rangeFactorEnd = newRangeFactorEnd;
         } else if (changeProperty === 'rangeFactorEnd' && canAlignEnd) {
-          this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
+          this._rangeFactorStart = newRangeFactorStart;
         } else {
           // 判断 scale 方向来决定边界检测顺序
           if (range[0] <= range[1]) {
             if (canAlignStart) {
-              this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
+              this._rangeFactorEnd = newRangeFactorEnd;
             } else if (canAlignEnd) {
-              this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
+              this._rangeFactorStart = newRangeFactorStart;
             } else {
               this._rangeFactorStart = 0;
               this._rangeFactorEnd = rangeFactorSize;
             }
           } else {
             if (canAlignEnd) {
-              this._rangeFactorStart = this._rangeFactorEnd - rangeFactorSize;
+              this._rangeFactorStart = newRangeFactorStart;
             } else if (canAlignStart) {
-              this._rangeFactorEnd = this._rangeFactorStart + rangeFactorSize;
+              this._rangeFactorEnd = newRangeFactorEnd;
             } else {
               this._rangeFactorStart = 1 - rangeFactorSize;
               this._rangeFactorEnd = 1;
