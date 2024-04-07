@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": "fix: update the band scale range factor calculating method when resizing",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}
