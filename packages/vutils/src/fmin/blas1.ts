@@ -7,6 +7,8 @@
  * @license
  */
 
+import { dotProduct } from '../math';
+
 // need some basic operations on vectors, rather than adding a dependency,
 // just define here
 export function zeros(x: number): number[] {
@@ -22,16 +24,8 @@ export function zerosM(x: number, y: number) {
   });
 }
 
-export function dot(a: number[], b: number[]) {
-  let ret = 0;
-  for (let i = 0; i < a.length; ++i) {
-    ret += a[i] * b[i];
-  }
-  return ret;
-}
-
 export function norm2(a: number[]) {
-  return Math.sqrt(dot(a, a));
+  return Math.sqrt(dotProduct(a, a));
 }
 
 export function scale(ret: number[], value: number[], c: number) {
@@ -48,6 +42,6 @@ export function weightedSum(ret: number[], w1: number, v1: number[], w2: number,
 
 export function gemv(output: number[], A: number[][], x: number[]) {
   for (let i = 0; i < output.length; ++i) {
-    output[i] = dot(A[i], x);
+    output[i] = dotProduct(A[i], x);
   }
 }

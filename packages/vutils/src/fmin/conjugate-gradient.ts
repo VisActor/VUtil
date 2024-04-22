@@ -7,7 +7,8 @@
  * @license
  */
 
-import { dot, norm2, scale, weightedSum, gemv } from './blas1';
+import { dotProduct } from '../math';
+import { norm2, scale, weightedSum } from './blas1';
 import { wolfeLineSearch } from './linesearch';
 
 export function conjugateGradient(f: any, initial: any, params: any) {
@@ -42,8 +43,8 @@ export function conjugateGradient(f: any, initial: any, params: any) {
       // update direction using Polak–Ribiere CG method
       weightedSum(yk, 1, next.fxprime, -1, current.fxprime);
 
-      const delta_k = dot(current.fxprime, current.fxprime);
-      const beta_k = Math.max(0, dot(yk, next.fxprime) / delta_k);
+      const delta_k = dotProduct(current.fxprime, current.fxprime);
+      const beta_k = Math.max(0, dotProduct(yk, next.fxprime) / delta_k);
 
       weightedSum(pk, beta_k, pk, -1, next.fxprime);
 
