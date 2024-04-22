@@ -18,7 +18,8 @@ export function findZeroOfFunction(f: any, a: any, b: any, parameters?: any) {
   let delta = b - a;
 
   if (fA * fB > 0) {
-    throw 'Initial bisect points must have opposite signs';
+    console.error('Initial bisect points must have opposite signs');
+    return NaN;
   }
 
   if (fA === 0) {
