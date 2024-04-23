@@ -7,6 +7,8 @@
  * @license
  */
 
+import { Logger } from '../logger';
+
 /** finds the zeros of a function, given two starting points (which must
  * have opposite signs */
 export function findZeroOfFunction(f: any, a: any, b: any, parameters?: any) {
@@ -18,7 +20,8 @@ export function findZeroOfFunction(f: any, a: any, b: any, parameters?: any) {
   let delta = b - a;
 
   if (fA * fB > 0) {
-    console.error('Initial bisect points must have opposite signs');
+    const logger = Logger.getInstance();
+    logger.error('Initial bisect points must have opposite signs');
     return NaN;
   }
 
