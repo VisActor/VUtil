@@ -106,6 +106,14 @@ export function crossProductPoint(dir1: { x: number; y: number }, dir2: { x: num
   return dir1.x * dir2.y - dir1.y * dir2.x;
 }
 
+export function dotProduct(a: number[] | Float32Array, b: number[] | Float32Array): number {
+  let ret = 0;
+  for (let i = 0; i < a.length; ++i) {
+    ret += a[i] * b[i];
+  }
+  return ret;
+}
+
 export function fuzzyEqualNumber(a: number, b: number): boolean {
   return abs(a - b) < epsilon;
 }
