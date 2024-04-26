@@ -1,6 +1,18 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Tue, 23 Apr 2024 08:05:12 GMT and should not be manually modified.
+This log was last generated on Fri, 26 Apr 2024 06:44:41 GMT and should not be manually modified.
+
+## 0.18.3
+Fri, 26 Apr 2024 06:44:41 GMT
+
+### Updates
+
+- feat: add bounds util `calculateAnchorOfBounds`
+
+
+- feat: add style utils `styleStringToObject` and `lowerCamelCaseToMiddle`
+
+
 
 ## 0.18.2
 Tue, 23 Apr 2024 08:05:12 GMT
