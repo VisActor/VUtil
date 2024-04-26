@@ -1,4 +1,4 @@
-import type { IBoundsLike } from 'src/data-structure';
+import type { IBoundsLike } from '../data-structure';
 
 export type InsideBoundsAnchorType = 'inside-top' | 'inside-bottom' | 'inside-left' | 'inside-right';
 
