@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.18.4",
+      "tag": "@visactor/vutils_v0.18.4",
+      "date": "Fri, 26 Apr 2024 10:58:38 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix params type of `calculateAnchorOfBounds()`\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.3",
       "tag": "@visactor/vutils_v0.18.3",
       "date": "Fri, 26 Apr 2024 06:44:41 GMT",
