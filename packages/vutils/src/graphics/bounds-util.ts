@@ -1,6 +1,6 @@
 import type { IBoundsLike } from '../data-structure';
 
-export type InsideBoundsAnchorType = 'inside-top' | 'inside-bottom' | 'inside-left' | 'inside-right';
+export type InsideBoundsAnchorType = 'inside' | 'inside-top' | 'inside-bottom' | 'inside-left' | 'inside-right';
 
 export type BoundsAnchorType =
   | 'top'
@@ -13,7 +13,7 @@ export type BoundsAnchorType =
   | 'bottom-left'
   | 'center';
 
-export const calculateAnchorOfBounds = (bounds: IBoundsLike, anchorType: BoundsAnchorType | InsideBoundsAnchorType) => {
+export const calculateAnchorOfBounds = (bounds: IBoundsLike, anchorType: string) => {
   const { x1, x2, y1, y2 } = bounds;
   const rectWidth = Math.abs(x2 - x1);
   const rectHeight = Math.abs(y2 - y1);
