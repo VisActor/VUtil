@@ -139,7 +139,3 @@ export function precisionAdd(a: number, b: number) {
 export function precisionSub(a: number, b: number) {
   return fixPrecision(a - b, 10 ** Math.max(getDecimalPlaces(a), getDecimalPlaces(b)));
 }
-
-export function seedRandom(seed: number) {
-  return '0.' + Math.sin(seed).toString().substring(6);
-}
