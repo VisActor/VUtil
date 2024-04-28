@@ -1,4 +1,4 @@
-import { precisionAdd, precisionSub, seedRandom } from '../../src/math';
+import { precisionAdd, precisionSub } from '../../src/math';
 
 describe('precision', () => {
   it('precision add', () => {
