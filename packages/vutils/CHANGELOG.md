@@ -1,6 +1,15 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Sun, 28 Apr 2024 06:32:14 GMT and should not be manually modified.
+This log was last generated on Wed, 08 May 2024 03:41:16 GMT and should not be manually modified.
+
+## 0.18.6
+Wed, 08 May 2024 03:41:16 GMT
+
+### Updates
+
+- feat: add `seedRandom`
+
+
 
 ## 0.18.5
 Sun, 28 Apr 2024 06:32:14 GMT
