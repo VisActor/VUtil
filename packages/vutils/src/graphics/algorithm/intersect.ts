@@ -1,4 +1,5 @@
 /* 用于判断2d相交 */
+import { degreeToRadian } from '../../angle';
 import type { IBoundsLike } from '../../data-structure';
 import type { vec2 } from '../../math';
 import { pi2, halfPi, crossProduct, fuzzyEqualVec } from '../../math';
@@ -291,10 +292,6 @@ function rotate({ x, y }: Point, deg: number, origin = { x: 0, y: 0 }) {
   };
 }
 
-function toDeg(angle: number) {
-  return (angle / 180) * Math.PI;
-}
-
 function getCenterPoint(box: RotateBound): Point {
   return {
     x: (box.x1 + box.x2) / 2,
@@ -312,7 +309,7 @@ interface RotateBound extends IBoundsLike {
  * @param {Object} box
  */
 function toRect(box: RotateBound, isDeg: boolean) {
-  const deg = isDeg ? box.angle : toDeg(box.angle);
+  const deg = isDeg ? box.angle : degreeToRadian(box.angle);
   const cp = getCenterPoint(box);
   return [
     rotate(
@@ -406,11 +403,11 @@ export function isRotateAABBIntersect(
   const B1C1 = vector(rect2[1], rect2[2]);
 
   // 矩形1 的两个弧度
-  const deg11 = isDeg ? box1.angle : toDeg(box1.angle);
-  let deg12 = isDeg ? box1.angle + halfPi : toDeg(90 - box1.angle);
+  const deg11 = isDeg ? box1.angle : degreeToRadian(box1.angle);
+  let deg12 = isDeg ? box1.angle + halfPi : degreeToRadian(90 - box1.angle);
   // 矩形2 的两个弧度
-  const deg21 = isDeg ? box2.angle : toDeg(box2.angle);
-  let deg22 = isDeg ? box2.angle + halfPi : toDeg(90 - box2.angle);
+  const deg21 = isDeg ? box2.angle : degreeToRadian(box2.angle);
+  let deg22 = isDeg ? box2.angle + halfPi : degreeToRadian(90 - box2.angle);
   if (deg12 > pi2) {
     deg12 -= pi2;
   }
