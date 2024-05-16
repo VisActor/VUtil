@@ -1,4 +1,4 @@
-import { styleStringToObject, lowerCamelCaseToMiddle } from '../src';
+import { styleStringToObject, lowerCamelCaseToMiddle, isHTMLElement } from '../src';
 
 describe('dom utils', () => {
   it('styleStringToObject', () => {
@@ -13,5 +13,9 @@ describe('dom utils', () => {
   it('lowerCamelCaseToMiddle', () => {
     expect(lowerCamelCaseToMiddle('lineHeight')).toBe('line-height');
     expect(lowerCamelCaseToMiddle('fontSize')).toBe('font-size');
+  });
+
+  it('isHTMLElement', () => {
+    expect(isHTMLElement({})).toBeFalsy();
   });
 });
