@@ -7,7 +7,7 @@
  * @license
  */
 
-import { isNumber } from './common';
+import isNumber from './common/isNumber';
 import type { ILogger } from './type';
 
 // check console
