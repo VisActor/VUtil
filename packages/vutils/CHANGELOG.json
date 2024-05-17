@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.18.8",
+      "tag": "@visactor/vutils_v0.18.8",
+      "date": "Fri, 17 May 2024 12:10:14 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix circlular deps\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.7",
       "tag": "@visactor/vutils_v0.18.7",
       "date": "Fri, 17 May 2024 02:20:30 GMT",
