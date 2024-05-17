@@ -1,6 +1,15 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Fri, 17 May 2024 02:20:30 GMT and should not be manually modified.
+This log was last generated on Fri, 17 May 2024 12:10:14 GMT and should not be manually modified.
+
+## 0.18.8
+Fri, 17 May 2024 12:10:14 GMT
+
+### Updates
+
+- fix: fix circlular deps
+
+
 
 ## 0.18.7
 Fri, 17 May 2024 02:20:30 GMT
