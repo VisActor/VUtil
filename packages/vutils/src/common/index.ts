@@ -39,7 +39,7 @@ export * from './array';
 export { range } from './range';
 export { ascending } from './ascending';
 export * from './quantileSorted';
-export { bisect } from './bisect';
+export { bisect, findZeroOfFunction, binaryFuzzySearch, binaryFuzzySearchInNumberRange } from './bisect';
 export { deviation } from './deviation';
 export { median } from './median';
 export { variance } from './variance';

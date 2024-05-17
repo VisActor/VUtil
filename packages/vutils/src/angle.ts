@@ -84,3 +84,17 @@ export function polarToCartesian(center: IPointLike, radius: number, angleInRadi
 export function getAngleByPoint(center: IPointLike, point: IPointLike): number {
   return Math.atan2(point.y - center.y, point.x - center.x);
 }
+
+/**
+ * 角度标准化处理
+ * @param angle 弧度角
+ */
+export function normalizeAngle(angle: number): number {
+  while (angle < 0) {
+    angle += Math.PI * 2;
+  }
+  while (angle >= Math.PI * 2) {
+    angle -= Math.PI * 2;
+  }
+  return angle;
+}

@@ -38,7 +38,7 @@ export type { IDataViewParserOptions } from './parser/data-view';
 
 // core
 export { DataSet } from './data-set';
-export { DataView } from './data-view';
+export { DataView, isDataView } from './data-view';
 export type { IDataViewOptions, IFields, IFieldsMeta } from './data-view';
 export type { Parser, IParserOptions } from './parser';
 

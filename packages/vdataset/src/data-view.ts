@@ -406,3 +406,7 @@ export class DataView {
     this.target = null;
   }
 }
+
+export function isDataView(obj: any): obj is DataView {
+  return obj instanceof DataView;
+}
