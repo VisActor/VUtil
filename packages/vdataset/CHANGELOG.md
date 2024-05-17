@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Wed, 08 May 2024 03:41:16 GMT and should not be manually modified.
+This log was last generated on Fri, 17 May 2024 02:20:30 GMT and should not be manually modified.
+
+## 0.18.7
+Fri, 17 May 2024 02:20:30 GMT
+
+### Updates
+
+- feat: add some utils, `isDataView`, `normalizeAngle`,  .etc
+
+
 
 ## 0.18.6
 Wed, 08 May 2024 03:41:16 GMT
