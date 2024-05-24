@@ -1,6 +1,15 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Fri, 17 May 2024 12:10:14 GMT and should not be manually modified.
+This log was last generated on Fri, 24 May 2024 08:23:48 GMT and should not be manually modified.
+
+## 0.18.9
+Fri, 24 May 2024 08:23:48 GMT
+
+### Updates
+
+- feat: add `calculateMaxRadius()` and `findBoundaryAngles()`
+
+
 
 ## 0.18.8
 Fri, 17 May 2024 12:10:14 GMT
