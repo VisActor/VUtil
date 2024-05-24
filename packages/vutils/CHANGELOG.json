@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.18.9",
+      "tag": "@visactor/vutils_v0.18.9",
+      "date": "Fri, 24 May 2024 08:23:48 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add `calculateMaxRadius()` and `findBoundaryAngles()`\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.8",
       "tag": "@visactor/vutils_v0.18.8",
       "date": "Fri, 17 May 2024 12:10:14 GMT",
