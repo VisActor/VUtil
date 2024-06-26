@@ -69,8 +69,8 @@ export function pointAt(
   x: undefined | number;
   y: undefined | number;
 } {
-  let x: number | undefined;
-  let y: number | undefined;
+  let x: number | undefined = x2;
+  let y: number | undefined = y2;
   if (typeof x1 === 'number' && typeof x2 === 'number') {
     x = (1 - t) * x1 + t * x2;
   }
