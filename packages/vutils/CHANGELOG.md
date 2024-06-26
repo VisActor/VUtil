@@ -1,6 +1,15 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Fri, 24 May 2024 08:23:48 GMT and should not be manually modified.
+This log was last generated on Wed, 26 Jun 2024 08:41:58 GMT and should not be manually modified.
+
+## 0.18.10
+Wed, 26 Jun 2024 08:41:58 GMT
+
+### Updates
+
+- fix: fix bug at `pointAt` when x,y is undefined
+
+
 
 ## 0.18.9
 Fri, 24 May 2024 08:23:48 GMT
