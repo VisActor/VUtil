@@ -27,7 +27,7 @@ export { default as get } from './get';
 export { default as has } from './has';
 export { default as clone } from './clone';
 export { default as cloneDeep } from './cloneDeep';
-export { default as merge } from './merge';
+export { default as merge, baseMerge } from './merge';
 export { default as pick } from './pick';
 export { default as pickWithout } from './pickWithout';
 export { isEqual } from './isEqual';
