@@ -6,6 +6,12 @@ import { d3TicksForLog, forceTicksBaseTransform, parseNiceOptions, ticksBaseTran
 import { symlog, symexp, nice } from './utils/utils';
 import { LogNiceMixin } from './log-nice-mixin';
 
+export interface SymlogScale extends LinearScale {
+  nice: (count?: number, option?: NiceOptions) => this;
+  niceMin: (count?: number) => this;
+  niceMax: (count?: number) => this;
+}
+
 export class SymlogScale extends LinearScale {
   readonly type: ContinuousScaleType = ScaleEnum.Symlog;
 

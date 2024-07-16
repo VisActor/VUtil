@@ -2,7 +2,7 @@ import { ticksBaseTransform, forceTicksBaseTransform, parseNiceOptions, d3TicksF
 import { ContinuousScale } from './continuous-scale';
 import { ScaleEnum } from './type';
 import { logp, nice, powp, logNegative, expNegative, identity } from './utils/utils';
-import type { ContinuousScaleType, NiceOptions, NiceType, PolymapType } from './interface';
+import type { ContinuousScaleType, IContinuousScale, NiceOptions, NiceType, PolymapType } from './interface';
 import { mixin } from '@visactor/vutils';
 import { LogNiceMixin } from './log-nice-mixin';
 
@@ -25,6 +25,12 @@ function limitNegativeZero(min: number = Number.EPSILON) {
   return (x: number) => {
     return Math.min(x, -min);
   };
+}
+
+export interface LogScale extends ContinuousScale {
+  nice: (count?: number, option?: NiceOptions) => this;
+  niceMin: (count?: number) => this;
+  niceMax: (count?: number) => this;
 }
 
 export class LogScale extends ContinuousScale {

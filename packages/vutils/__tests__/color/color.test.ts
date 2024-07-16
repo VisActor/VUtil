@@ -13,7 +13,7 @@ describe('parseColorString', () => {
 
   it('parseColorString("#ff73") should return not RGB color', () => {
     const color = ColorUtil.Color.parseColorString('#ff73');
-    expect(color).toBeUndefined();
+    expect(color).toBeNull();
   });
 
   it('parseColorString("#ff7") should return RGB color', () => {
