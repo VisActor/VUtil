@@ -3,7 +3,7 @@ import isArrayLike from './isArrayLike';
 import isPlainObject from './isPlainObject';
 import isValid from './isValid';
 
-function baseMerge(target: any, source: any, shallowArray: boolean = false) {
+function baseMerge(target: any, source: any, shallowArray: boolean = false, skipTargetArray: boolean = false) {
   if (source) {
     if (target === source) {
       return;
@@ -20,8 +20,13 @@ function baseMerge(target: any, source: any, shallowArray: boolean = false) {
       let propIndex = -1;
       while (length--) {
         const key = props[++propIndex];
-        if (isValid(iterable[key]) && typeof iterable[key] === 'object') {
-          baseMergeDeep(target, source, key, shallowArray);
+        // skipArray 这个是vchart spec的特有逻辑
+        if (
+          isValid(iterable[key]) &&
+          typeof iterable[key] === 'object' &&
+          (!skipTargetArray || !isArray(target[key]))
+        ) {
+          baseMergeDeep(target, source, key, shallowArray, skipTargetArray);
         } else {
           assignMergeValue(target, key, iterable[key]);
         }
@@ -32,7 +37,13 @@ function baseMerge(target: any, source: any, shallowArray: boolean = false) {
 
 // 由于目前 ChartSpace 内部对 spec 会先执行一次深拷贝，merge 暂时不考虑 source 中有环的问题
 // eslint-disable-next-line @typescript-eslint/ban-types
-function baseMergeDeep(target: object, source: object, key: string, shallowArray: boolean = false) {
+function baseMergeDeep(
+  target: object,
+  source: object,
+  key: string,
+  shallowArray: boolean = false,
+  skipTargetArray: boolean = false
+) {
   const objValue = target[key];
   const srcValue = source[key];
   let newValue = source[key];
@@ -69,7 +80,7 @@ function baseMergeDeep(target: object, source: object, key: string, shallowArray
   }
   // 对 class 等复杂对象或者浅拷贝的 array 不做拷贝处理
   if (isCommon) {
-    baseMerge(newValue, srcValue, shallowArray);
+    baseMerge(newValue, srcValue, shallowArray, skipTargetArray);
   }
   assignMergeValue(target, key, newValue);
 }

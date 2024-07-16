@@ -10,16 +10,6 @@ function sub(out: vec2, v1: vec2, v2: vec2) {
   out[1] = v1[1] - v2[1];
 }
 
-// 临时变量
-let x11: number;
-let x12: number;
-let y11: number;
-let y12: number;
-let x21: number;
-let x22: number;
-let y21: number;
-let y22: number;
-
 /**
  * 判断直线是否相交，投影法
  * @param left1
@@ -32,14 +22,11 @@ export function isIntersect(left1: vec2, right1: vec2, left2: vec2, right2: vec2
   let max1: number = right1[0];
   let min2: number = left2[0];
   let max2: number = right2[0];
-  let _temp: number;
   if (max1 < min1) {
-    _temp = max1;
-    (max1 = min1), (min1 = _temp);
+    [min1, max1] = [max1, min1];
   }
   if (max2 < min2) {
-    _temp = max2;
-    (max2 = min2), (min2 = _temp);
+    [max2, min2] = [min2, max2];
   }
   if (max1 < min2 || max2 < min1) {
     return false;
@@ -47,12 +34,10 @@ export function isIntersect(left1: vec2, right1: vec2, left2: vec2, right2: vec2
 
   (min1 = left1[1]), (max1 = right1[1]), (min2 = left2[1]), (max2 = right2[1]);
   if (max1 < min1) {
-    _temp = max1;
-    (max1 = min1), (min1 = _temp);
+    [min1, max1] = [max1, min1];
   }
   if (max2 < min2) {
-    _temp = max2;
-    (max2 = min2), (min2 = _temp);
+    [max2, min2] = [min2, max2];
   }
   if (max1 < min2 || max2 < min1) {
     return false;
@@ -119,14 +104,29 @@ export function getRectIntersect(
     return bbox1;
   }
 
-  (x11 = bbox1.x1),
-    (x12 = bbox1.x2),
-    (y11 = bbox1.y1),
-    (y12 = bbox1.y2),
-    (x21 = bbox2.x1),
-    (x22 = bbox2.x2),
-    (y21 = bbox2.y1),
-    (y22 = bbox2.y2);
+  const { x11, x12, y11, y12, x21, x22, y21, y22 } = formatTwoBBox(bbox1, bbox2, format);
+
+  if (x11 >= x22 || x12 <= x21 || y11 >= y22 || y12 <= y21) {
+    return { x1: 0, y1: 0, x2: 0, y2: 0 };
+  }
+  return { x1: Math.max(x11, x21), y1: Math.max(y11, y21), x2: Math.min(x12, x22), y2: Math.min(y12, y22) };
+}
+
+export enum InnerBBox {
+  NONE = 0,
+  BBOX1 = 1,
+  BBOX2 = 2
+}
+
+const formatTwoBBox = (bbox1: IBoundsLike, bbox2: IBoundsLike, format: boolean) => {
+  let x11 = bbox1.x1;
+  let x12 = bbox1.x2;
+  let y11 = bbox1.y1;
+  let y12 = bbox1.y2;
+  let x21 = bbox2.x1;
+  let x22 = bbox2.x2;
+  let y21 = bbox2.y1;
+  let y22 = bbox2.y2;
 
   if (format) {
     if (x11 > x12) {
@@ -142,18 +142,8 @@ export function getRectIntersect(
       [y21, y22] = [y22, y21];
     }
   }
-
-  if (x11 >= x22 || x12 <= x21 || y11 >= y22 || y12 <= y21) {
-    return { x1: 0, y1: 0, x2: 0, y2: 0 };
-  }
-  return { x1: Math.max(x11, x21), y1: Math.max(y11, y21), x2: Math.min(x12, x22), y2: Math.min(y12, y22) };
-}
-
-export enum InnerBBox {
-  NONE = 0,
-  BBOX1 = 1,
-  BBOX2 = 2
-}
+  return { x11, x12, y11, y12, x21, x22, y21, y22 };
+};
 /**
  * 矩形是否在另一个矩形内部
  * 返回InnerBBox
@@ -170,30 +160,7 @@ export function rectInsideAnotherRect(
     return InnerBBox.NONE;
   }
 
-  (x11 = bbox1.x1),
-    (x12 = bbox1.x2),
-    (y11 = bbox1.y1),
-    (y12 = bbox1.y2),
-    (x21 = bbox2.x1),
-    (x22 = bbox2.x2),
-    (y21 = bbox2.y1),
-    (y22 = bbox2.y2);
-
-  if (format) {
-    if (x11 > x12) {
-      [x11, x12] = [x12, x11];
-    }
-    if (y11 > y12) {
-      [y11, y12] = [y12, y11];
-    }
-    if (x21 > x22) {
-      [x21, x22] = [x22, x21];
-    }
-    if (y21 > y22) {
-      [y21, y22] = [y22, y21];
-    }
-  }
-
+  const { x11, x12, y11, y12, x21, x22, y21, y22 } = formatTwoBBox(bbox1, bbox2, format);
   // bbox1在bbox2内部
   if (x11 > x21 && x12 < x22 && y11 > y21 && y12 < y22) {
     return InnerBBox.BBOX1;
@@ -222,26 +189,7 @@ export function isRectIntersect(bbox1: IBoundsLike | null, bbox2: IBoundsLike | 
       return true;
     }
 
-    (x11 = bbox1.x1),
-      (x12 = bbox1.x2),
-      (y11 = bbox1.y1),
-      (y12 = bbox1.y2),
-      (x21 = bbox2.x1),
-      (x22 = bbox2.x2),
-      (y21 = bbox2.y1),
-      (y22 = bbox2.y2);
-    if (x11 > x12) {
-      [x11, x12] = [x12, x11];
-    }
-    if (y11 > y12) {
-      [y11, y12] = [y12, y11];
-    }
-    if (x21 > x22) {
-      [x21, x22] = [x22, x21];
-    }
-    if (y21 > y22) {
-      [y21, y22] = [y22, y21];
-    }
+    const { x11, x12, y11, y12, x21, x22, y21, y22 } = formatTwoBBox(bbox1, bbox2, true);
 
     if (x11 > x22 || x12 < x21 || y11 > y22 || y12 < y21) {
       return false;
@@ -264,7 +212,10 @@ export function pointInRect(point: { x: number; y: number }, bbox: IBoundsLike |
   if (!format) {
     return point.x >= bbox.x1 && point.x <= bbox.x2 && point.y >= bbox.y1 && point.y <= bbox.y2;
   }
-  (x11 = bbox.x1), (x12 = bbox.x2), (y11 = bbox.y1), (y12 = bbox.y2);
+  let x11 = bbox.x1;
+  let x12 = bbox.x2;
+  let y11 = bbox.y1;
+  let y12 = bbox.y2;
   if (x11 > x12) {
     [x11, x12] = [x12, x11];
   }

@@ -1,7 +1,14 @@
 import type { ITextFontParams } from './interface';
 
 // FIXME: from VRender
-export function getContextFont(text: Partial<ITextFontParams>, defaultAttr: Partial<ITextFontParams> = {}): string {
+export function getContextFont(
+  text: Partial<ITextFontParams>,
+  defaultAttr: Partial<ITextFontParams> = {},
+  fontSizeScale?: number
+): string {
+  if (!fontSizeScale) {
+    fontSizeScale = 1;
+  }
   const {
     fontStyle = defaultAttr.fontStyle,
     fontVariant = defaultAttr.fontVariant,
@@ -14,7 +21,7 @@ export function getContextFont(text: Partial<ITextFontParams>, defaultAttr: Part
     (fontStyle ? fontStyle + ' ' : '') +
     (fontVariant ? fontVariant + ' ' : '') +
     (fontWeight ? fontWeight + ' ' : '') +
-    fontSize +
+    fontSize * fontSizeScale +
     'px ' +
     (fontFamily ? fontFamily : 'sans-serif')
   );
