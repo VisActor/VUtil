@@ -1,5 +1,19 @@
 import { clamper } from '@visactor/vutils';
 
+function generateTicks(start: number, stop: number, step: number, reverse: boolean) {
+  const ticks: number[] = [];
+  let ptr = start;
+  while (ptr <= stop) {
+    ticks.push(ptr);
+    ptr += step;
+  }
+  if (reverse) {
+    ticks.reverse();
+  }
+
+  return ticks;
+}
+
 /**
  * 根据start、stop、count进行分割，不要求count完全准确，但是保证均匀，输出为整数数组
  * @param start
@@ -10,7 +24,6 @@ import { clamper } from '@visactor/vutils';
  */
 export function ticks(start: number, stop: number, count: number, allowExcessive?: boolean) {
   let reverse: boolean;
-  const ticks: number[] = [];
   let step: number;
 
   stop = Math.floor(+stop);
@@ -40,16 +53,7 @@ export function ticks(start: number, stop: number, count: number, allowExcessive
     }
   }
 
-  let ptr = start;
-  while (ptr <= stop) {
-    ticks.push(ptr);
-    ptr += step;
-  }
-  if (reverse) {
-    ticks.reverse();
-  }
-
-  return ticks;
+  return generateTicks(start, stop, step, reverse);
 }
 
 /**
@@ -60,7 +64,6 @@ export function ticks(start: number, stop: number, count: number, allowExcessive
  * @returns
  */
 export function stepTicks(start: number, stop: number, step: number) {
-  const ticks: number[] = [];
   let reverse: boolean;
 
   stop = Math.floor(+stop);
@@ -71,14 +74,5 @@ export function stepTicks(start: number, stop: number, step: number) {
     start = stop;
     stop = n;
   }
-
-  let ptr = start;
-  while (ptr <= stop) {
-    ticks.push(ptr);
-    ptr += step;
-  }
-  if (reverse) {
-    ticks.reverse();
-  }
-  return ticks;
+  return generateTicks(start, stop, step, reverse);
 }

@@ -5,9 +5,9 @@ import isNumber from './isNumber';
 import isString from './isString';
 import isValid from './isValid';
 
-export default function cloneDeep(value: any): any {
+export default function cloneDeep(value: any, ignoreWhen?: (value: any) => boolean, excludeKeys?: string[]): any {
   let result;
-  if (!isValid(value) || typeof value !== 'object') {
+  if (!isValid(value) || typeof value !== 'object' || (ignoreWhen && ignoreWhen(value))) {
     return value;
   }
 
@@ -42,7 +42,12 @@ export default function cloneDeep(value: any): any {
     while (++index < (props || value).length) {
       const key = props ? props[index] : index;
       const subValue = value[key];
-      result[key] = cloneDeep(subValue);
+
+      if (excludeKeys && excludeKeys.includes(key.toString())) {
+        result[key] = subValue;
+      } else {
+        result[key] = cloneDeep(subValue, ignoreWhen, excludeKeys);
+      }
     }
   }
   return result;

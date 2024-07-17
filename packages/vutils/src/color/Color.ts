@@ -233,6 +233,36 @@ function LinearToSRGB(c: number) {
   return c < 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 0.41666) - 0.055;
 }
 
+const setHex = (formatValue: string, forceHex?: boolean) => {
+  const isHex = REG_HEX.exec(formatValue);
+
+  if (forceHex || isHex) {
+    const hex = parseInt(isHex[1], 16);
+    const hexLength = isHex[1].length;
+    // #fff
+    if (hexLength === 3) {
+      return new RGB(
+        ((hex >> 8) & 0xf) + (((hex >> 8) & 0xf) << 4),
+        ((hex >> 4) & 0xf) + (((hex >> 4) & 0xf) << 4),
+        (hex & 0xf) + ((hex & 0xf) << 4),
+        1
+      );
+    }
+    // #ffffff
+    if (hexLength === 6) {
+      return rgb(hex);
+    }
+    // #ffffffaa
+    else if (hexLength === 8) {
+      return new RGB((hex >> 24) & 0xff, (hex >> 16) & 0xff, (hex >> 8) & 0xff, (hex & 0xff) / 0xff);
+    }
+
+    return null;
+  }
+
+  return undefined;
+};
+
 export class Color {
   color!: RGB;
 
@@ -279,31 +309,12 @@ export class Color {
       return rgb(DEFAULT_COLORS[value]);
     }
     const formatValue = `${value}`.trim().toLowerCase();
-    const isHex = REG_HEX.exec(formatValue);
 
     // case2: 16进制
-    if (isHex) {
-      const hex = parseInt(isHex[1], 16);
-      const hexLength = isHex[1].length;
-      // #fff
-      if (hexLength === 3) {
-        return new RGB(
-          ((hex >> 8) & 0xf) + (((hex >> 8) & 0xf) << 4),
-          ((hex >> 4) & 0xf) + (((hex >> 4) & 0xf) << 4),
-          (hex & 0xf) + ((hex & 0xf) << 4),
-          1
-        );
-      }
-      // #ffffff
-      if (hexLength === 6) {
-        return rgb(hex);
-      }
-      // #ffffffaa
-      else if (hexLength === 8) {
-        return new RGB((hex >> 24) & 0xff, (hex >> 16) & 0xff, (hex >> 8) & 0xff, (hex & 0xff) / 0xff);
-      }
+    const hexRes = setHex(value);
 
-      return;
+    if (hexRes !== undefined) {
+      return hexRes;
     }
 
     // case3 : rgb
@@ -416,28 +427,10 @@ export class Color {
 
   setHex(value: string) {
     const formatValue = `${value}`.trim().toLowerCase();
-    const isHex = REG_HEX.exec(formatValue);
 
-    const hex = parseInt(isHex[1], 16);
-    const hexLength = isHex[1].length;
-    // #fff
-    if (hexLength === 3) {
-      return new RGB(
-        ((hex >> 8) & 0xf) + (((hex >> 8) & 0xf) << 4),
-        ((hex >> 4) & 0xf) + (((hex >> 4) & 0xf) << 4),
-        (hex & 0xf) + ((hex & 0xf) << 4),
-        1
-      );
-    }
-    // #ffffff
-    if (hexLength === 6) {
-      return rgb(hex);
-    }
-    // #ffffffaa
-    else if (hexLength === 8) {
-      return new RGB((hex >> 24) & 0xff, (hex >> 16) & 0xff, (hex >> 8) & 0xff, (hex & 0xff) / 0xff);
-    }
-    return this;
+    const res = setHex(formatValue, true);
+
+    return res ?? this;
   }
 
   setColorName(name: string) {

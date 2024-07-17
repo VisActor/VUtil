@@ -1,14 +1,16 @@
+import { mixin } from '@visactor/vutils';
 import type { ContinuousScaleType, NiceOptions, NiceType } from './interface';
 import { LinearScale } from './linear-scale';
 import { ScaleEnum } from './type';
-import {
-  d3TicksForLog,
-  forceTicksBaseTransform,
-  parseNiceOptions,
-  tickIncrement,
-  ticksBaseTransform
-} from './utils/tick-sample';
+import { d3TicksForLog, forceTicksBaseTransform, parseNiceOptions, ticksBaseTransform } from './utils/tick-sample';
 import { symlog, symexp, nice } from './utils/utils';
+import { LogNiceMixin } from './log-nice-mixin';
+
+export interface SymlogScale extends LinearScale {
+  nice: (count?: number, option?: NiceOptions) => this;
+  niceMin: (count?: number) => this;
+  niceMax: (count?: number) => this;
+}
 
 export class SymlogScale extends LinearScale {
   readonly type: ContinuousScaleType = ScaleEnum.Symlog;
@@ -74,81 +76,6 @@ export class SymlogScale extends LinearScale {
     const d = this.calculateVisibleDomain(this._range);
     return forceTicksBaseTransform(d[0], d[d.length - 1], step, this.transformer, this.untransformer);
   }
-
-  nice(count: number = 10, option?: NiceOptions): this {
-    const originalDomain = this._domain;
-    let niceMinMax: number[] = [];
-    let niceType: NiceType = null;
-
-    if (option) {
-      const res = parseNiceOptions(originalDomain, option);
-      niceMinMax = res.niceMinMax;
-      this._domainValidator = res.domainValidator;
-
-      niceType = res.niceType;
-
-      if (res.niceDomain) {
-        this._niceDomain = res.niceDomain;
-        this.rescale();
-        return this;
-      }
-    } else {
-      niceType = 'all';
-    }
-
-    if (niceType) {
-      const niceDomain = nice(originalDomain.slice(), {
-        floor: (x: number) => Math.floor(x),
-        ceil: (x: number) => Math.ceil(x)
-      });
-
-      if (niceType === 'min') {
-        niceDomain[niceDomain.length - 1] = niceMinMax[1] ?? niceDomain[niceDomain.length - 1];
-      } else if (niceType === 'max') {
-        niceDomain[0] = niceMinMax[0] ?? niceDomain[0];
-      }
-
-      this._niceDomain = niceDomain as number[];
-      this.rescale();
-      return this;
-    }
-
-    return this;
-  }
-
-  /**
-   * 只对min区间进行nice
-   * 如果保持某一边界的值，就很难有好的nice效果，所以这里实现就是nice之后还原固定的边界值
-   */
-  niceMin(): this {
-    const maxD = this._domain[this._domain.length - 1];
-    this.nice();
-    const niceDomain = this._domain.slice();
-
-    if (this._domain) {
-      niceDomain[niceDomain.length - 1] = maxD;
-      this._niceDomain = niceDomain;
-      this.rescale();
-    }
-
-    return this;
-  }
-
-  /**
-   * 只对max区间进行nice
-   * 如果保持某一边界的值，就很难有好的nice效果，所以这里实现就是nice之后还原固定的边界值
-   */
-  niceMax(): this {
-    const minD = this._domain[0];
-    this.nice();
-    const niceDomain = this._domain.slice();
-
-    if (this._domain) {
-      niceDomain[0] = minD;
-      this._niceDomain = niceDomain;
-      this.rescale();
-    }
-
-    return this;
-  }
 }
+
+mixin(SymlogScale, LogNiceMixin);
