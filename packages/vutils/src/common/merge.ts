@@ -3,7 +3,7 @@ import isArrayLike from './isArrayLike';
 import isPlainObject from './isPlainObject';
 import isValid from './isValid';
 
-function baseMerge(target: any, source: any, shallowArray: boolean = false, skipTargetArray: boolean = false) {
+export function baseMerge(target: any, source: any, shallowArray: boolean = false, skipTargetArray: boolean = false) {
   if (source) {
     if (target === source) {
       return;
