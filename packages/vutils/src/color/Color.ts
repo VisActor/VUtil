@@ -311,7 +311,7 @@ export class Color {
     const formatValue = `${value}`.trim().toLowerCase();
 
     // case2: 16进制
-    const hexRes = setHex(value);
+    const hexRes = setHex(formatValue);
 
     if (hexRes !== undefined) {
       return hexRes;
