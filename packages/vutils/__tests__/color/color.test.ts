@@ -39,6 +39,14 @@ describe('parseColorString', () => {
 
     expect(color?.formatHsl()).toBe('hsla(0,100%,50%,0.5)');
   });
+
+  it('parseColorString("#4284FF") should return RGB color', () => {
+    const color = ColorUtil.Color.parseColorString('#4284FF');
+    expect(color).toBeDefined();
+    expect(color?.formatHex()).toBe('#4284ff');
+
+    expect(color?.formatHsl()).toBe('hsl(219,100%,62.9%)');
+  });
 });
 
 describe('setHsl', () => {
