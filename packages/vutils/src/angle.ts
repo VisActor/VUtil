@@ -181,3 +181,17 @@ export function calculateMaxRadius(
 
   return Math.min.apply(null, radiusList);
 }
+
+export type Quadrant = 1 | 2 | 3 | 4;
+
+export function computeQuadrant(angle: number): Quadrant {
+  angle = normalizeAngle(angle);
+  if (angle > 0 && angle <= Math.PI / 2) {
+    return 2;
+  } else if (angle > Math.PI / 2 && angle <= Math.PI) {
+    return 3;
+  } else if (angle > Math.PI && angle <= (3 * Math.PI) / 2) {
+    return 4;
+  }
+  return 1;
+}

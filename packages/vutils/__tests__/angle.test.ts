@@ -1,4 +1,4 @@
-import { findBoundaryAngles, normalizeAngle, polarToCartesian, calculateMaxRadius } from '../src';
+import { findBoundaryAngles, normalizeAngle, polarToCartesian, calculateMaxRadius, computeQuadrant } from '../src';
 
 describe('angle utils', () => {
   it('normalizeAngle', () => {
@@ -40,5 +40,18 @@ describe('angle utils', () => {
     expect(
       calculateMaxRadius({ width: 400, height: 500 }, { x: 200, y: 350 }, -0.8 * Math.PI, 0.1 * Math.PI)
     ).toBeCloseTo(157.71933363574007);
+  });
+
+  it('computeQuadrant', () => {
+    expect(computeQuadrant(-0.5)).toBe(1);
+    expect(computeQuadrant(-1)).toBe(1);
+    expect(computeQuadrant(-2)).toBe(4);
+    expect(computeQuadrant(-3)).toBe(4);
+    expect(computeQuadrant(-4)).toBe(3);
+    expect(computeQuadrant(0.5)).toBe(2);
+    expect(computeQuadrant(1)).toBe(2);
+    expect(computeQuadrant(2)).toBe(3);
+    expect(computeQuadrant(3)).toBe(3);
+    expect(computeQuadrant(4)).toBe(4);
   });
 });
