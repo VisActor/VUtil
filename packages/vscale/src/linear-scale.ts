@@ -3,6 +3,7 @@ import { d3Ticks, forceTicks, niceLinear, parseNiceOptions, stepTicks, ticks } f
 import { ContinuousScale } from './continuous-scale';
 import type { ContinuousScaleType, NiceOptions } from './interface';
 import { isValid } from '@visactor/vutils';
+import { wilkinsonExtended } from './utils/tick-wilkinson-extended';
 
 /**
  * TODO:
@@ -31,6 +32,11 @@ export class LinearScale extends ContinuousScale {
   d3Ticks(count: number = 10, options?: { noDecimals?: boolean }) {
     const d = this.calculateVisibleDomain(this._range);
     return d3Ticks(d[0], d[d.length - 1], count, options);
+  }
+
+  wilkinsonTicks(count: number = 5) {
+    const d = this.calculateVisibleDomain(this._range);
+    return wilkinsonExtended(d[0], d[1], count);
   }
 
   /**

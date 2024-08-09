@@ -165,7 +165,25 @@ export type ContinuousTicksFunc = (
   start: number,
   stop: number,
   count: number,
-  options?: { noDecimals?: boolean }
+  options?: {
+    noDecimals?: boolean;
+    w?: [number, number, number, number];
+  }
+) => number[];
+
+/** wilkinson 生成ticks */
+export type WilkinsonExtendedTicksFunc = (
+  start: number,
+  stop: number,
+  count?: number,
+  options?: {
+    /** 是否允许扩展min、max，不绝对强制，例如[3, 97] */
+    onlyLoose?: boolean;
+    /** nice numbers集合 */
+    Q?: number[];
+    /** 四个优化组件的权重 */
+    w?: [number, number, number, number];
+  }
 ) => number[];
 
 export interface NiceOptions {
