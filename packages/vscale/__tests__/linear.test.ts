@@ -823,3 +823,13 @@ test('linear.ticks(count) will filter ticks when niceMax is true', function () {
   expect(newTicks).toEqual([0, 10, 20, 30, 40, 50]);
   expect(s.domain()).toEqual([originDomain[0], newTicks[newTicks.length - 1]]);
 });
+
+test('linear.wilkinsonTicks', () => {
+  const s = new LinearScale().domain([0, 100]).range([500, 1000]);
+  expect(s.wilkinsonTicks()).toStrictEqual([0, 25, 50, 75, 100]);
+});
+
+test('linear.wilkinsonTicks in interval option', () => {
+  const s = new LinearScale().domain([0, 100]).range([500, 1000]);
+  expect(s.wilkinsonTicks(10)).toStrictEqual([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
+});
