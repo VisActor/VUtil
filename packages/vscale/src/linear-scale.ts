@@ -1,9 +1,8 @@
 import { ScaleEnum } from './type';
 import { d3Ticks, forceTicks, niceLinear, parseNiceOptions, stepTicks, ticks } from './utils/tick-sample';
 import { ContinuousScale } from './continuous-scale';
-import type { ContinuousScaleType, NiceOptions } from './interface';
-import { isValid } from '@visactor/vutils';
-import { wilkinsonExtended } from './utils/tick-wilkinson-extended';
+import type { ContinuousScaleType, CustomTicksFunc, NiceOptions } from './interface';
+import { isFunction, isValid } from '@visactor/vutils';
 
 /**
  * TODO:
@@ -34,16 +33,14 @@ export class LinearScale extends ContinuousScale {
     return d3Ticks(d[0], d[d.length - 1], count, options);
   }
 
-  wilkinsonTicks(count: number = 5) {
-    const d = this.calculateVisibleDomain(this._range);
-    return wilkinsonExtended(d[0], d[1], count);
-  }
-
   /**
    * the kind of algorithms will generate ticks that is smaller than the min or greater than the max
    * if we don't update niceDomain, the ticks will exceed the domain
    */
-  ticks(count: number = 10, options?: { noDecimals?: boolean }) {
+  ticks(count: number = 10, options?: { noDecimals?: boolean; customTicks?: CustomTicksFunc<ContinuousScale> }) {
+    if (isFunction(options?.customTicks)) {
+      return options.customTicks(this, count);
+    }
     if (
       (isValid(this._rangeFactorStart) &&
         isValid(this._rangeFactorEnd) &&

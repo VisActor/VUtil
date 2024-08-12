@@ -141,4 +141,9 @@ export abstract class BaseScale implements IRangeFactor {
     this._unknown = _;
     return this;
   }
+
+  /** 内部变量对外抛出方法 */
+  get(key: string, defaultValue?: any) {
+    return (this as any)?.[key] ?? defaultValue;
+  }
 }

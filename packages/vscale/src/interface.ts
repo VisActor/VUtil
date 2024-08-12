@@ -1,3 +1,4 @@
+import type { BaseScale } from './base-scale';
 import type { ScaleEnum } from './type';
 
 export type Tuple<TItem, TLength extends number> = [TItem, ...TItem[]] & { length: TLength };
@@ -167,7 +168,6 @@ export type ContinuousTicksFunc = (
   count: number,
   options?: {
     noDecimals?: boolean;
-    w?: [number, number, number, number];
   }
 ) => number[];
 
@@ -185,6 +185,9 @@ export type WilkinsonExtendedTicksFunc = (
     w?: [number, number, number, number];
   }
 ) => number[];
+
+/** 自定义ticks方法 */
+export type CustomTicksFunc<T extends BaseScale> = (scale: T, count: number) => number[];
 
 export interface NiceOptions {
   forceMin?: number;
