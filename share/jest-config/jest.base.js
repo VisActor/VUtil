@@ -4,7 +4,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testTimeout: 30000,
-  silent: false,
+  silent: true,
   testMatch: ['**/__tests__/**/*.test.[jt]s'],
   transform: {
     '^.+\\.ts?$': [

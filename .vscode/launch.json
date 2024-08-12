@@ -1,19 +1,22 @@
 {
-  "version": "0.2.0",
+  "version": "0.1.0",
   "configurations": [
     {
-      "type": "node",
+      "name": "unit test",
+      "type": "pwa-node",
       "request": "launch",
-      "name": "Debug Jest Tests",
-      "program": "${workspaceFolder}/packages/vscale/node_modules/jest/bin/jest",
-      "args": [
-        "--runInBand",
-        "--config",
-        "${workspaceFolder}/packages/vscale/jest.config.js",
-        "__tests__/linear.test.ts"  // 替换为你的测试文件路径
-      ],
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": ["${file}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     }
+    // {
+    //   "name": "page test",
+    //   "request": "launch",
+    //   "cleanUp": "onlyTab",
+    //   "file": "${workspaceFolder}/packages/chartspace/test/index.html",
+    //   "preLaunchTask": "web",
+    //   "type": "pwa-chrome"
+    // }
   ]
 }
