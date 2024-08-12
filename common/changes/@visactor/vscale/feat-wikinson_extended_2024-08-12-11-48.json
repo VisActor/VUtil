@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@visactor/vscale",
-      "comment": "Add customTicksFunc in linearScale and support a new ticks function called wilkinson extended",
+      "comment": "feat: add customTicksFunc in linearScale and support a new ticks function called wilkinson extended",
       "type": "none"
     }
   ],
