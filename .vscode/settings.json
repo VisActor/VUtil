@@ -1,7 +1,12 @@
 {
   // Eslint
   "eslint.format.enable": true,
-  "eslint.validate": ["typescript", "javascript", "javascriptreact", "typescriptreact"],
+  "eslint.validate": [
+    "typescript",
+    "javascript",
+    "javascriptreact",
+    "typescriptreact"
+  ],
   // Formatter
   "javascript.format.enable": false,
   "typescript.format.enable": false,
@@ -16,7 +21,9 @@
   },
   // Editor
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "editor.codeActionsOnSave": [
+    "source.fixAll.eslint"
+  ],
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
@@ -26,5 +33,13 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "python.formatting.provider": "none",
-  "cSpell.words": ["vutil"]
+  "cSpell.words": [
+    "vutil"
+  ],
+  "jest.outputConfig": {
+    "revealOn": "run",
+    "revealWithFocus": "test-results",
+    "clearOnRun": "none"
+  },
+  "jest.rootPath": "packages/vscale"
 }
