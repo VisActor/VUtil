@@ -37,7 +37,10 @@ export class LinearScale extends ContinuousScale {
    * the kind of algorithms will generate ticks that is smaller than the min or greater than the max
    * if we don't update niceDomain, the ticks will exceed the domain
    */
-  ticks(count: number = 10, options?: { noDecimals?: boolean; customTicks?: CustomTicksFunc<ContinuousScale> }) {
+  ticks(
+    count: number = 10,
+    options?: { noDecimals?: boolean; customTicks?: CustomTicksFunc<ContinuousScale> }
+  ): number[] {
     if (isFunction(options?.customTicks)) {
       return options.customTicks(this, count);
     }
