@@ -1,3 +1,4 @@
+import { wilkinsonExtended } from '../src';
 import { LinearScale } from '../src/linear-scale';
 
 function roundEpsilon(x: number) {
@@ -822,4 +823,28 @@ test('linear.ticks(count) will filter ticks when niceMax is true', function () {
   const newTicks = s.ticks(5);
   expect(newTicks).toEqual([0, 10, 20, 30, 40, 50]);
   expect(s.domain()).toEqual([originDomain[0], newTicks[newTicks.length - 1]]);
+});
+
+test('linear.customTicks with wilkinson', async () => {
+  const s = new LinearScale().domain([0, 100]).range([500, 1000]);
+  expect(
+    s.ticks(5, {
+      customTicks: (scale, count) => {
+        const d = scale.calculateVisibleDomain(scale.get('_range'));
+        return wilkinsonExtended(d[0], d[1], count);
+      }
+    })
+  ).toStrictEqual([0, 25, 50, 75, 100]);
+});
+
+test('linear.customTicks with wilkinson in interval option', async () => {
+  const s = new LinearScale().domain([0, 100]).range([500, 1000]);
+  expect(
+    s.ticks(10, {
+      customTicks: (scale, count) => {
+        const d = scale.calculateVisibleDomain(scale.get('_range'));
+        return wilkinsonExtended(d[0], d[1], count);
+      }
+    })
+  ).toStrictEqual([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
 });
