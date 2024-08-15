@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.18.14",
+      "tag": "@visactor/vscale_v0.18.14",
+      "date": "Thu, 15 Aug 2024 02:19:52 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add customTicksFunc in linearScale and support a new ticks function called wilkinson extended"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.13",
       "tag": "@visactor/vscale_v0.18.13",
       "date": "Thu, 01 Aug 2024 03:34:58 GMT",
