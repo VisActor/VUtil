@@ -70,7 +70,7 @@ function baseMergeDeep(
   // }
   // 不考虑 argument 类型
   else if (isPlainObject(srcValue)) {
-    newValue = objValue;
+    newValue = objValue ?? {};
     // 不考虑 prototype 的额外处理
     if (typeof objValue === 'function' || typeof objValue !== 'object') {
       newValue = {};
