@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vscale",
-  "version": "0.18.14",
+  "version": "0.18.15",
   "description": "Scales for visual encoding, used in VGrammar, VTable",
   "keywords": [
     "scale",
@@ -34,7 +34,7 @@
     "test-cov": "jest -w 16 --coverage"
   },
   "dependencies": {
-    "@visactor/vutils": "workspace:0.18.14"
+    "@visactor/vutils": "workspace:0.18.15"
   },
   "devDependencies": {
     "@internal/bundler": "workspace:*",
