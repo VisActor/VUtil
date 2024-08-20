@@ -55,4 +55,27 @@ describe('merge', () => {
 
     expect(result).toEqual(expected);
   });
+  it('null value in target should not throw error', function () {
+    const target: any = {
+      style: {
+        stroke: null
+      }
+    };
+
+    const source = {
+      style: {
+        stroke: { type: 'palette', key: 'color1' }
+      }
+    };
+
+    const expected = {
+      style: {
+        stroke: { type: 'palette', key: 'color1' }
+      }
+    };
+
+    const result = merge(target, source);
+
+    expect(result).toEqual(expected);
+  });
 });
