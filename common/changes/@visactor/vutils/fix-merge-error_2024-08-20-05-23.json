@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix: merge error for invalid value",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
