@@ -26,7 +26,7 @@ importers:
       '@types/pbf': ^3.0.2
       '@types/topojson-client': ^3.1.0
       '@types/topojson-specification': ^1.0.2
-      '@visactor/vutils': workspace:0.18.15
+      '@visactor/vutils': workspace:0.18.16
       d3-array: 3.2.3
       d3-dsv: ^2.0.0
       d3-geo: ^1.12.1
@@ -98,7 +98,7 @@ importers:
       '@rushstack/eslint-patch': ~1.1.4
       '@types/jest': ~29.5.0
       '@types/node': '*'
-      '@visactor/vutils': workspace:0.18.15
+      '@visactor/vutils': workspace:0.18.16
       eslint: ~8.18.0
       jest: ~29.5.0
       ts-jest: ~29.1.0
@@ -4674,7 +4674,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
+    deprecated: Upgrade to fsevents v2 to mitigate potential security issues
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
