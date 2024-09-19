@@ -1,4 +1,11 @@
-import { findBoundaryAngles, normalizeAngle, polarToCartesian, calculateMaxRadius, computeQuadrant } from '../src';
+import {
+  findBoundaryAngles,
+  normalizeAngle,
+  polarToCartesian,
+  calculateMaxRadius,
+  computeQuadrant,
+  cartesianToPolar
+} from '../src';
 
 describe('angle utils', () => {
   it('normalizeAngle', () => {
@@ -53,5 +60,30 @@ describe('angle utils', () => {
     expect(computeQuadrant(2)).toBe(3);
     expect(computeQuadrant(3)).toBe(3);
     expect(computeQuadrant(4)).toBe(4);
+  });
+});
+
+describe('cartesianToPolar', () => {
+  test('should convert point at origin to polar coordinates', () => {
+    const result = cartesianToPolar({ x: 0, y: 0 });
+    expect(result).toEqual({ radius: 0, angle: 0 });
+  });
+
+  test('should convert point with center at origin', () => {
+    const result = cartesianToPolar({ x: 3, y: 4 });
+    expect(result.radius).toBe(5);
+    expect(result.angle).toBeCloseTo(Math.atan2(4, 3), 5);
+  });
+
+  test('should convert point with center not at origin', () => {
+    const result = cartesianToPolar({ x: 11, y: 11 }, { x: 10, y: 10 });
+    expect(result.radius).toBeCloseTo(Math.sqrt(2), 5);
+    expect(result.angle).toBeCloseTo(Math.PI / 4, 5);
+  });
+
+  test('should return correct polar coordinates within specified angle range', () => {
+    const result = cartesianToPolar({ x: 11, y: 11 }, { x: 10, y: 10 }, -Math.PI / 2, (3 * Math.PI) / 2);
+    expect(result.radius).toBeCloseTo(Math.sqrt(2), 5);
+    expect(result.angle).toBeCloseTo(Math.PI / 4, 5);
   });
 });
