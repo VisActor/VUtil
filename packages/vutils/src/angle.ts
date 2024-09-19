@@ -80,6 +80,54 @@ export function polarToCartesian(center: IPointLike, radius: number, angleInRadi
 }
 
 /**
+ * 根据笛卡尔坐标系坐标计算极坐标坐标点
+ * @param point
+ * @param center 极坐标系中心点坐标
+ * @param startAngle 极坐标系起始角度
+ * @param endAngle 极坐标系结束角度
+ * @returns 极坐标系坐标点
+ */
+export function cartesianToPolar(
+  point: IPointLike,
+  center: IPointLike = { x: 0, y: 0 },
+  startAngle = 0,
+  endAngle = 2 * Math.PI
+) {
+  const { x, y } = point;
+  const { x: centerX, y: centerY } = center;
+
+  let dx = x - centerX;
+  let dy = y - centerY;
+  const radius = Math.sqrt(dx * dx + dy * dy);
+
+  if (radius === 0) {
+    return {
+      radius: 0,
+      angle: 0
+    };
+  }
+
+  dx /= radius;
+  dy /= radius;
+
+  let radian = Math.atan2(dy, dx);
+  if (radian < startAngle) {
+    while (radian <= startAngle) {
+      radian += Math.PI * 2;
+    }
+  }
+  if (radian > endAngle) {
+    while (radian >= endAngle) {
+      radian -= Math.PI * 2;
+    }
+  }
+  return {
+    radius,
+    angle: radian
+  };
+}
+
+/**
  * 根据点的笛卡尔坐标获取该点与圆心的连线同正 x 轴方向的夹角
  * @param center 圆心坐标
  * @param point 待求的点坐标
