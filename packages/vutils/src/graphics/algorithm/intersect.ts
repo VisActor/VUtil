@@ -236,10 +236,15 @@ function getProjectionRadius(checkAxis: [number, number], axis: [number, number]
   return Math.abs(axis[0] * checkAxis[0] + axis[1] * checkAxis[1]);
 }
 
-function rotate({ x, y }: Point, deg: number, origin = { x: 0, y: 0 }) {
+/**
+ * 逆时针旋转矩阵（从正 x 轴开始，旋转到正 y 轴的方向）
+ * [ cos(θ)  -sin(θ) ]
+ * [ sin(θ)  cos(θ) ]
+ */
+function rotate({ x, y }: Point, rad: number, origin = { x: 0, y: 0 }) {
   return {
-    x: (x - origin.x) * Math.cos(deg) + (y - origin.y) * Math.sin(deg) + origin.x,
-    y: (x - origin.x) * Math.sin(deg) + (origin.y - y) * Math.cos(deg) + origin.y
+    x: (x - origin.x) * Math.cos(rad) - (y - origin.y) * Math.sin(rad) + origin.x,
+    y: (x - origin.x) * Math.sin(rad) + (y - origin.y) * Math.cos(rad) + origin.y
   };
 }
 
@@ -260,7 +265,7 @@ interface RotateBound extends IBoundsLike {
  * @param {Object} box
  */
 function toRect(box: RotateBound, isDeg: boolean) {
-  const deg = isDeg ? box.angle : degreeToRadian(box.angle);
+  const deg = isDeg ? degreeToRadian(box.angle) : box.angle;
   const cp = getCenterPoint(box);
   return [
     rotate(
@@ -305,6 +310,7 @@ export function isRotateAABBIntersect(
 ) {
   const rect1 = toRect(box1, isDeg);
   const rect2 = toRect(box2, isDeg);
+
   const vector = (start: Point, end: Point) => {
     return [end.x - start.x, end.y - start.y] as [number, number];
   };
@@ -354,11 +360,11 @@ export function isRotateAABBIntersect(
   const B1C1 = vector(rect2[1], rect2[2]);
 
   // 矩形1 的两个弧度
-  const deg11 = isDeg ? box1.angle : degreeToRadian(box1.angle);
-  let deg12 = isDeg ? box1.angle + halfPi : degreeToRadian(90 - box1.angle);
+  const deg11 = isDeg ? degreeToRadian(box1.angle) : box1.angle;
+  let deg12 = isDeg ? degreeToRadian(90 - box1.angle) : box1.angle + halfPi;
   // 矩形2 的两个弧度
-  const deg21 = isDeg ? box2.angle : degreeToRadian(box2.angle);
-  let deg22 = isDeg ? box2.angle + halfPi : degreeToRadian(90 - box2.angle);
+  const deg21 = isDeg ? degreeToRadian(box2.angle) : box2.angle;
+  let deg22 = isDeg ? degreeToRadian(90 - box2.angle) : box2.angle + halfPi;
   if (deg12 > pi2) {
     deg12 -= pi2;
   }

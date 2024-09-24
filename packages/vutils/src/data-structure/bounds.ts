@@ -1,4 +1,5 @@
 import { isArray } from '../common';
+import { isRotateAABBIntersect } from '../graphics';
 import type { vec4, vec8 } from '../math';
 import { abs, epsilon } from '../math';
 import type { IMatrix } from './matrix';
@@ -419,4 +420,21 @@ export class Bounds implements IBounds {
 export class AABBBounds extends Bounds {}
 export class OBBBounds extends Bounds {
   angle: number;
+
+  constructor(bounds?: Bounds, angle = 0) {
+    super(bounds);
+    if (bounds) {
+      this.angle = angle;
+    }
+  }
+
+  intersects(b: OBBBounds): boolean {
+    return isRotateAABBIntersect(this, b);
+  }
+
+  setValue(x1: number = 0, y1: number = 0, x2: number = 0, y2: number = 0, angle = 0): Bounds {
+    super.setValue(x1, y1, x2, y2);
+    this.angle = angle;
+    return this;
+  }
 }

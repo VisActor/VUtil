@@ -1,12 +1,4 @@
-import {
-  isIntersect,
-  getIntersectPoint,
-  getRectIntersect,
-  rectInsideAnotherRect,
-  isRectIntersect,
-  pointInRect,
-  isRotateAABBIntersect
-} from '../../src';
+import { isIntersect, getIntersectPoint, getRectIntersect } from '../../src';
 
 describe('intersects', () => {
   it('isIntersect', () => {
