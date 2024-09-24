@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.18.17",
+      "tag": "@visactor/vutils_v0.18.17",
+      "date": "Tue, 24 Sep 2024 10:55:04 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: incorrect result of obb bounds intersection"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.16",
       "tag": "@visactor/vutils_v0.18.16",
       "date": "Thu, 19 Sep 2024 10:07:00 GMT",

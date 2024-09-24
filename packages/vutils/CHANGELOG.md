@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Thu, 19 Sep 2024 10:07:00 GMT and should not be manually modified.
+This log was last generated on Tue, 24 Sep 2024 10:55:04 GMT and should not be manually modified.
+
+## 0.18.17
+Tue, 24 Sep 2024 10:55:04 GMT
+
+### Updates
+
+- fix: incorrect result of obb bounds intersection
 
 ## 0.18.16
 Thu, 19 Sep 2024 10:07:00 GMT
