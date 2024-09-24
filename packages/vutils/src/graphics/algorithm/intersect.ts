@@ -241,7 +241,7 @@ function getProjectionRadius(checkAxis: [number, number], axis: [number, number]
  * [ cos(θ)  -sin(θ) ]
  * [ sin(θ)  cos(θ) ]
  */
-function rotate({ x, y }: Point, rad: number, origin = { x: 0, y: 0 }) {
+export function rotatePoint({ x, y }: Point, rad: number, origin = { x: 0, y: 0 }) {
   return {
     x: (x - origin.x) * Math.cos(rad) - (y - origin.y) * Math.sin(rad) + origin.x,
     y: (x - origin.x) * Math.sin(rad) + (y - origin.y) * Math.cos(rad) + origin.y
@@ -268,7 +268,7 @@ function toRect(box: RotateBound, isDeg: boolean) {
   const deg = isDeg ? degreeToRadian(box.angle) : box.angle;
   const cp = getCenterPoint(box);
   return [
-    rotate(
+    rotatePoint(
       {
         x: box.x1,
         y: box.y1
@@ -276,7 +276,7 @@ function toRect(box: RotateBound, isDeg: boolean) {
       deg,
       cp
     ),
-    rotate(
+    rotatePoint(
       {
         x: box.x2,
         y: box.y1
@@ -284,7 +284,7 @@ function toRect(box: RotateBound, isDeg: boolean) {
       deg,
       cp
     ),
-    rotate(
+    rotatePoint(
       {
         x: box.x2,
         y: box.y2
@@ -292,7 +292,7 @@ function toRect(box: RotateBound, isDeg: boolean) {
       deg,
       cp
     ),
-    rotate(
+    rotatePoint(
       {
         x: box.x1,
         y: box.y2
