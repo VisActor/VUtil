@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix: incorrect result of obb bounds intersection",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
