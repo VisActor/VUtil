@@ -149,6 +149,15 @@ export const lowerCamelCaseToMiddle = (str: string) => {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase();
 };
 
+/**
+ * 将中划线连接的字符串转换成驼峰字符串
+ * @param str 如：'line-height'  => 'lineHeight'
+ * @returns
+ */
+export function toCamelCase(str: string) {
+  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
 export function isHTMLElement(obj: any): obj is Element {
   try {
     return obj instanceof Element;
