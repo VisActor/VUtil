@@ -214,15 +214,15 @@ export function calculateMaxRadius(
       radiusList.push(x);
     } else {
       if (sin > 0) {
-        radiusList.push(Math.abs((height - y) / cos));
+        radiusList.push(Math.abs((height - y) / sin));
       } else {
-        radiusList.push(Math.abs(y / cos));
+        radiusList.push(Math.abs(y / sin));
       }
 
       if (cos > 0) {
-        radiusList.push(Math.abs((width - x) / sin));
+        radiusList.push(Math.abs((width - x) / cos));
       } else {
-        radiusList.push(Math.abs(x / sin));
+        radiusList.push(Math.abs(x / cos));
       }
     }
   });
