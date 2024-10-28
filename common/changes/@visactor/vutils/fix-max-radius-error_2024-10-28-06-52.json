@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: fix error of calculate max radius for specified angles and center\n\n",
+      "type": "none",
+      "packageName": "@visactor/vutils"
+    }
+  ],
+  "packageName": "@visactor/vutils",
+  "email": "dingling112@gmail.com"
+}

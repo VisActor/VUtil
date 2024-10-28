@@ -46,7 +46,10 @@ describe('angle utils', () => {
     ).toBeCloseTo(150);
     expect(
       calculateMaxRadius({ width: 400, height: 500 }, { x: 200, y: 350 }, -0.8 * Math.PI, 0.1 * Math.PI)
-    ).toBeCloseTo(157.71933363574007);
+    ).toBeCloseTo(200);
+    expect(
+      calculateMaxRadius({ width: 400, height: 500 }, { x: 200, y: 550 }, -1.1 * Math.PI, 0.1 * Math.PI)
+    ).toBeCloseTo(161.8033988749892);
   });
 
   it('computeQuadrant', () => {
