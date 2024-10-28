@@ -1,6 +1,15 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Tue, 24 Sep 2024 10:55:04 GMT and should not be manually modified.
+This log was last generated on Mon, 28 Oct 2024 11:08:48 GMT and should not be manually modified.
+
+## 0.18.18
+Mon, 28 Oct 2024 11:08:48 GMT
+
+### Updates
+
+- fix: fix error of calculate max radius for specified angles and center
+
+
 
 ## 0.18.17
 Tue, 24 Sep 2024 10:55:04 GMT
