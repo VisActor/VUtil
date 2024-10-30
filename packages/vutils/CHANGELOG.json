@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.18.18",
+      "tag": "@visactor/vutils_v0.18.18",
+      "date": "Mon, 28 Oct 2024 11:08:48 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix error of calculate max radius for specified angles and center\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.17",
       "tag": "@visactor/vutils_v0.18.17",
       "date": "Tue, 24 Sep 2024 10:55:04 GMT",
