@@ -5,6 +5,7 @@ import type { Parser } from './index';
 
 export interface ISVGSourceOption {
   type?: 'svg';
+  customDOMParser?: (svg: string) => Document;
 }
 
 export interface SVGParserResult {
@@ -87,8 +88,20 @@ function splitNumberSequence(rawStr: string): string[] {
  * @param options
  * @returns
  */
-export const svgParser: Parser = (data: string, option: ISVGSourceOption, dataView: DataView) => {
-  const svg = new DOMParser().parseFromString(data, 'text/xml');
+export const svgParser: Parser = (data: string, option: ISVGSourceOption = {}, dataView: DataView) => {
+  let parser = option.customDOMParser;
+  if (!parser) {
+    if (window?.DOMParser) {
+      parser = (svg: string) => new DOMParser().parseFromString(svg, 'text/xml');
+    }
+  }
+
+  if (!parser) {
+    throw new Error('No Available DOMParser!');
+  }
+
+  const svg = parser(data);
+
   let node = svg.nodeType === 9 ? svg.firstChild : svg;
   while (node && (node.nodeName.toLowerCase() !== 'svg' || node.nodeType !== 1)) {
     node = node.nextSibling;
@@ -126,7 +139,6 @@ function parseSvgNode(svg: SVGElement, opt: any = {}) {
   }
 
   traverse(svg as SVGElement, root, elements);
-
   return {
     root,
     width,
