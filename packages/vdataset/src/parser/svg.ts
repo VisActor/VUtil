@@ -83,7 +83,7 @@ function splitNumberSequence(rawStr: string): string[] {
   return rawStr.match(numberReg) || [];
 }
 /**
- * 根据指定的 delimiter 构造一个新的 DSV(支持范式的分隔符分隔值文件，delimiter-separated values)解析以及格式化。
+ * 将 svg 字符串转换为指定的数据结构 SVGParserResult
  * @param data
  * @param options
  * @returns
