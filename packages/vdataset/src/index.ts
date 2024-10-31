@@ -35,6 +35,8 @@ export { treeParser } from './parser/tree';
 export type { ITreeParserOptions } from './parser/tree';
 export { dataViewParser } from './parser/data-view';
 export type { IDataViewParserOptions } from './parser/data-view';
+export { svgParser } from './parser/svg';
+export type { SVGParsedElement, SVGParserResult, ISVGSourceOption } from './parser/svg';
 
 // core
 export { DataSet } from './data-set';
