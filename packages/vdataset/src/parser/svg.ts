@@ -53,6 +53,7 @@ const validCircleAttributes = ['cx', 'cy', 'r'];
 const validEllipseAttributes = ['cx', 'cy', 'rx', 'ry'];
 const validLineAttributes = ['x1', 'x2', 'y1', 'y2'];
 const validAttributes = [
+  'visibility',
   'x',
   'y',
   'width',
@@ -126,6 +127,7 @@ function parseSvgNode(svg: SVGElement, opt: any = {}) {
 
   const viewBox = svg.getAttribute('viewBox');
   let viewBoxRect: SVGParserResult['viewBoxRect'];
+
   if (viewBox) {
     const viewBoxArr = splitNumberSequence(viewBox);
     if (viewBoxArr.length >= 4) {
@@ -135,6 +137,17 @@ function parseSvgNode(svg: SVGElement, opt: any = {}) {
         width: parseFloat(viewBoxArr[2]),
         height: parseFloat(viewBoxArr[3])
       };
+      if (width || height) {
+        const boundingRect = { x: 0, y: 0, width, height };
+        const scaleX = boundingRect.width / viewBoxRect.width;
+        const scaleY = boundingRect.height / viewBoxRect.height;
+        const scale = Math.min(scaleX, scaleY);
+        const transLateX = -(viewBoxRect.x + viewBoxRect.width / 2) * scale + (boundingRect.x + boundingRect.width / 2);
+        const transLateY =
+          -(viewBoxRect.y + viewBoxRect.height / 2) * scale + (boundingRect.y + boundingRect.height / 2);
+        const viewBoxTransform = new Matrix().translate(transLateX, transLateY).scale(scale, scale);
+        root.transform = viewBoxTransform;
+      }
     }
   }
 
