@@ -190,7 +190,7 @@ function parseInheritAttributes(parsedElement: SVGParsedElement) {
 }
 
 function parseAttributes(el: Element) {
-  const attrs = {};
+  const attrs = {} as any;
   const attributes = el.attributes ?? {};
   const style = (el as any).style ?? {};
   for (let i = 0; i < validAttributes.length; i++) {
@@ -206,9 +206,14 @@ function parseAttributes(el: Element) {
     attrs.visible = false;
   }
 
-  if (attrs.fontSize && isString(attrs.fontSize)) {
-    attrs.fontSize = parseFloat(attrs.fontSize);
-  }
+  // 简单兼容处理 "xxx:12px" 类型的属性
+  ['fontSize', 'strokeWidth', 'width', 'height'].forEach(attr => {
+    const attrValue = attrs[attr];
+    if (isString(attrs[attr])) {
+      attrs[attr] = parseFloat(attrValue);
+    }
+  });
+
   return attrs;
 }
 
