@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "0.19.0",
+      "tag": "@visactor/vscale_v0.19.0",
+      "date": "Wed, 20 Nov 2024 07:26:24 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix interface of vscale\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.18.18",
       "tag": "@visactor/vscale_v0.18.18",
       "date": "Mon, 28 Oct 2024 11:08:48 GMT",
