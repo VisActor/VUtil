@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "feat: support svg string parser",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}
