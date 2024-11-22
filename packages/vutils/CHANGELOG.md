@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Wed, 20 Nov 2024 07:26:24 GMT and should not be manually modified.
+This log was last generated on Fri, 22 Nov 2024 08:00:10 GMT and should not be manually modified.
+
+## 0.19.1
+Fri, 22 Nov 2024 08:00:10 GMT
+
+### Updates
+
+- feat: textMeasure support fontBoundingBoxAscent and fontBoundingBoxDescent
 
 ## 0.19.0
 Wed, 20 Nov 2024 07:26:24 GMT
