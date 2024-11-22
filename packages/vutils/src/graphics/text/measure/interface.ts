@@ -12,6 +12,8 @@ export type TextMeasureMethod = 'simple' | 'quick' | 'canvas' | 'vrender';
 export interface ITextSize {
   width: number;
   height: number;
+  fontBoundingBoxAscent?: number;
+  fontBoundingBoxDescent?: number;
 }
 
 // FIXME: from VRender

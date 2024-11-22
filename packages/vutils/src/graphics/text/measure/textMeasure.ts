@@ -188,7 +188,12 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
     }
     const metrics = this._context!.measureText(text);
     const { fontSize, lineHeight } = this.textSpec;
-    return { width: metrics.width, height: (lineHeight as number) ?? fontSize };
+    return {
+      width: metrics.width,
+      height: (lineHeight as number) ?? fontSize,
+      fontBoundingBoxAscent: metrics.fontBoundingBoxAscent,
+      fontBoundingBoxDescent: metrics.fontBoundingBoxDescent
+    };
   }
 
   /** 快速估算文本宽高 */
@@ -219,6 +224,8 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       }
       totalSize.width += size.width;
       totalSize.height = Math.max(totalSize.height, size.height);
+      !isNil(size.fontBoundingBoxAscent) && (totalSize.fontBoundingBoxAscent = size.fontBoundingBoxAscent);
+      !isNil(size.fontBoundingBoxDescent) && (totalSize.fontBoundingBoxDescent = size.fontBoundingBoxDescent);
     }
     return totalSize;
   }
@@ -271,7 +278,9 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       const numberBounds = this._standardMethod(TextMeasure.NUMBERS_CHAR_SET);
       this._numberCharSize = {
         width: numberBounds.width / TextMeasure.NUMBERS_CHAR_SET.length, // 宽度取均值
-        height: numberBounds.height
+        height: numberBounds.height,
+        fontBoundingBoxAscent: numberBounds.fontBoundingBoxAscent,
+        fontBoundingBoxDescent: numberBounds.fontBoundingBoxDescent
       };
     }
     return this._numberCharSize;
@@ -291,7 +300,9 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       const alphabetBounds = this._standardMethod(TextMeasure.ALPHABET_CHAR_SET);
       this._letterCharSize = {
         width: alphabetBounds.width / TextMeasure.ALPHABET_CHAR_SET.length, // 宽度取均值
-        height: alphabetBounds.height
+        height: alphabetBounds.height,
+        fontBoundingBoxAscent: alphabetBounds.fontBoundingBoxAscent,
+        fontBoundingBoxDescent: alphabetBounds.fontBoundingBoxDescent
       };
     }
     return this._letterCharSize;

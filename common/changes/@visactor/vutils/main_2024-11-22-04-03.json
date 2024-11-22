@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "feat: textMeasure support fontBoundingBoxAscent and fontBoundingBoxDescent",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
