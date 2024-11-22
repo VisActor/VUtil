@@ -224,8 +224,8 @@ export class TextMeasure<T extends Partial<ITextMeasureSpec>> {
       }
       totalSize.width += size.width;
       totalSize.height = Math.max(totalSize.height, size.height);
-      totalSize.fontBoundingBoxAscent = size.fontBoundingBoxAscent;
-      totalSize.fontBoundingBoxDescent = size.fontBoundingBoxDescent;
+      !isNil(size.fontBoundingBoxAscent) && (totalSize.fontBoundingBoxAscent = size.fontBoundingBoxAscent);
+      !isNil(size.fontBoundingBoxDescent) && (totalSize.fontBoundingBoxDescent = size.fontBoundingBoxDescent);
     }
     return totalSize;
   }
