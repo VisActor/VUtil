@@ -52,7 +52,7 @@ export const maxInArray = <T>(arr: T[], compareFn?: (a: T, b: T) => number): T |
   let max = arr[0];
   for (let i = 1; i < arr.length; i++) {
     const value = arr[i];
-    if (compareFn?.(value, max) ?? (value as number) - (max as number) > 0) {
+    if ((compareFn?.(value, max) ?? (value as number) - (max as number)) > 0) {
       max = value;
     }
   }
@@ -72,7 +72,7 @@ export const minInArray = <T>(arr: T[], compareFn?: (a: T, b: T) => number): T |
   let min = arr[0];
   for (let i = 1; i < arr.length; i++) {
     const value = arr[i];
-    if (compareFn?.(value, min) ?? (value as number) - (min as number) < 0) {
+    if ((compareFn?.(value, min) ?? (value as number) - (min as number)) < 0) {
       min = value;
     }
   }
