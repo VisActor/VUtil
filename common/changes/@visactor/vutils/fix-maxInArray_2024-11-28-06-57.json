@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "fix: fix incorrect results in `maxInArray` and `minInArray` with custom comparison functions.",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
