@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.19.2",
+      "tag": "@visactor/vutils_v0.19.2",
+      "date": "Fri, 29 Nov 2024 09:01:54 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix incorrect results in `maxInArray` and `minInArray` with custom comparison functions."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.19.1",
       "tag": "@visactor/vutils_v0.19.1",
       "date": "Fri, 22 Nov 2024 08:00:10 GMT",
