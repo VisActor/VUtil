@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Fri, 22 Nov 2024 08:00:10 GMT and should not be manually modified.
+This log was last generated on Fri, 29 Nov 2024 09:01:54 GMT and should not be manually modified.
+
+## 0.19.2
+Fri, 29 Nov 2024 09:01:54 GMT
+
+### Updates
+
+- fix: fix incorrect results in `maxInArray` and `minInArray` with custom comparison functions.
 
 ## 0.19.1
 Fri, 22 Nov 2024 08:00:10 GMT
