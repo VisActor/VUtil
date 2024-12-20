@@ -302,12 +302,7 @@ function toRect(box: RotateBound, isDeg: boolean) {
     )
   ];
 }
-export function isRotateAABBIntersect(
-  box1: RotateBound,
-  box2: RotateBound,
-  isDeg = false,
-  ctx?: CanvasRenderingContext2D
-) {
+export function isRotateAABBIntersect(box1: RotateBound, box2: RotateBound, isDeg = false) {
   const rect1 = toRect(box1, isDeg);
   const rect2 = toRect(box2, isDeg);
 
@@ -315,40 +310,9 @@ export function isRotateAABBIntersect(
     return [end.x - start.x, end.y - start.y] as [number, number];
   };
 
-  if (ctx) {
-    ctx.save();
-    ctx.fillStyle = 'red';
-    ctx.globalAlpha = 0.6;
-    rect1.forEach((item, index) => {
-      if (index === 0) {
-        ctx.moveTo(item.x, item.y);
-      } else {
-        ctx.lineTo(item.x, item.y);
-      }
-    });
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.fillStyle = 'green';
-    ctx.globalAlpha = 0.6;
-    rect2.forEach((item, index) => {
-      if (index === 0) {
-        ctx.moveTo(item.x, item.y);
-      } else {
-        ctx.lineTo(item.x, item.y);
-      }
-    });
-    ctx.fill();
-    ctx.restore();
-  }
-
   // 两个矩形的中心点
   const p1 = getCenterPoint(box1);
   const p2 = getCenterPoint(box2);
-
-  ctx && ctx.fillRect(p1.x, p1.y, 2, 2);
-  ctx && ctx.fillRect(p2.x, p2.y, 2, 2);
   // 向量 p1p2
   const vp1p2 = vector(p1, p2);
 

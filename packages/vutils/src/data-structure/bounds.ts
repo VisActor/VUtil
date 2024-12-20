@@ -424,7 +424,7 @@ export class OBBBounds extends Bounds {
   constructor(bounds?: Bounds, angle = 0) {
     super(bounds);
     if (bounds) {
-      this.angle = angle;
+      this.angle = (bounds as any).angle ?? angle;
     }
   }
 
@@ -436,5 +436,9 @@ export class OBBBounds extends Bounds {
     super.setValue(x1, y1, x2, y2);
     this.angle = angle;
     return this;
+  }
+
+  clone(): OBBBounds {
+    return new OBBBounds(this);
   }
 }
