@@ -36,7 +36,7 @@ const aggregates: any = {
     return data.length;
   },
   distinct(data: any[], field: string) {
-    const values = uniqArray(data.map(row => +row[field]));
+    const values = uniqArray(data.map(row => +row[field])) as number[];
     return values.length;
   }
 };
