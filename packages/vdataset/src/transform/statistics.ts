@@ -36,14 +36,14 @@ const aggregates: any = {
     return data.length;
   },
   distinct(data: any[], field: string) {
-    const values = uniqArray(data.map(row => row[field]));
+    const values = uniqArray(data.map(row => +row[field]));
     return values.length;
   }
 };
 
 STATISTICS_METHODS.forEach(method => {
   aggregates[method] = (data: any[], field: string) => {
-    let values = data.map(row => row[field]);
+    let values = data.map(row => +row[field]);
     if (isArray(values) && isArray(values[0])) {
       values = flattenArray(values);
     }
