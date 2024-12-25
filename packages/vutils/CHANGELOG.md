@@ -1,6 +1,15 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Fri, 29 Nov 2024 09:01:54 GMT and should not be manually modified.
+This log was last generated on Wed, 25 Dec 2024 02:43:48 GMT and should not be manually modified.
+
+## 0.19.3
+Wed, 25 Dec 2024 02:43:48 GMT
+
+### Updates
+
+- fix: fix bug of `clone()` in obb
+
+
 
 ## 0.19.2
 Fri, 29 Nov 2024 09:01:54 GMT

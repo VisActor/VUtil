@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "0.19.3",
+      "tag": "@visactor/vdataset_v0.19.3",
+      "date": "Wed, 25 Dec 2024 02:43:48 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: fix the bug of statistics value type is string\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.19.2",
       "tag": "@visactor/vdataset_v0.19.2",
       "date": "Fri, 29 Nov 2024 09:01:54 GMT",
