@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: fix the bug of statistics value type is string\n\n",
+      "type": "none",
+      "packageName": "@visactor/vdataset"
+    }
+  ],
+  "packageName": "@visactor/vdataset",
+  "email": "lixuef1313@163.com"
+}
