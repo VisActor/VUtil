@@ -474,6 +474,9 @@ export class Color {
     return (0.299 * this.color.r + 0.587 * this.color.g + 0.114 * this.color.b) / 255;
   }
 
+  /**
+   * https://www.w3.org/TR/WCAG21/#use-of-color
+   */
   getLuminanceWCAG() {
     const RsRGB = this.color.r / 255;
     const GsRGB = this.color.g / 255;
