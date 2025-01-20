@@ -92,6 +92,7 @@ importers:
     specifiers:
       '@internal/bundler': workspace:*
       '@internal/eslint-config': workspace:*
+      '@internal/jest-config': workspace:*
       '@internal/ts-config': workspace:*
       '@jest/globals': ~29.5.0
       '@rushstack/eslint-patch': ~1.1.4
@@ -109,6 +110,7 @@ importers:
     devDependencies:
       '@internal/bundler': link:../../tools/bundler
       '@internal/eslint-config': link:../../share/eslint-config
+      '@internal/jest-config': link:../../share/jest-config
       '@internal/ts-config': link:../../share/ts-config
       '@jest/globals': 29.5.0
       '@rushstack/eslint-patch': 1.1.4
