@@ -151,16 +151,6 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
         Math.sign(range[1] - range[0]);
       const rangeFactorSize = Math.min((range[1] - range[0]) / wholeLength, 1);
       if (isValid(this._rangeFactorStart) && isValid(this._rangeFactorEnd)) {
-        if (wholeLength > 0) {
-          const r0 = range[0] - wholeLength * this._rangeFactorStart;
-          const r1 = r0 + wholeLength;
-          this._wholeRange = [r0, r1];
-        } else {
-          const r1 = range[1] + wholeLength * (1 - this._rangeFactorEnd);
-          const r0 = r1 - wholeLength;
-          this._wholeRange = [r0, r1];
-        }
-
         const canAlignStart = this._rangeFactorStart + rangeFactorSize <= 1;
         const canAlignEnd = this._rangeFactorEnd - rangeFactorSize >= 0;
 
@@ -189,6 +179,16 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
               this._rangeFactorEnd = 1;
             }
           }
+        }
+
+        if (wholeLength > 0) {
+          const r0 = range[0] - wholeLength * this._rangeFactorStart;
+          const r1 = r0 + wholeLength;
+          this._wholeRange = [r0, r1];
+        } else {
+          const r1 = range[1] + wholeLength * (1 - this._rangeFactorEnd);
+          const r0 = r1 - wholeLength;
+          this._wholeRange = [r0, r1];
         }
       } else {
         this._rangeFactorStart = 0;
