@@ -280,7 +280,7 @@ export class Color {
     return new Color(source).setOpacity(o).toRGBA();
   }
 
-  static getColorBrightness(source: string | Color, model: 'hsv' | 'hsl' | 'lum' | 'lum2' | 'lum3' = 'hsl') {
+  static getColorBrightness(source: string | Color, model: 'hsv' | 'hsl' | 'lum' | 'lum2' | 'lum3' | 'wcag' = 'hsl') {
     const color = source instanceof Color ? source : new Color(source);
     switch (model) {
       case 'hsv':
@@ -293,6 +293,8 @@ export class Color {
         return color.getLuminance2();
       case 'lum3':
         return color.getLuminance3();
+      case 'wcag':
+        return color.getLuminanceWCAG();
       default:
         return color.getHSVBrightness();
     }
@@ -470,6 +472,35 @@ export class Color {
 
   getLuminance3() {
     return (0.299 * this.color.r + 0.587 * this.color.g + 0.114 * this.color.b) / 255;
+  }
+
+  /**
+   * https://www.w3.org/TR/WCAG21/#use-of-color
+   */
+  getLuminanceWCAG() {
+    const RsRGB = this.color.r / 255;
+    const GsRGB = this.color.g / 255;
+    const BsRGB = this.color.b / 255;
+    let R;
+    let G;
+    let B;
+    if (RsRGB <= 0.03928) {
+      R = RsRGB / 12.92;
+    } else {
+      R = Math.pow((RsRGB + 0.055) / 1.055, 2.4);
+    }
+    if (GsRGB <= 0.03928) {
+      G = GsRGB / 12.92;
+    } else {
+      G = Math.pow((GsRGB + 0.055) / 1.055, 2.4);
+    }
+    if (BsRGB <= 0.03928) {
+      B = BsRGB / 12.92;
+    } else {
+      B = Math.pow((BsRGB + 0.055) / 1.055, 2.4);
+    }
+    const L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    return L;
   }
 
   clone() {
