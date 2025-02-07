@@ -41,6 +41,13 @@
       "versionPolicyName": "vutilMain"
     },
     {
+      "packageName": "@visactor/vdescription-midscene",
+      "projectFolder": "packages/vdescription-midscene",
+      "tags": ["package"],
+      "shouldPublish": true,
+      "versionPolicyName": "vutilMain"
+    },
+    {
       "packageName": "@internal/bundler",
       "projectFolder": "tools/bundler",
       "tags": ["tool"],

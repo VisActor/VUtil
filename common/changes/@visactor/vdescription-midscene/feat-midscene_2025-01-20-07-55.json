@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdescription-midscene",
+      "comment": "feat: add @visactor/vdescription-midscene",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vdescription-midscene"
+}
