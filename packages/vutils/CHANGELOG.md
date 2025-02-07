@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Wed, 25 Dec 2024 02:43:48 GMT and should not be manually modified.
+This log was last generated on Fri, 07 Feb 2025 05:51:43 GMT and should not be manually modified.
+
+## 0.19.4
+Fri, 07 Feb 2025 05:51:43 GMT
+
+### Updates
+
+- feat: add a new color brightness calculation described by the WCAG standard
 
 ## 0.19.3
 Wed, 25 Dec 2024 02:43:48 GMT
