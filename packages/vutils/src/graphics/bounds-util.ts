@@ -69,14 +69,40 @@ export const isAABBWithinSeparation = (a: IBoundsLike, b: IBoundsLike, sep: numb
 };
 
 export const isOBBWithinSeparation = (a: IOBBBounds, b: IOBBBounds, sep: number = 0) => {
-  if (sep === 0) {
-    return a.intersects(b);
-  } else {
-    const boundsA = a.getRotatedBounds();
-    const boundsB = b.getRotatedBounds();
-    const horizontal = Math.max(0, boundsA.x1 > boundsB.x2 ? boundsA.x1 - boundsB.x2 : boundsB.x1 - boundsA.x2);
-    const vertical = Math.max(0, boundsA.y1 > boundsB.y2 ? boundsA.y1 - boundsB.y2 : boundsB.y1 - boundsA.y2);
-
-    return sep > Math.max(horizontal, vertical);
+  if (a.intersects(b)) {
+    return false;
   }
+
+  const axes = [
+    { x: Math.cos(a.angle), y: Math.sin(a.angle) }, // Rect A's first axis
+    { x: -Math.sin(a.angle), y: Math.cos(a.angle) }, // Rect A's second axis
+    { x: Math.cos(b.angle), y: Math.sin(a.angle) }, // Rect B's first axis
+    { x: -Math.sin(b.angle), y: Math.cos(a.angle) } // Rect B's second axis
+  ];
+
+  // calculate the projection range of a rectangle on a given axis
+  function getProjectionRange(obb: IOBBBounds, axisX: number, axisY: number): { min: number; max: number } {
+    const corners = obb.getRotatedCorners();
+    const projections = corners.map(p => p.x * axisX + p.y * axisY);
+    return { min: Math.min(...projections), max: Math.max(...projections) };
+  }
+
+  // Calculate distances for all axes
+  let maxDistance = 0;
+  for (const axis of axes) {
+    const rangeA = getProjectionRange(a, axis.x, axis.y);
+    const rangeB = getProjectionRange(b, axis.x, axis.y);
+    let distance;
+    if (rangeA.max < rangeB.min) {
+      distance = rangeB.min - rangeA.max; // B is to the right of A
+    } else if (rangeB.max < rangeA.min) {
+      distance = rangeA.min - rangeB.max; // A is to the right of B
+    } else {
+      distance = 0; // Overlapping
+    }
+    // const distance = calculateProjectionDistance(rangeA, rangeB);
+    maxDistance = Math.max(maxDistance, distance);
+  }
+
+  return sep > maxDistance;
 };

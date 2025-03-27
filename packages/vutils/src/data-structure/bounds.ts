@@ -78,7 +78,7 @@ export type IAABBBounds = IBounds;
 
 export interface IOBBBounds extends IBounds {
   angle: number;
-  getRotatedBounds: () => IBoundsLike;
+  getRotatedCorners: () => IPointLike[];
 }
 
 export function transformBoundsWithMatrix(out: IBounds, bounds: IBounds, matrix: IMatrix): IBounds {
@@ -443,23 +443,16 @@ export class OBBBounds extends Bounds {
     return new OBBBounds(this);
   }
 
-  getRotatedBounds(): IBoundsLike {
+  getRotatedCorners(): IPointLike[] {
     const cx = (this.x1 + this.x2) / 2;
     const cy = (this.y1 + this.y2) / 2;
 
     const originPoint = { x: cx, y: cy };
-    const corners = [
+    return [
       rotatePoint({ x: this.x1, y: this.y1 }, this.angle, originPoint),
       rotatePoint({ x: this.x2, y: this.y1 }, this.angle, originPoint),
       rotatePoint({ x: this.x1, y: this.y2 }, this.angle, originPoint),
       rotatePoint({ x: this.x2, y: this.y2 }, this.angle, originPoint)
     ];
-
-    const minX = Math.min(...corners.map(p => p.x));
-    const maxX = Math.max(...corners.map(p => p.x));
-    const minY = Math.min(...corners.map(p => p.y));
-    const maxY = Math.max(...corners.map(p => p.y));
-
-    return { x1: minX, x2: maxX, y1: minY, y2: maxY };
   }
 }
