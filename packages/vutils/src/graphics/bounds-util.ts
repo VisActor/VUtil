@@ -63,16 +63,11 @@ export const calculateAnchorOfBounds = (bounds: IBoundsLike, anchorType: string)
   return { x: anchorX, y: anchorY };
 };
 
-export const isAABBWithinSeparation = (a: IBoundsLike, b: IBoundsLike, sep: number = 0) => {
-  const s = Math.max(b.x1 - a.x2, a.x1 - b.x2, b.y1 - a.y2, a.y1 - b.y2);
-  return sep > s;
+export const aabbSeparation = (a: IBoundsLike, b: IBoundsLike) => {
+  return Math.max(b.x1 - a.x2, a.x1 - b.x2, b.y1 - a.y2, a.y1 - b.y2);
 };
 
-export const isOBBWithinSeparation = (a: IOBBBounds, b: IOBBBounds, sep: number = 0) => {
-  if (a.intersects(b)) {
-    return false;
-  }
-
+export const obbSeparation = (a: IOBBBounds, b: IOBBBounds) => {
   const axes = [
     { x: Math.cos(a.angle), y: Math.sin(a.angle) }, // Rect A's first axis
     { x: -Math.sin(a.angle), y: Math.cos(a.angle) }, // Rect A's second axis
@@ -100,9 +95,8 @@ export const isOBBWithinSeparation = (a: IOBBBounds, b: IOBBBounds, sep: number 
     } else {
       distance = 0; // Overlapping
     }
-    // const distance = calculateProjectionDistance(rangeA, rangeB);
     maxDistance = Math.max(maxDistance, distance);
   }
 
-  return sep > maxDistance;
+  return maxDistance;
 };
