@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.19.5",
+      "tag": "@visactor/vutils_v0.19.5",
+      "date": "Wed, 09 Apr 2025 08:31:44 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add utils for bounds within separation"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.19.4",
       "tag": "@visactor/vutils_v0.19.4",
       "date": "Fri, 07 Feb 2025 05:51:43 GMT",
