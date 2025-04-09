@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vscale",
+      "comment": " fix: linear scale clone get incorrect domain",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vscale"
+}

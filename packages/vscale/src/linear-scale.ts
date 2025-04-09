@@ -13,12 +13,19 @@ export class LinearScale extends ContinuousScale {
   readonly type: ContinuousScaleType = ScaleEnum.Linear;
 
   clone(): LinearScale {
-    return new LinearScale()
+    const scale = new LinearScale();
+    scale
       .domain(this._domain, true)
       .range(this._range, true)
       .unknown(this._unknown)
       .clamp(this.clamp(), null, true)
       .interpolate(this._interpolate) as LinearScale;
+    if (this._niceType) {
+      scale._niceType = this._niceType;
+      scale._domainValidator = this._domainValidator;
+      scale._niceDomain = this._niceDomain?.slice();
+    }
+    return scale;
   }
 
   tickFormat() {
