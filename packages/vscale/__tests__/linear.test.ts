@@ -848,3 +848,10 @@ test('linear.customTicks with wilkinson in interval option', async () => {
     })
   ).toStrictEqual([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
 });
+
+test('linear.clone should not drop nice options', async () => {
+  const s = new LinearScale().domain([0, 58]).range([0, 531]).nice(5);
+  const s1 = s.clone();
+  expect(s1.domain()).toStrictEqual(s.domain());
+  expect(s1.range()).toStrictEqual(s.range());
+});
