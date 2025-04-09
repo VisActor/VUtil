@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "0.19.4",
+      "tag": "@visactor/vutils_v0.19.4",
+      "date": "Fri, 07 Feb 2025 05:51:43 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add a new color brightness calculation described by the WCAG standard"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.19.3",
       "tag": "@visactor/vutils_v0.19.3",
       "date": "Wed, 25 Dec 2024 02:43:48 GMT",
