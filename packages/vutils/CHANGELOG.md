@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Fri, 07 Feb 2025 05:51:43 GMT and should not be manually modified.
+This log was last generated on Wed, 09 Apr 2025 08:31:44 GMT and should not be manually modified.
+
+## 0.19.5
+Wed, 09 Apr 2025 08:31:44 GMT
+
+### Updates
+
+- feat: add utils for bounds within separation
 
 ## 0.19.4
 Fri, 07 Feb 2025 05:51:43 GMT
