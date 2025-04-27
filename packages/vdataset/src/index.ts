@@ -46,3 +46,5 @@ export type { Parser, IParserOptions } from './parser';
 
 // util
 export { readCSVTopNLine } from './utils/csv';
+
+export { getProjectionPath, projectionProperties, createProjection } from './projection/projections';

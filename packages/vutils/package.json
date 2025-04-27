@@ -10,7 +10,10 @@
     "dist"
   ],
   "description": "util",
-  "author": "dp-fe",
+  "author": {
+    "name": "VisActor",
+    "url": "https://VisActor.io/"
+  },
   "license": "MIT",
   "keywords": [
     "visual",

@@ -15,7 +15,7 @@ export const projection: Transform = (data: any, options?: IProjectionOptions) =
     return data;
   }
   const { projection, as } = options;
-  const prjFunc = PROJECTION_GROUP[projection];
+  const prjFunc = (PROJECTION_GROUP as any)[projection];
   if (data[0].lng) {
     const processData = data.map((item: { lng: any; lat: any }) => {
       return {

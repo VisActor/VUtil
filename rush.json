@@ -41,6 +41,13 @@
       "versionPolicyName": "vutilMain"
     },
     {
+      "packageName": "@visactor/vlayouts",
+      "projectFolder": "packages/vlayouts",
+      "tags": ["package"],
+      "shouldPublish": true,
+      "versionPolicyName": "vutilMain"
+    },
+    {
       "packageName": "@internal/bundler",
       "projectFolder": "tools/bundler",
       "tags": ["tool"],
