@@ -8,8 +8,6 @@ import type {
 import { calTextLength, colorListEqual, functor } from './util';
 import cloud from './cloud-shape-layout';
 import type { SegmentationInputType } from '../interface/wordcloud';
-import { fakeRandom } from '../../../vutils/src/common/random';
-import isString from '../../../vutils/src/common/isString';
 import {
   generateIsEmptyPixel,
   generateMaskCanvas,
@@ -18,7 +16,7 @@ import {
   segmentation
 } from '../utils/image';
 import { loadImage } from '../utils/loader';
-import { degreeToRadian, isFunction, maxInArray, simpleField, toNumber } from '@visactor/vutils';
+import { degreeToRadian, fakeRandom, isFunction, isString, maxInArray, simpleField, toNumber } from '@visactor/vutils';
 import type { FieldOption } from '../wordcloud/wordcloud';
 import { LinearScale, OrdinalScale, SqrtScale } from '@visactor/vscale';
 
