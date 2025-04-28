@@ -90,3 +90,4 @@ export * from './field';
 export * from './toPercent';
 export * from './zero';
 export * from './extent';
+export * from './regression-linear';
