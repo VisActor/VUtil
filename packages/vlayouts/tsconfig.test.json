@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["./__tests__", "./src"],
+  "compilerOptions": {
+    "paths": {
+      "@visactor/vutils": ["../vutils/src"],
+      "@visactor/vscale": ["../vscale/src"]
+    }
+  }
+}

@@ -86,3 +86,8 @@ export { default as upperFirst } from './upperFirst';
 export { default as substitute } from './substitute';
 
 export * from './random';
+export * from './field';
+export * from './toPercent';
+export * from './zero';
+export * from './extent';
+export * from './regression-linear';

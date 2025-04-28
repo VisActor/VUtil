@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "rootDir": "./src",
     "outDir": "./es",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "composite": true
   },
   "ts-node": {
     "transpileOnly": true,
