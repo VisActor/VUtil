@@ -1,4 +1,4 @@
-import { WordcloudGridLayout as GridLayout } from '../../src/';
+import { WordcloudGridLayout as GridLayout } from '../../src';
 import { getMockCreateCanvas } from '../mock';
 
 test('GridLayout', async () => {
@@ -81,7 +81,6 @@ test('GridLayout when canvas is not empty', async () => {
     { text: 'baz', fontSize: 25, index: 2 },
     { text: 'abc', fontSize: 13, index: 3 }
   ];
-
   const layout = new GridLayout({
     fontSize: (datum: any) => datum.fontSize,
     text: (datum: any) => datum.text,
@@ -92,7 +91,6 @@ test('GridLayout when canvas is not empty', async () => {
       shape: 'rect',
       backgroundColor: 'pink'
     },
-
     createCanvas: getMockCreateCanvas()
   });
   const result = layout.layout(data, { width: 400, height: 400 });

@@ -5,9 +5,8 @@ import type {
   ImageConfig,
   SegmentationOutputType
 } from '../interface';
-import { extent, fakeRandom, field, isString, Logger, simpleField } from '@visactor/vutils';
+import { extent, fakeRandom, field, isString, Logger, simpleField, isNumber, isFunction } from '@visactor/vutils';
 import { setSize } from '../util';
-import { isNumber, isFunction } from '@visactor/vutils';
 import { SqrtScale } from '@visactor/vscale';
 import type { SegmentationInputType } from '../../interface/wordcloud';
 import {
@@ -119,10 +118,14 @@ export abstract class Layout {
     }
     this.segmentationInput = segmentationInput;
     if (isString(segmentationInput.shapeUrl)) {
-      segmentationInput.isEmptyPixel = generateIsEmptyPixel(undefined, {
-        threshold: options.maskConfig?.threshold ?? 200,
-        invert: options.maskConfig?.invert
-      });
+      segmentationInput.isEmptyPixel = generateIsEmptyPixel(
+        undefined,
+        {
+          threshold: options.maskConfig?.threshold ?? 200,
+          invert: options.maskConfig?.invert
+        },
+        this.options.createCanvas
+      );
       const imagePromise = loadImage(segmentationInput.shapeUrl, this.options.createImage);
 
       if (imagePromise) {
@@ -169,7 +172,11 @@ export abstract class Layout {
       segmentationInput.shapeUrl &&
       (segmentationInput.shapeUrl.type === 'text' || segmentationInput.shapeUrl.type === 'geometric')
     ) {
-      segmentationInput.isEmptyPixel = generateIsEmptyPixel(segmentationInput.shapeUrl.backgroundColor);
+      segmentationInput.isEmptyPixel = generateIsEmptyPixel(
+        segmentationInput.shapeUrl.backgroundColor,
+        undefined,
+        this.options.createCanvas
+      );
 
       if (segmentationInput.shapeUrl.type === 'text' || segmentationInput.shapeUrl.type === 'geometric') {
         if (!segmentationInput.shapeUrl.backgroundColor) {
@@ -182,7 +189,8 @@ export abstract class Layout {
         size[0],
         size[1],
         undefined,
-        options.maskConfig?.invert
+        options.maskConfig?.invert,
+        this.options.createCanvas
       ) as HTMLCanvasElement;
       segmentationInput.maskCanvas = maskCanvas;
       this.segmentationOutput = segmentation(this.segmentationInput);

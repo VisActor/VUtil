@@ -22,7 +22,7 @@ test('FastLayout', async () => {
   expect(result[0].fontSize).toBe(14);
 });
 
-test('FastLayout() when clip is false, some lone words will be drop', async () => {
+test('FastLayout() when clip is false, some long words will be drop', async () => {
   const data = [
     { text: 'this is a very long text i need to display', fontSize: 49, index: 0 },
     { text: 'this text is long too', fontSize: 36, index: 1 },

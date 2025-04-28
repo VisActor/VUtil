@@ -85,7 +85,7 @@ export class Layout {
     }
     this.segmentationInput = segmentationInput;
     if (isString(segmentationInput.shapeUrl)) {
-      segmentationInput.isEmptyPixel = generateIsEmptyPixel();
+      segmentationInput.isEmptyPixel = generateIsEmptyPixel(undefined, undefined, this.options.createCanvas);
       const imagePromise = loadImage(segmentationInput.shapeUrl, this.options.createImage);
 
       if (imagePromise) {
@@ -123,11 +123,18 @@ export class Layout {
       segmentationInput.shapeUrl &&
       (segmentationInput.shapeUrl.type === 'text' || segmentationInput.shapeUrl.type === 'geometric')
     ) {
-      segmentationInput.isEmptyPixel = generateIsEmptyPixel(segmentationInput.shapeUrl.backgroundColor);
+      segmentationInput.isEmptyPixel = generateIsEmptyPixel(
+        segmentationInput.shapeUrl.backgroundColor,
+        undefined,
+        this.options.createCanvas
+      );
       const maskCanvas = generateMaskCanvas(
         segmentationInput.shapeUrl,
         options.size[0],
-        options.size[1]
+        options.size[1],
+        undefined,
+        false,
+        this.options.createCanvas
       ) as HTMLCanvasElement;
       segmentationInput.maskCanvas = maskCanvas;
 

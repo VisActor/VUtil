@@ -431,7 +431,14 @@ export class GridLayout extends BaseLayout<IGridLayoutOptions> {
     const shape = this.options.shape;
 
     if (isObject(shape)) {
-      const canvas = generateMaskCanvas(shape as CanvasMaskShape, config.width, config.height);
+      const canvas = generateMaskCanvas(
+        shape as CanvasMaskShape,
+        config.width,
+        config.height,
+        undefined,
+        false,
+        this.options.createCanvas
+      );
       /* Read back the pixels of the canvas we got to tell which part of the
       canvas is empty.
       (no clearCanvas only works with a canvas, not divs) */
@@ -441,7 +448,11 @@ export class GridLayout extends BaseLayout<IGridLayoutOptions> {
         this.options.onUpdateMaskCanvas(canvas as HTMLCanvasElement);
       }
 
-      let isEmptyPixel = generateIsEmptyPixel((shape as CanvasMaskShape).backgroundColor);
+      let isEmptyPixel = generateIsEmptyPixel(
+        (shape as CanvasMaskShape).backgroundColor,
+        undefined,
+        this.options.createCanvas
+      );
       let i;
       const singleGridLoop = (gx: number, gy: number) => {
         let y = this.gridSize;

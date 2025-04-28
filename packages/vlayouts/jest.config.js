@@ -3,6 +3,7 @@ const baseJestConfig = require('@internal/jest-config/jest.base');
 
 module.exports = {
   ...baseJestConfig,
+  testEnvironment: 'jsdom',
   moduleNameMapper: {
     ...baseJestConfig.moduleNameMapper,
     '@visactor/vutils': path.resolve(__dirname, '../vutils/src/index.ts'),

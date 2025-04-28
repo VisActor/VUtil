@@ -1,4 +1,4 @@
-import { WordcloudCloudLayout as CloudLayout } from '../../src/';
+import { WordcloudCloudLayout as CloudLayout } from '../../src';
 import { getMockCreateCanvas } from '../mock';
 
 test('CloutLayout', async () => {
