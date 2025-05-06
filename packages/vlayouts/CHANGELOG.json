@@ -2,6 +2,12 @@
   "name": "@visactor/vlayouts",
   "entries": [
     {
+      "version": "1.0.1",
+      "tag": "@visactor/vlayouts_v1.0.1",
+      "date": "Tue, 06 May 2025 11:04:38 GMT",
+      "comments": {}
+    },
+    {
       "version": "0.19.6",
       "tag": "@visactor/vlayouts_v0.19.6",
       "date": "Mon, 28 Apr 2025 09:10:49 GMT",
