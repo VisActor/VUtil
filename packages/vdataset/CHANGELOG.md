@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Tue, 06 May 2025 11:04:38 GMT and should not be manually modified.
+This log was last generated on Wed, 07 May 2025 06:07:55 GMT and should not be manually modified.
+
+## 1.0.2
+Wed, 07 May 2025 06:07:55 GMT
+
+### Updates
+
+- fix: fix error of projection
+
+
 
 ## 1.0.1
 Tue, 06 May 2025 11:04:38 GMT
