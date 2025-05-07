@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vlayouts",
-  "version": "0.19.5",
+  "version": "1.0.1",
   "main": "cjs/index.js",
   "module": "es/index.js",
   "types": "es/index.d.ts",
@@ -49,8 +49,8 @@
     "canvas": "~3.1.0"
   },
   "dependencies": {
-    "@visactor/vscale": "workspace:0.19.5",
-    "@visactor/vutils": "workspace:0.19.5",
+    "@visactor/vscale": "workspace:1.0.1",
+    "@visactor/vutils": "workspace:1.0.1",
     "eventemitter3": "^4.0.7",
     "@turf/invariant": "^6.5.0",
     "@turf/helpers": "^6.5.0"
