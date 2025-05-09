@@ -1,4 +1,4 @@
-import { cloneDeep, EventEmitter, merge, isNil } from '@visactor/vutils';
+import { cloneDeep, EventEmitter, merge, isNil, isEqual } from '@visactor/vutils';
 import type { DataSet } from './data-set';
 import type { ITransformOptions } from './transform';
 import type { DATAVIEW_TYPE } from './constants';
@@ -8,7 +8,6 @@ import { fields } from './transform/fields';
 export interface IDataViewOptions {
   name?: string | number; // dataview 名称
   history?: boolean; // 是否启用 historyData 字段存储全部历史变化数据，默认false 不存储
-  diffKeys?: string[]; //  用于指定该数据视图监听的 `states` 状态量的。默认监听所有状态量（也就是任何状态量变更都会导致数据视图重新计算），如果指定为空数组 []，则不监听任何状态量，如果指定为非空数组，则只监听数组元素对应的状态量变更。
   fields?: IFields;
 }
 
@@ -24,7 +23,20 @@ export interface IFields {
   [key: string]: IFieldsMeta;
 }
 
-export const DataViewDiffRank = '_data-view-diff-rank';
+export interface DataViewTransformOptions {
+  /**
+   * 是否更新到历史数据中
+   */
+  pushHistory?: boolean;
+  /**
+   * 是否触发消息
+   */
+  emitMessage?: boolean;
+  /**
+   * 当数据相等的时候不触发 change 事件
+   */
+  skipEqual?: boolean;
+}
 
 /**
  * 数据视图
@@ -79,12 +91,6 @@ export class DataView {
    * 数据维度信息
    */
   protected _fields: IFields = null;
-
-  // diff用数据id
-  private _diffData: boolean;
-  private _diffKeys: string[];
-  _diffMap: Map<string, any>;
-  _diffRank: number;
 
   // tag
 
@@ -177,21 +183,13 @@ export class DataView {
       }
       pushOption && this.transformsArr.push(options);
       if (execute) {
-        const lastTag = this.isLastTransform(options);
-
         this.executeTransform(options);
-        if (lastTag) {
-          this.diffLastData();
-        }
       }
     }
     // 每次新增transform都要进行一次排序
     this.sortTransform();
     this.isRunning = false;
     return this;
-  }
-  private isLastTransform(options: ITransformOptions) {
-    return this.transformsArr[this.transformsArr.length - 1] === options;
   }
 
   sortTransform() {
@@ -200,23 +198,21 @@ export class DataView {
     }
   }
 
-  private executeTransform(
-    options: ITransformOptions,
-    opt: { pushHistory: boolean; emitMessage: boolean } = {
-      pushHistory: true,
-      emitMessage: true
-    }
-  ) {
-    const { pushHistory, emitMessage } = opt;
+  private executeTransform(options: ITransformOptions, opt: DataViewTransformOptions = {}) {
+    const { pushHistory, emitMessage, skipEqual } = opt;
     const transformFn = this.dataSet.getTransform(options.type);
-    const transformData = transformFn(this.latestData, options.options);
+    const prevLatestData = this.latestData;
+    const transformData = transformFn(prevLatestData, options.options);
 
     if (this.history && pushHistory !== false) {
       this.historyData.push(transformData);
     }
 
     this.latestData = transformData;
-    emitMessage !== false && this.target.emit('change', []);
+
+    if (emitMessage !== false && (!skipEqual || !isEqual(prevLatestData, this.latestData))) {
+      this.target.emit('change', { latestData: this.latestData });
+    }
   }
 
   private resetTransformData() {
@@ -227,97 +223,22 @@ export class DataView {
     }
   }
 
-  reRunAllTransform = (
-    opt: { pushHistory: boolean; emitMessage: boolean } = {
-      pushHistory: true,
-      emitMessage: true
-    }
-  ) => {
+  reRunAllTransform = (opt: DataViewTransformOptions = {}) => {
+    const prevLatestData = this.latestData;
+
     this.isRunning = true;
     this.resetTransformData();
     this.transformsArr.forEach(t => {
       this.executeTransform(t, { pushHistory: opt.pushHistory, emitMessage: false });
-      if (this.isLastTransform(t)) {
-        this.diffLastData();
-      }
     });
     this.isRunning = false;
 
-    opt.emitMessage !== false && this.target.emit('change', []);
+    if (opt.emitMessage !== false && (!opt.skipEqual || !isEqual(prevLatestData, this.latestData))) {
+      this.target.emit('change', { latestData: this.latestData });
+    }
+
     return this;
   };
-
-  enableDiff(keys: string[]) {
-    this._diffData = true;
-    this._diffKeys = keys;
-
-    this._diffMap = new Map();
-    this._diffRank = 0;
-  }
-
-  disableDiff() {
-    this._diffData = false;
-    this._diffMap = null;
-    this._diffRank = null;
-  }
-
-  resetDiff() {
-    this._diffMap = new Map();
-    this._diffRank = 0;
-  }
-
-  protected diffLastData() {
-    if (!this._diffData) {
-      return;
-    }
-    if (!this.latestData.forEach) {
-      return;
-    }
-    if (!this._diffKeys?.length) {
-      return;
-    }
-    const next = this._diffRank + 1;
-    if (this._diffRank === 0) {
-      // eslint-disable-next-line @typescript-eslint/ban-types
-      this.latestData.forEach((d: Object) => {
-        d[DataViewDiffRank] = next;
-        this._diffMap.set(
-          this._diffKeys.reduce((pre, k) => pre + d[k], ''),
-          d
-        );
-      });
-      this.latestDataAUD = {
-        add: Array.from(this.latestData),
-        del: [],
-        update: []
-      };
-    } else {
-      this.latestDataAUD = {
-        add: [],
-        del: [],
-        update: []
-      };
-      let tempKey;
-      // eslint-disable-next-line @typescript-eslint/ban-types
-      this.latestData.forEach((d: Object) => {
-        d[DataViewDiffRank] = next;
-        tempKey = this._diffKeys.reduce((pre, k) => pre + d[k], '');
-        if (this._diffMap.get(tempKey)) {
-          this.latestDataAUD.update.push(d);
-        } else {
-          this.latestDataAUD.add.push(d);
-        }
-        this._diffMap.set(tempKey, d);
-      });
-      this._diffMap.forEach((v, k) => {
-        if (v[DataViewDiffRank] < next) {
-          this.latestDataAUD.del.push(v);
-          this._diffMap.delete(k);
-        }
-      });
-    }
-    this._diffRank = next;
-  }
 
   private cloneParseData(data: any, options?: IParserOptions) {
     let clone = false;
@@ -397,8 +318,6 @@ export class DataView {
 
   destroy() {
     this.dataSet.removeDataView(this.name);
-    this._diffMap = null;
-    this._diffRank = null;
     this.latestData = null;
     this.rawData = null;
     this.parserData = null;
