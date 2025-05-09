@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Fri, 09 May 2025 07:25:42 GMT and should not be manually modified.
+This log was last generated on Fri, 09 May 2025 10:41:56 GMT and should not be manually modified.
+
+## 1.0.4
+Fri, 09 May 2025 10:41:56 GMT
+
+### Updates
+
+- feat: add `skipEqual` option to dataview transform
+
+
 
 ## 1.0.3
 Fri, 09 May 2025 07:25:42 GMT
