@@ -8,7 +8,7 @@ import type {
 import type { TagItemAttribute } from '../wordcloud/interface';
 import type { FieldOption } from '../wordcloud/wordcloud';
 
-export interface SegmentationOutputType extends SegmentationOutputTypeBase {
+export interface ImageCloudSegmentationOutputType extends SegmentationOutputTypeBase {
   transparentMaskCanvas?: HTMLCanvasElement;
 }
 

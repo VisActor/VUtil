@@ -1,5 +1,5 @@
 /* eslint-disable max-depth */
-import type { ImageCollageType, SegmentationOutputType, SpiralLayoutConfig } from '../interface';
+import type { ImageCollageType, ImageCloudSegmentationOutputType, SpiralLayoutConfig } from '../interface';
 import { minInArray } from '@visactor/vutils';
 import { setSize } from '../util';
 import { Layout } from './basic';
@@ -15,7 +15,7 @@ export class SpiralLayout extends Layout {
     image: ImageCollageType,
     size: [number, number],
     spiralType: string,
-    segmentationOutput: SegmentationOutputType,
+    segmentationOutput: ImageCloudSegmentationOutputType,
     fixedImages: ImageCollageType[],
     dt: number = 1
   ) {

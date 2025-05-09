@@ -3,7 +3,7 @@ import type {
   ImageCloudOptions,
   ImageCollageType,
   ImageConfig,
-  SegmentationOutputType
+  ImageCloudSegmentationOutputType
 } from '../interface';
 import { extent, fakeRandom, field, isString, Logger, simpleField, isNumber, isFunction } from '@visactor/vutils';
 import { setSize } from '../util';
@@ -27,7 +27,7 @@ export abstract class Layout {
   protected isLayoutFinished?: boolean;
   protected progressiveResult?: any[] = [];
   protected segmentationInput?: SegmentationInputType;
-  protected segmentationOutput?: SegmentationOutputType;
+  protected segmentationOutput?: ImageCloudSegmentationOutputType;
 
   protected imageCollageList?: ImageCollageType[] = [];
 
