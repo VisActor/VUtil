@@ -1,6 +1,13 @@
 # Change Log - @visactor/vlayouts
 
-This log was last generated on Wed, 07 May 2025 06:07:55 GMT and should not be manually modified.
+This log was last generated on Fri, 09 May 2025 07:25:42 GMT and should not be manually modified.
+
+## 1.0.3
+Fri, 09 May 2025 07:25:42 GMT
+
+### Updates
+
+- fix: export more types for imagecloud
 
 ## 1.0.2
 Wed, 07 May 2025 06:07:55 GMT

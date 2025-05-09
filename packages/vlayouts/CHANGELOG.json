@@ -2,6 +2,18 @@
   "name": "@visactor/vlayouts",
   "entries": [
     {
+      "version": "1.0.3",
+      "tag": "@visactor/vlayouts_v1.0.3",
+      "date": "Fri, 09 May 2025 07:25:42 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: export more types for imagecloud"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.2",
       "tag": "@visactor/vlayouts_v1.0.2",
       "date": "Wed, 07 May 2025 06:07:55 GMT",
