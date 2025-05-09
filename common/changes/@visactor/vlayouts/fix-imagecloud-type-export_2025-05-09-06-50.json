@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vlayouts",
+      "comment": "fix: export more types for imagecloud",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vlayouts"
+}
