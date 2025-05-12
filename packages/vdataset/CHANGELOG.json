@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "1.0.5",
+      "tag": "@visactor/vdataset_v1.0.5",
+      "date": "Mon, 12 May 2025 02:42:28 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: support sort in data fields transform\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.4",
       "tag": "@visactor/vdataset_v1.0.4",
       "date": "Fri, 09 May 2025 10:41:56 GMT",
