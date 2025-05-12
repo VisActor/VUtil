@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "1.0.4",
+      "tag": "@visactor/vdataset_v1.0.4",
+      "date": "Fri, 09 May 2025 10:41:56 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add `skipEqual` option to dataview transform\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.3",
       "tag": "@visactor/vdataset_v1.0.3",
       "date": "Fri, 09 May 2025 07:25:42 GMT",
