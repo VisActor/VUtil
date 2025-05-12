@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Fri, 09 May 2025 10:41:56 GMT and should not be manually modified.
+This log was last generated on Mon, 12 May 2025 02:42:28 GMT and should not be manually modified.
+
+## 1.0.5
+Mon, 12 May 2025 02:42:28 GMT
+
+### Updates
+
+- feat: support sort in data fields transform
+
+
 
 ## 1.0.4
 Fri, 09 May 2025 10:41:56 GMT
