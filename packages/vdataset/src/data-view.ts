@@ -16,6 +16,13 @@ export interface IFieldsMeta {
   domain?: any[];
   sortIndex?: number;
   sortReverse?: boolean;
+  /**
+   * 排序简易配置
+   * 当配置了 sort 时，sortIndex 默认为 0 ，sortReverse 跟随 sort 的值，'desc' 时为 true，'asc' 时为 false
+   * 当配置了 sortIndex 和 sortReverser 时，优先级会高于 sort 的默认效果
+   * @support since 1.0.4
+   */
+  sort?: 'asc' | 'desc';
   [key: string]: unknown;
 }
 

@@ -41,8 +41,9 @@ male,550`;
       },
       value: {
         type: 'linear',
-        sortIndex: 0,
-        sortReverse: true
+        // sortIndex: 0,
+        // sortReverse: true,
+        sort: 'desc'
       }
     });
     dataView.reRunAllTransform();

@@ -1,3 +1,4 @@
+import { isValid, isValidNumber } from '@visactor/vutils';
 import type { IFields } from '../data-view';
 import type { IFieldsMeta } from '../data-view';
 import type { Transform } from '.';
@@ -43,6 +44,14 @@ export const fields: Transform = (data: Array<object>, options: IFieldsOptions) 
   for (const key in fields) {
     if (Object.prototype.hasOwnProperty.call(fields, key)) {
       const fieldInfo = fields[key] as IFieldsMetaTemp;
+      if (fieldInfo.sort) {
+        if (!isValidNumber(fieldInfo.sortIndex)) {
+          fieldInfo.sortIndex = 0;
+        }
+        if (!isValid(fieldInfo.sortReverse)) {
+          fieldInfo.sortReverse = fieldInfo.sort === 'desc';
+        }
+      }
       if (!fieldInfo.type) {
         let dataCheck = dataTemp;
         if (!(key in dataTemp)) {
