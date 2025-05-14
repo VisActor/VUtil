@@ -19,6 +19,10 @@ export function computeTextCenters(
   const overlapped = getOverlappingCircles(circles);
   for (let i = 0; i < areas.length; ++i) {
     const area = areas[i].sets;
+    if (!area || area.length === 0) {
+      ret[''] = { x: 0, y: 0 };
+      continue;
+    }
     const areaIds: Record<VennCircleName, true> = {};
     const exclude: Record<VennCircleName, true> = {};
     for (let j = 0; j < area.length; ++j) {

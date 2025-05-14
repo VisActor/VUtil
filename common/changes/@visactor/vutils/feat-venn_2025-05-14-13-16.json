@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "Merge pull request #237 from VisActor/release/1.0.5\n\n[Auto release] release 1.0.5\n",
+      "type": "none",
+      "packageName": "@visactor/vutils"
+    }
+  ],
+  "packageName": "@visactor/vutils",
+  "email": "shuzhuxvchuang@163.com"
+}
