@@ -60,3 +60,31 @@ test('Path transform of 3 element venn', async () => {
   expect(circles[2].x).toBeCloseTo((result[2] as IVennCircleDatum).x, 0);
   expect(circles[2].y).toBeCloseTo((result[2] as IVennCircleDatum).y, 0);
 });
+
+const data2 = [
+  { sets: [], size: 0, label: 'none' },
+  { sets: ['A'], size: 12, label: 'A' },
+  { sets: ['B'], size: 12, label: 'B' },
+  { sets: ['A', 'B'], size: 4, label: 'A,B', stroke: 'red' }
+];
+
+test('Data transform of 3 element venn with empty set', async () => {
+  const result = await transform(
+    {
+      x0: 0,
+      y0: 0,
+      x1: 500,
+      y1: 500
+    },
+    data2
+  );
+
+  expect(result.length).toEqual(4);
+
+  expect(result[0].type).toEqual('circle');
+  expect(result[3].type).toEqual('overlap');
+
+  expect((result[0] as IVennCircleDatum).radius).toBeCloseTo(250, 0);
+  expect((result[0] as IVennCircleDatum).x).toBeCloseTo(250, 0);
+  expect((result[0] as IVennCircleDatum).y).toBeCloseTo(250, 0);
+});

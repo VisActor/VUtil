@@ -45,6 +45,21 @@ export const transform = (
 
   const data = upstreamData.map(area => {
     const sets = array(area[setField]);
+    if (!sets || sets.length === 0) {
+      return {
+        ...area,
+        datum: area,
+        sets,
+        key: '',
+        size: area[valueField],
+        labelX: undefined,
+        labelY: undefined,
+        type: 'circle',
+        x: x0 + (x1 - x0) / 2,
+        y: y0 + (y1 - y0) / 2,
+        radius: Math.max(x1 - x0, y1 - y0) / 2
+      } as IVennCircleDatum;
+    }
     const key = sets.toString();
     const textCenter = textCenters[key];
     const basicDatum = {
