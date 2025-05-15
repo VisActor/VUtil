@@ -1,4 +1,4 @@
-/* Adapted from venn.js by Ben Frederickson
+``; /* Adapted from venn.js by Ben Frederickson
  * https://github.com/benfred/venn.js
  * Licensed under the MIT
 
@@ -20,7 +20,6 @@ export function computeTextCenters(
   for (let i = 0; i < areas.length; ++i) {
     const area = areas[i].sets;
     if (!area || area.length === 0) {
-      ret[''] = { x: 0, y: 0 };
       continue;
     }
     const areaIds: Record<VennCircleName, true> = {};
