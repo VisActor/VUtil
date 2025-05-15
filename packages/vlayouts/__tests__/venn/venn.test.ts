@@ -87,4 +87,8 @@ test('Data transform of 3 element venn with empty set', async () => {
   expect((result[0] as IVennCircleDatum).radius).toBeCloseTo(250, 0);
   expect((result[0] as IVennCircleDatum).x).toBeCloseTo(250, 0);
   expect((result[0] as IVennCircleDatum).y).toBeCloseTo(250, 0);
+
+  expect((result[1] as IVennCircleDatum).radius).toBeCloseTo((result[1] as IVennCircleDatum).radius, 0);
+  expect((result[1] as IVennCircleDatum).x).toBeCloseTo((result[1] as IVennCircleDatum).x, 0);
+  expect((result[1] as IVennCircleDatum).y).toBeCloseTo((result[1] as IVennCircleDatum).y, 0);
 });

@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "docs: update changlog of rush\n\n",
+      "type": "none",
+      "packageName": "@visactor/vutils"
+    }
+  ],
+  "packageName": "@visactor/vutils",
+  "email": "shuzhuxvchuang@163.com"
+}
