@@ -1,5 +1,5 @@
 import type { IPointLike } from '@visactor/vutils';
-import { array } from '@visactor/vutils';
+import { array, isEmpty } from '@visactor/vutils';
 import type {
   IVennCircleDatum,
   IVennCommonDatum,
@@ -23,7 +23,8 @@ export const transform = (
     setField = 'sets',
     valueField = 'size',
     orientation = Math.PI / 2,
-    orientationOrder = null
+    orientationOrder = null,
+    emptySetKey = ''
   } = options;
 
   let circles: Record<VennCircleName, IVennCircle> = {};
@@ -50,7 +51,7 @@ export const transform = (
         ...area,
         datum: area,
         sets,
-        key: '',
+        key: emptySetKey,
         size: area[valueField],
         labelX: undefined,
         labelY: undefined,
