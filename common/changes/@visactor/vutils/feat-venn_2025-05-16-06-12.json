@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: add emptySetKey option to IVennTransformOptions",
+      "type": "none",
+      "packageName": "@visactor/vutils"
+    }
+  ],
+  "packageName": "@visactor/vutils",
+  "email": "shuzhuxvchuang@163.com"
+}

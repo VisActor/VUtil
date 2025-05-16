@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: add emptySetKey option to IVennTransformOptions",
+      "type": "none",
+      "packageName": "@visactor/vlayouts"
+    }
+  ],
+  "packageName": "@visactor/vlayouts",
+  "email": "shuzhuxvchuang@163.com"
+}
