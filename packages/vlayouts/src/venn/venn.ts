@@ -30,8 +30,13 @@ export const transform = (
   let circles: Record<VennCircleName, IVennCircle> = {};
   let textCenters: Record<VennAreaName, IPointLike> = {};
 
-  if (upstreamData.length > 0) {
-    const vennData = upstreamData.map(
+  const nonEmptyUpstreamData = upstreamData.filter(area => {
+    const sets = array(area[setField]);
+    return !isEmpty(sets);
+  });
+
+  if (nonEmptyUpstreamData.length > 0) {
+    const vennData = nonEmptyUpstreamData.map(
       area =>
         ({
           sets: array(area[setField]),
