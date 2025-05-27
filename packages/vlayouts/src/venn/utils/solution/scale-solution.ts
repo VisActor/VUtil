@@ -47,8 +47,6 @@ export function scaleSolution(
   const yScaling = height / (yRange.max - yRange.min);
 
   let scaling: number;
-  let xOffset: number;
-  let yOffset: number;
 
   if (hasEmptySet) {
     const containerRadius = Math.min(width, height) / 2;
@@ -63,16 +61,12 @@ export function scaleSolution(
       diagramRadius = Math.max(diagramRadius, maxDistanceForThisCircle);
     }
     scaling = containerRadius / diagramRadius;
-
-    xOffset = (width - (xRange.max - xRange.min) * scaling) / 2;
-    yOffset = (height - (yRange.max - yRange.min) * scaling) / 2;
   } else {
     scaling = Math.min(yScaling, xScaling);
-
-    // while we're at it, center the diagram too
-    xOffset = (width - (xRange.max - xRange.min) * scaling) / 2;
-    yOffset = (height - (yRange.max - yRange.min) * scaling) / 2;
   }
+  // while we're at it, center the diagram too
+  const xOffset = (width - (xRange.max - xRange.min) * scaling) / 2;
+  const yOffset = (height - (yRange.max - yRange.min) * scaling) / 2;
   const scaled: Record<VennCircleName, IVennCircle> = {};
   for (let i = 0; i < circles.length; ++i) {
     const circle = circles[i];
