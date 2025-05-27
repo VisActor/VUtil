@@ -18,7 +18,8 @@ export function scaleSolution(
   width: number,
   height: number,
   x0: number,
-  y0: number
+  y0: number,
+  hasEmptySet: boolean = false
 ): Record<VennCircleName, IVennCircle> {
   width = Math.max(width, 1);
   height = Math.max(height, 1);
@@ -44,12 +45,34 @@ export function scaleSolution(
 
   const xScaling = width / (xRange.max - xRange.min);
   const yScaling = height / (yRange.max - yRange.min);
-  const scaling = Math.min(yScaling, xScaling);
 
-  // while we're at it, center the diagram too
-  const xOffset = (width - (xRange.max - xRange.min) * scaling) / 2;
-  const yOffset = (height - (yRange.max - yRange.min) * scaling) / 2;
+  let scaling: number;
+  let xOffset: number;
+  let yOffset: number;
 
+  if (hasEmptySet) {
+    const containerRadius = Math.min(width, height) / 2;
+
+    const centerX = (xRange.min + xRange.max) / 2;
+    const centerY = (yRange.min + yRange.max) / 2;
+
+    let diagramRadius = 0;
+    for (const circle of circles) {
+      const distanceToCenter = Math.sqrt(Math.pow(circle.x - centerX, 2) + Math.pow(circle.y - centerY, 2));
+      const maxDistanceForThisCircle = distanceToCenter + circle.radius;
+      diagramRadius = Math.max(diagramRadius, maxDistanceForThisCircle);
+    }
+    scaling = containerRadius / diagramRadius;
+
+    xOffset = (width - (xRange.max - xRange.min) * scaling) / 2;
+    yOffset = (height - (yRange.max - yRange.min) * scaling) / 2;
+  } else {
+    scaling = Math.min(yScaling, xScaling);
+
+    // while we're at it, center the diagram too
+    xOffset = (width - (xRange.max - xRange.min) * scaling) / 2;
+    yOffset = (height - (yRange.max - yRange.min) * scaling) / 2;
+  }
   const scaled: Record<VennCircleName, IVennCircle> = {};
   for (let i = 0; i < circles.length; ++i) {
     const circle = circles[i];
