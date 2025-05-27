@@ -1,5 +1,5 @@
 import type { IPointLike } from '@visactor/vutils';
-import { array, isEmpty } from '@visactor/vutils';
+import { array, has, isEmpty } from '@visactor/vutils';
 import type {
   IVennCircleDatum,
   IVennCommonDatum,
@@ -24,16 +24,23 @@ export const transform = (
     valueField = 'size',
     orientation = Math.PI / 2,
     orientationOrder = null,
-    emptySetKey = ''
+    emptySetKey = 'rest'
   } = options;
-
   let circles: Record<VennCircleName, IVennCircle> = {};
   let textCenters: Record<VennAreaName, IPointLike> = {};
 
-  const nonEmptyUpstreamData = upstreamData.filter(area => {
+  let hasEmptySet = false;
+  hasEmptySet = upstreamData.some(area => {
     const sets = array(area[setField]);
-    return !isEmpty(sets);
+    return !sets || sets.length === 0;
   });
+
+  const nonEmptyUpstreamData = hasEmptySet
+    ? upstreamData.filter(area => {
+        const sets = array(area[setField]);
+        return !isEmpty(sets);
+      })
+    : upstreamData;
 
   if (nonEmptyUpstreamData.length > 0) {
     const vennData = nonEmptyUpstreamData.map(
@@ -45,7 +52,7 @@ export const transform = (
     );
     let solution = venn(vennData, options);
     solution = normalizeSolution(solution, orientation, orientationOrder);
-    circles = scaleSolution(solution, x1 - x0, y1 - y0, x0, y0);
+    circles = scaleSolution(solution, x1 - x0, y1 - y0, x0, y0, hasEmptySet);
     textCenters = computeTextCenters(circles, vennData);
   }
 
@@ -63,7 +70,7 @@ export const transform = (
         type: 'circle',
         x: x0 + (x1 - x0) / 2,
         y: y0 + (y1 - y0) / 2,
-        radius: Math.max(x1 - x0, y1 - y0) / 2
+        radius: Math.min(x1 - x0, y1 - y0) / 2
       } as IVennCircleDatum;
     }
     const key = sets.toString();
