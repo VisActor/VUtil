@@ -29,17 +29,13 @@ export const transform = (
   let circles: Record<VennCircleName, IVennCircle> = {};
   let textCenters: Record<VennAreaName, IPointLike> = {};
 
-  let hasEmptySet = false;
-  hasEmptySet = upstreamData.some(area => {
+  const hasEmptySet = upstreamData.some(area => {
     const sets = array(area[setField]);
     return !sets || sets.length === 0;
   });
 
   const nonEmptyUpstreamData = hasEmptySet
-    ? upstreamData.filter(area => {
-        const sets = array(area[setField]);
-        return !isEmpty(sets);
-      })
+    ? upstreamData.filter(area => !isEmpty(array(area[setField])))
     : upstreamData;
 
   if (nonEmptyUpstreamData.length > 0) {
@@ -58,7 +54,7 @@ export const transform = (
 
   const data = upstreamData.map(area => {
     const sets = array(area[setField]);
-    if (!sets || sets.length === 0) {
+    if (hasEmptySet) {
       return {
         ...area,
         datum: area,
