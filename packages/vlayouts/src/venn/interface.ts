@@ -9,7 +9,6 @@ export interface IVennTransformOptions extends IVennParams {
   valueField?: string;
   orientation?: number;
   orientationOrder?: any;
-  emptySetKey?: string;
 }
 
 export interface IVennTransformMarkOptions {

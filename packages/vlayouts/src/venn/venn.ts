@@ -1,5 +1,5 @@
 import type { IPointLike } from '@visactor/vutils';
-import { array, has, isEmpty } from '@visactor/vutils';
+import { array, isEmpty } from '@visactor/vutils';
 import type {
   IVennCircleDatum,
   IVennCommonDatum,
@@ -23,8 +23,7 @@ export const transform = (
     setField = 'sets',
     valueField = 'size',
     orientation = Math.PI / 2,
-    orientationOrder = null,
-    emptySetKey = 'rest'
+    orientationOrder = null
   } = options;
   let circles: Record<VennCircleName, IVennCircle> = {};
   let textCenters: Record<VennAreaName, IPointLike> = {};
@@ -34,12 +33,10 @@ export const transform = (
     return !sets || sets.length === 0;
   });
 
-  const nonEmptyUpstreamData = hasEmptySet
-    ? upstreamData.filter(area => !isEmpty(array(area[setField])))
-    : upstreamData;
+  const nonEmptyData = hasEmptySet ? upstreamData.filter(area => !isEmpty(array(area[setField]))) : upstreamData;
 
-  if (nonEmptyUpstreamData.length > 0) {
-    const vennData = nonEmptyUpstreamData.map(
+  if (nonEmptyData.length > 0) {
+    const vennData = nonEmptyData.map(
       area =>
         ({
           sets: array(area[setField]),
@@ -54,12 +51,12 @@ export const transform = (
 
   const data = upstreamData.map(area => {
     const sets = array(area[setField]);
-    if (hasEmptySet) {
+    if (!sets || sets.length === 0) {
       return {
         ...area,
         datum: area,
         sets,
-        key: emptySetKey,
+        key: 'others',
         size: area[valueField],
         labelX: undefined,
         labelY: undefined,
