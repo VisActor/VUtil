@@ -16,17 +16,6 @@ import type { ICircleArc, ICircle, IIntersectPoint, IOverlapAreaStats } from './
 /** Returns the intersection area of a bunch of circles (where each circle
  is an object having an x,y and radius property) */
 export function intersectionArea(circles: ICircle[], stats?: IOverlapAreaStats) {
-  if (!circles || !circles.length) {
-    if (stats) {
-      stats.area = 0;
-      stats.arcArea = 0;
-      stats.polygonArea = 0;
-      stats.arcs = [];
-      stats.innerPoints = [];
-      stats.intersectionPoints = [];
-    }
-    return 0;
-  }
   // get all the intersection points of the circles
   const intersectionPoints = getIntersectionPoints(circles);
 
