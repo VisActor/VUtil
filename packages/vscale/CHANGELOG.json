@@ -2,6 +2,18 @@
   "name": "@visactor/vscale",
   "entries": [
     {
+      "version": "1.0.7",
+      "tag": "@visactor/vscale_v1.0.7",
+      "date": "Wed, 25 Jun 2025 07:20:33 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "fix: band scale should not return value exceed range\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.6",
       "tag": "@visactor/vscale_v1.0.6",
       "date": "Fri, 16 May 2025 08:05:44 GMT",
