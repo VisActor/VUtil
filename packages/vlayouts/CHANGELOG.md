@@ -1,6 +1,11 @@
 # Change Log - @visactor/vlayouts
 
-This log was last generated on Fri, 16 May 2025 08:05:44 GMT and should not be manually modified.
+This log was last generated on Wed, 25 Jun 2025 07:20:33 GMT and should not be manually modified.
+
+## 1.0.7
+Wed, 25 Jun 2025 07:20:33 GMT
+
+_Version update only_
 
 ## 1.0.6
 Fri, 16 May 2025 08:05:44 GMT
