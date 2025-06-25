@@ -316,3 +316,25 @@ test('band.ticks(count) when rangeFactor is not empty', function () {
 
   expect(tickData1).toEqual(['A', 'B', 'C']);
 });
+
+test('band.scale() should not return value greater than range[0]', function () {
+  const s = new BandScale()
+    .paddingInner(1)
+    .paddingOuter(0)
+    .domain(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], true)
+    .range([0, 239]);
+
+  expect(s.scale('A')).toEqual(0);
+  expect(s.scale('H')).toEqual(239);
+});
+
+test('band.scale() should not return value smaller than range[1]', function () {
+  const s = new BandScale()
+    .paddingInner(1)
+    .paddingOuter(0)
+    .domain(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], true)
+    .range([239, 0]);
+
+  expect(s.scale('A')).toEqual(239);
+  expect(s.scale('H')).toEqual(0);
+});

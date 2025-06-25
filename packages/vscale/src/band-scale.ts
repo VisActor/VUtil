@@ -1,4 +1,4 @@
-import { toNumber, isGreater, isLess, isNumber, isValid, isNil } from '@visactor/vutils';
+import { toNumber, isGreater, isLess, isNumber, isValid, isNil, clamp } from '@visactor/vutils';
 import { OrdinalScale, implicit } from './ordinal-scale';
 import {
   bandSpace,
@@ -26,7 +26,7 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
   protected _paddingOuter: number;
   protected _align: number;
   protected _range: Array<number>;
-  protected _bandRangeState?: { reverse: boolean; start: number; count: number };
+  protected _bandRangeState?: { reverse: boolean; start: number; min: number; max: number; count: number };
 
   constructor(slience?: boolean) {
     super();
@@ -73,7 +73,11 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
 
     this._bandRangeState = {
       reverse,
-      start: reverse ? start + this._step * (n - 1) : start,
+      start: reverse
+        ? clamp(start + this._step * (n - 1), wholeRange[1], wholeRange[0]) // 防止计算精度问题导致的start 超出区间
+        : clamp(start, wholeRange[0], wholeRange[1]),
+      min: reverse ? wholeRange[1] : wholeRange[0],
+      max: stop,
       count: n
     };
 
@@ -100,12 +104,12 @@ export class BandScale extends OrdinalScale implements IBandLikeScale {
       i = this._domain.push(d);
       this._index.set(key, i);
     }
-    const { count, start, reverse } = this._bandRangeState;
+    const { count, start, reverse, min, max } = this._bandRangeState;
     const stepIndex = (i - 1) % count;
 
     const output = start + (reverse ? -1 : 1) * stepIndex * this._step;
 
-    return this._fishEyeTransform ? this._fishEyeTransform(output) : output;
+    return clamp(this._fishEyeTransform ? this._fishEyeTransform(output) : output, min, max);
   }
 
   /**
