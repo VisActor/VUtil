@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: band scale should not return value exceed range\n\n",
+      "type": "none",
+      "packageName": "@visactor/vscale"
+    }
+  ],
+  "packageName": "@visactor/vscale",
+  "email": "dingling112@gmail.com"
+}
