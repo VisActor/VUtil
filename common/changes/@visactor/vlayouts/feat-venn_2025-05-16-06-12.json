@@ -1,7 +1,7 @@
 {
   "changes": [
     {
-      "comment": "fix: add emptySetKey option to IVennTransformOptions",
+      "comment": "feat: add emptySet option to VennTransform",
       "type": "none",
       "packageName": "@visactor/vlayouts"
     }

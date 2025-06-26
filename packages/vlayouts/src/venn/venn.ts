@@ -23,7 +23,8 @@ export const transform = (
     setField = 'sets',
     valueField = 'size',
     orientation = Math.PI / 2,
-    orientationOrder = null
+    orientationOrder = null,
+    emptySetKey
   } = options;
   let circles: Record<VennCircleName, IVennCircle> = {};
   let textCenters: Record<VennAreaName, IPointLike> = {};
@@ -56,7 +57,7 @@ export const transform = (
         ...area,
         datum: area,
         sets,
-        key: 'others',
+        key: emptySetKey || 'others',
         size: area[valueField],
         labelX: undefined,
         labelY: undefined,
