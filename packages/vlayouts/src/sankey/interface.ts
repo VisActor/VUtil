@@ -46,7 +46,7 @@ export interface SankeyOptions {
   /**
    * set the height of node
    * @since 0.13.0
-   * @description add columns information since 1.0.7
+   * @description add columns information since 1.0.8
    */
   nodeHeight?: number | ((node: SankeyNodeElement, columns?: SankeyNodeElement[][]) => number);
   /**
