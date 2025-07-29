@@ -12,7 +12,7 @@ import {
   pickWithout,
   toValidNumber
 } from '@visactor/vutils';
-import { calculateNodeValue } from './hierarchy';
+import { makeHierarchicNodes } from './hierarchy';
 import type {
   SankeyData,
   SankeyOptions,
@@ -249,49 +249,8 @@ export class SankeyLayout {
     const linkMap: Record<string | number, SankeyLinkElement> = {};
     const originalLinks: (SankeyLinkDatum & { parents?: SankeyNodeElement[] })[] = [];
 
-    calculateNodeValue(originalNodes);
+    makeHierarchicNodes(originalNodes, this._getNodeKey, nodes, nodeMap, originalLinks);
 
-    const doSubTree = (subTree: HierarchyNodeDatum[], depth: number, parents?: SankeyNodeElement[]) => {
-      subTree.forEach((node, index) => {
-        const nodeKey = this._getNodeKey
-          ? this._getNodeKey(node)
-          : parents
-          ? `${parents[parents.length - 1].key}-${index}`
-          : `${depth}-${index}`;
-        const nodeValue = isNil(node.value) ? 0 : toValidNumber(node.value);
-
-        if (nodeMap[nodeKey]) {
-          nodeMap[nodeKey].value = undefined;
-        } else {
-          const nodeElement: SankeyNodeElement = {
-            depth,
-            datum: node,
-            index: index,
-            key: nodeKey,
-            value: nodeValue,
-            sourceLinks: [] as SankeyLinkElement[],
-            targetLinks: [] as SankeyLinkElement[]
-          };
-
-          nodeMap[nodeKey] = nodeElement;
-          nodes.push(nodeElement);
-        }
-        if (parents) {
-          originalLinks.push({
-            source: parents[parents.length - 1].key,
-            target: nodeKey,
-            value: nodeValue,
-            parents
-          });
-        }
-
-        if (node.children && node.children.length) {
-          doSubTree(node.children, depth + 1, parents ? parents.concat([nodeMap[nodeKey]]) : [nodeMap[nodeKey]]);
-        }
-      });
-    };
-
-    doSubTree(originalNodes, 0, null);
     originalLinks.forEach((link, index) => {
       const key = `${link.source}-${link.target}`;
       const linkDatum = pickWithout(link, ['parents']);
