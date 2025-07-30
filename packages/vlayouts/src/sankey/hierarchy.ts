@@ -117,3 +117,19 @@ export function computeHierarchicNodeLinks(
 
   return { nodes, links, nodeMap };
 }
+
+export function computeNodeValues(nodes: SankeyNodeElement[]) {
+  for (let i = 0, len = nodes.length; i < len; i++) {
+    const node = nodes[i];
+
+    node.value = Math.max(
+      isNil(node.value) ? 0 : toValidNumber(node.value),
+      node.sourceLinks.reduce((sum, link: SankeyLinkElement) => {
+        return sum + (toValidNumber(link.value) ?? 0);
+      }, 0),
+      node.targetLinks.reduce((sum, link: SankeyLinkElement) => {
+        return sum + (toValidNumber(link.value) ?? 0);
+      }, 0)
+    );
+  }
+}

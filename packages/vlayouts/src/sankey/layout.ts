@@ -12,7 +12,7 @@ import {
   pickWithout,
   toValidNumber
 } from '@visactor/vutils';
-import { computeHierarchicNodeLinks, makeHierarchicNodes } from './hierarchy';
+import { computeHierarchicNodeLinks, computeNodeValues, makeHierarchicNodes } from './hierarchy';
 import type {
   SankeyData,
   SankeyOptions,
@@ -374,19 +374,7 @@ export class SankeyLayout {
   }
 
   computeNodeValues(nodes: SankeyNodeElement[]) {
-    for (let i = 0, len = nodes.length; i < len; i++) {
-      const node = nodes[i];
-
-      node.value = Math.max(
-        isNil(node.value) ? 0 : toValidNumber(node.value),
-        node.sourceLinks.reduce((sum, link: SankeyLinkElement) => {
-          return sum + (toValidNumber(link.value) ?? 0);
-        }, 0),
-        node.targetLinks.reduce((sum, link: SankeyLinkElement) => {
-          return sum + (toValidNumber(link.value) ?? 0);
-        }, 0)
-      );
-    }
+    return computeNodeValues(nodes);
   }
 
   computeNodeDepths(nodes: SankeyNodeElement[]) {
