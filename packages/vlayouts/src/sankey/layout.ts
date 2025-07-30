@@ -12,7 +12,7 @@ import {
   pickWithout,
   toValidNumber
 } from '@visactor/vutils';
-import { makeHierarchicNodes } from './hierarchy';
+import { computeHierarchicNodeLinks, makeHierarchicNodes } from './hierarchy';
 import type {
   SankeyData,
   SankeyOptions,
@@ -243,46 +243,7 @@ export class SankeyLayout {
   }
 
   computeHierarchicNodeLinks(originalNodes: HierarchyNodeDatum[]) {
-    const nodes: SankeyNodeElement[] = [];
-    const links: SankeyLinkElement[] = [];
-    const nodeMap: Record<string | number, SankeyNodeElement> = {};
-    const linkMap: Record<string | number, SankeyLinkElement> = {};
-    const originalLinks: (SankeyLinkDatum & { parents?: SankeyNodeElement[] })[] = [];
-
-    makeHierarchicNodes(originalNodes, this._getNodeKey, nodes, nodeMap, originalLinks);
-
-    originalLinks.forEach((link, index) => {
-      const key = `${link.source}-${link.target}`;
-      const linkDatum = pickWithout(link, ['parents']);
-
-      (linkDatum as any).parents = link.parents.map(node => {
-        return pickWithout(node, ['sourceLinks', 'targetLinks']);
-      });
-
-      if (linkMap[key]) {
-        linkMap[key].value += toValidNumber(link.value);
-
-        (linkMap[key].datum as SankeyLinkDatum[]).push(linkDatum as SankeyLinkDatum);
-
-        return;
-      }
-      const linkElement = {
-        index,
-        key: `${link.source}-${link.target}`,
-        source: link.source,
-        target: link.target,
-        datum: [linkDatum] as any,
-        value: link.value,
-        parents: link.parents.map(parent => parent.key)
-      };
-
-      links.push(linkElement);
-      nodeMap[link.source].sourceLinks.push(linkElement);
-      nodeMap[link.target].targetLinks.push(linkElement);
-      linkMap[key] = linkElement;
-    });
-
-    return { nodes, links, nodeMap };
+    return computeHierarchicNodeLinks(originalNodes, this._getNodeKey);
   }
 
   computeSourceTargetNodeLinks(data: { nodes?: SankeyNodeDatum[]; links: SankeyLinkDatum[] }) {
