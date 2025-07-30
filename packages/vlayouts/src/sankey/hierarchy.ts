@@ -1,4 +1,4 @@
-import { isNil, toValidNumber } from '@visactor/vutils';
+import { isNil, pickWithout, toValidNumber } from '@visactor/vutils';
 
 import type { HierarchyNodeDatum, SankeyLinkDatum, SankeyLinkElement, SankeyNodeElement } from './interface';
 
@@ -70,4 +70,66 @@ export function makeHierarchicNodes(
 
   doSubTree(originalNodes, 0, null);
   return nodes;
+}
+
+export function computeHierarchicNodeLinks(
+  originalNodes: HierarchyNodeDatum[],
+  nodeKeyFunc: (node: HierarchyNodeDatum) => string
+) {
+  const nodes: SankeyNodeElement[] = [];
+  const links: SankeyLinkElement[] = [];
+  const nodeMap: Record<string | number, SankeyNodeElement> = {};
+  const linkMap: Record<string | number, SankeyLinkElement> = {};
+  const originalLinks: (SankeyLinkDatum & { parents?: SankeyNodeElement[] })[] = [];
+
+  makeHierarchicNodes(originalNodes, nodeKeyFunc, nodes, nodeMap, originalLinks);
+
+  originalLinks.forEach((link, index) => {
+    const key = `${link.source}-${link.target}`;
+    const linkDatum = pickWithout(link, ['parents']);
+
+    (linkDatum as any).parents = link.parents.map(node => {
+      return pickWithout(node, ['sourceLinks', 'targetLinks']);
+    });
+
+    if (linkMap[key]) {
+      linkMap[key].value += toValidNumber(link.value);
+
+      (linkMap[key].datum as SankeyLinkDatum[]).push(linkDatum as SankeyLinkDatum);
+
+      return;
+    }
+    const linkElement = {
+      index,
+      key: `${link.source}-${link.target}`,
+      source: link.source,
+      target: link.target,
+      datum: [linkDatum] as any,
+      value: link.value,
+      parents: link.parents.map(parent => parent.key)
+    };
+
+    links.push(linkElement);
+    nodeMap[link.source].sourceLinks.push(linkElement);
+    nodeMap[link.target].targetLinks.push(linkElement);
+    linkMap[key] = linkElement;
+  });
+
+  return { nodes, links, nodeMap };
+}
+
+export function computeNodeValues(nodes: SankeyNodeElement[]) {
+  for (let i = 0, len = nodes.length; i < len; i++) {
+    const node = nodes[i];
+
+    node.value = Math.max(
+      isNil(node.value) ? 0 : toValidNumber(node.value),
+      node.sourceLinks.reduce((sum, link: SankeyLinkElement) => {
+        return sum + (toValidNumber(link.value) ?? 0);
+      }, 0),
+      node.targetLinks.reduce((sum, link: SankeyLinkElement) => {
+        return sum + (toValidNumber(link.value) ?? 0);
+      }, 0)
+    );
+  }
 }
