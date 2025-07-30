@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "feat: export function computeHierarchicNodeLinks for sankey\n\n",
+      "type": "none",
+      "packageName": "@visactor/vlayouts"
+    }
+  ],
+  "packageName": "@visactor/vlayouts",
+  "email": "lixuef1313@163.com"
+}
