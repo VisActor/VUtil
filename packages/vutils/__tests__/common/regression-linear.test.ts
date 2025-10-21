@@ -12,6 +12,6 @@ test('regressionLinear()', function () {
     }
   ];
   const res = regressionLinear(arr);
-  expect(res.coef).toEqual([0, 2]);
+  expect(res.coef).toEqual({ a: 0, b: 2 });
   expect(res.predict(1)).toBeCloseTo(2);
 });
