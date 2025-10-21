@@ -1,6 +1,15 @@
 # Change Log - @visactor/vlayouts
 
-This log was last generated on Wed, 30 Jul 2025 06:35:02 GMT and should not be manually modified.
+This log was last generated on Tue, 21 Oct 2025 09:26:28 GMT and should not be manually modified.
+
+## 1.0.10
+Tue, 21 Oct 2025 09:26:28 GMT
+
+### Updates
+
+- fix: fix bug of wordcloud layout
+
+
 
 ## 1.0.9
 Wed, 30 Jul 2025 06:35:02 GMT
