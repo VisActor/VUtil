@@ -59,4 +59,25 @@ describe('bin transform', () => {
     expect(Array.isArray(out)).toBeTruthy();
     expect(out.length).toBe(0);
   });
+
+  test('outputNames renames fields', () => {
+    const data = [{ v: 1 }, { v: 2 }, { v: 3 }];
+    const out = bin(data, {
+      field: 'v',
+      bins: 2,
+      includeValues: true,
+      outputNames: { x0: 'start', x1: 'end', count: 'cnt', values: 'items' }
+    });
+    expect(out.length).toBe(2);
+    // each bin should have renamed keys
+    for (let i = 0; i < out.length; i++) {
+      expect(out[i]).toHaveProperty('start');
+      expect(out[i]).toHaveProperty('end');
+      expect(out[i]).toHaveProperty('cnt');
+      expect(out[i]).toHaveProperty('items');
+    }
+    // counts should sum to 3
+    const total = out.reduce((s: number, b: any) => s + b.cnt, 0);
+    expect(total).toBe(3);
+  });
 });

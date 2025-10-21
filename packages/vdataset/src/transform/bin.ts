@@ -2,12 +2,34 @@ import { isNil } from '@visactor/vutils';
 import type { Transform } from '.';
 
 export interface IBinOptions {
-  field: string; // numeric field to bin
-  bins?: number; // number of bins (default 10)
-  thresholds?: number[]; // explicit bin edges
-  step?: number; // optional fixed bin width (interval step). If provided, overrides bins.
-  extent?: [number, number]; // optional [min, max] to use instead of data-driven
-  includeValues?: boolean; // whether to keep the original items in each bin
+  /**
+   * numeric field to bin
+   */
+  field: string;
+  /**
+   *  number of bins (default 10)
+   */
+  bins?: number;
+  /**
+   *  explicit bin edges
+   */
+  thresholds?: number[];
+  /**
+   * optional fixed bin width (interval step). If provided, overrides bins.
+   */
+  step?: number;
+  /**
+   * optional [min, max] to use instead of data-driven
+   */
+  extent?: [number, number];
+  /**
+   * whether to keep the original items in each bin
+   */
+  includeValues?: boolean;
+  /**
+   * the field name of output data
+   */
+  outputNames?: { x0?: string; x1?: string; count?: string; values?: string };
 }
 
 /**
@@ -85,11 +107,15 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     return [];
   }
 
+  const x0Name = options.outputNames?.x0 ?? 'x0';
+  const x1Name = options.outputNames?.x1 ?? 'x1';
+  const countName = options.outputNames?.count ?? 'count';
+  const valuesName = options.outputNames?.values ?? 'values';
   const out: any[] = new Array(numBins);
   for (let i = 0; i < numBins; i++) {
-    out[i] = { x0: thresholds[i], x1: thresholds[i + 1], count: 0 };
+    out[i] = { [x0Name]: thresholds[i], [x1Name]: thresholds[i + 1], [countName]: 0 };
     if (options?.includeValues) {
-      out[i].values = [] as object[];
+      out[i][valuesName] = [] as object[];
     }
   }
 
@@ -106,13 +132,13 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
 
     // find bin index (linear scan is fine for moderate bin counts)
     for (let j = 0; j < numBins; j++) {
-      const left = out[j].x0;
-      const right = out[j].x1;
+      const left = out[j][x0Name];
+      const right = out[j][x1Name];
       const isLast = j === numBins - 1;
       if ((num >= left && num < right) || (isLast && num <= right)) {
-        out[j].count++;
+        out[j][countName]++;
         if (options && options.includeValues) {
-          out[j].values.push(data[i]);
+          out[j][valuesName].push(data[i]);
         }
         break;
       }
