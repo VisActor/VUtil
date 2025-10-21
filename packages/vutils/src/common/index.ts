@@ -91,3 +91,8 @@ export * from './toPercent';
 export * from './zero';
 export * from './extent';
 export * from './regression-linear';
+export * from './regression-logistic';
+export * from './regression-lowess';
+export * from './regression-polynomial';
+export * from './kde';
+export * from './ecdf';
