@@ -4,6 +4,8 @@
  * @param type type
  * @returns
  */
-const isType = (value: any, type: string): boolean => Object.prototype.toString.call(value) === `[object ${type}]`;
+import getType from './getType';
+
+const isType = (value: any, type: string): boolean => getType(value) === type;
 
 export default isType;
