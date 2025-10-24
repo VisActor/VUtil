@@ -4,7 +4,7 @@
     "experimentalDecorators": true,
     "strict": true,
     "noImplicitAny": true,
-    "removeComments": true,
+    // "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": false,
     "moduleResolution": "node",
