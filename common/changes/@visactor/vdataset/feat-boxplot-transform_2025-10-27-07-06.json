@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "feat: add transform boxplot\n\n",
+      "type": "none",
+      "packageName": "@visactor/vdataset"
+    }
+  ],
+  "packageName": "@visactor/vdataset",
+  "email": "dingling112@gmail.com"
+}
