@@ -2,6 +2,18 @@
   "name": "@visactor/vdataset",
   "entries": [
     {
+      "version": "1.0.12",
+      "tag": "@visactor/vdataset_v1.0.12",
+      "date": "Mon, 27 Oct 2025 08:51:48 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "feat: add transform boxplot\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.11",
       "tag": "@visactor/vdataset_v1.0.11",
       "date": "Tue, 21 Oct 2025 11:22:45 GMT",
