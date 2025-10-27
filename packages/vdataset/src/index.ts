@@ -20,6 +20,8 @@ export { fields } from './transform/fields';
 export type { IBinOptions } from './transform/bin';
 export { bin } from './transform/bin';
 export type { IFieldsOptions } from './transform/fields';
+export { boxplot } from './transform/boxplot';
+export type { IBoxplotOptions } from './transform/boxplot';
 // transformType
 export * from './transform/index';
 
