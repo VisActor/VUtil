@@ -1,4 +1,4 @@
-import { isArray, isNil, quantileSorted } from '@visactor/vutils';
+import { clamp, isArray, isNil, quantileSorted } from '@visactor/vutils';
 import type { Transform } from '.';
 
 export interface IBoxplotOptions {
@@ -14,7 +14,7 @@ export interface IBoxplotOptions {
    * If scalar, whiskers are drawn to the farthest datapoint within whis * IQR from the nearest hinge.
    * If a tuple, it is interpreted as percentiles that whiskers represent.
    */
-  whiskers: number | number[];
+  whiskers?: number | number[];
   /** output field name mapping */
   outputNames?: {
     key?: string;
@@ -119,8 +119,8 @@ export const boxplot: Transform = (data: Array<object>, options?: IBoxplotOption
   }
 
   if (isArray(whiskers)) {
-    const min = Math.min.apply(null, whiskers);
-    const max = Math.max.apply(null, whiskers);
+    const min = clamp(Math.min.apply(null, whiskers), 0, 1);
+    const max = clamp(Math.max.apply(null, whiskers), 0, 1);
 
     whiskers = [min, max];
   }
