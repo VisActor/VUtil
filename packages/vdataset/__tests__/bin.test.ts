@@ -80,4 +80,40 @@ describe('bin transform', () => {
     const total = out.reduce((s: number, b: any) => s + b.cnt, 0);
     expect(total).toBe(3);
   });
+
+  test('countField is used as weights and percentage calculated correctly', () => {
+    const data = [
+      { v: 1, w: 2 }, // goes to first bin
+      { v: 2, w: 3 }, // goes to first bin
+      { v: 8, w: 5 } // goes to second bin
+    ];
+    // thresholds split at 5 -> two bins [0,5) and [5,10]
+    const out: any = bin(data, { field: 'v', thresholds: [0, 5, 10], countField: 'w' });
+    expect(out.length).toBe(2);
+    // first bin should have count 5 (2+3), second bin 5
+    expect(out[0].count).toBe(5);
+    expect(out[1].count).toBe(5);
+    // percentage should be 0.5 for both
+    expect(out[0].percentage).toBeCloseTo(0.5, 12);
+    expect(out[1].percentage).toBeCloseTo(0.5, 12);
+  });
+
+  test('renamed percentage field via outputNames is present and correct', () => {
+    const data = [
+      { v: 1, w: 1 },
+      { v: 2, w: 1 },
+      { v: 9, w: 2 }
+    ];
+    const out: any = bin(data, {
+      field: 'v',
+      thresholds: [0, 5, 10],
+      countField: 'w',
+      outputNames: { percentage: 'pct' }
+    });
+    expect(out.length).toBe(2);
+    // counts: first bin 2, second bin 2 -> percentages 0.5 each
+    expect(out[0].cnt === undefined).toBeTruthy(); // ensure default countName not renamed here
+    expect(out[0].pct).toBeCloseTo(0.5, 12);
+    expect(out[1].pct).toBeCloseTo(0.5, 12);
+  });
 });

@@ -7,6 +7,10 @@ export interface IBinOptions {
    */
   field: string;
   /**
+   * count of numeric field
+   */
+  countField?: string;
+  /**
    *  number of bins (default 10)
    */
   bins?: number;
@@ -29,7 +33,7 @@ export interface IBinOptions {
   /**
    * the field name of output data
    */
-  outputNames?: { x0?: string; x1?: string; count?: string; values?: string };
+  outputNames?: { x0?: string; x1?: string; count?: string; values?: string; percentage?: string };
 }
 
 /**
@@ -41,13 +45,13 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
   if (!field) {
     return [];
   }
-
+  const countField = options.countField;
   const n = data.length;
   // compute data-driven extent
   let min = Infinity;
   let max = -Infinity;
 
-  if (options?.extent) {
+  if (options.extent) {
     min = options.extent[0];
     max = options.extent[1];
   } else {
@@ -74,11 +78,11 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
 
   // build thresholds
   let thresholds: number[] | undefined;
-  if (options && options.thresholds && options.thresholds.length) {
+  if (options.thresholds && options.thresholds.length) {
     // explicit thresholds provided by user
     thresholds = options.thresholds.slice();
     thresholds.sort((a, b) => a - b);
-  } else if (options && typeof options.step === 'number' && options.step > 0) {
+  } else if (typeof options.step === 'number' && options.step > 0) {
     // fixed bin width (step) provided: compute number of bins to cover [min, max]
     const stepSize = options.step;
     let startMin = min;
@@ -94,7 +98,7 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     }
   } else {
     // fallback to bins count (default 10)
-    const bins = options?.bins && options.bins > 0 ? Math.floor(options.bins) : 10;
+    const bins = options.bins && options.bins > 0 ? Math.floor(options.bins) : 10;
     const stepSize = (max - min) / bins;
     thresholds = new Array(bins + 1);
     for (let i = 0; i <= bins; i++) {
@@ -111,14 +115,16 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
   const x1Name = options.outputNames?.x1 ?? 'x1';
   const countName = options.outputNames?.count ?? 'count';
   const valuesName = options.outputNames?.values ?? 'values';
+  const percentageName = options.outputNames?.percentage ?? 'percentage';
   const out: any[] = new Array(numBins);
   for (let i = 0; i < numBins; i++) {
     out[i] = { [x0Name]: thresholds[i], [x1Name]: thresholds[i + 1], [countName]: 0 };
-    if (options?.includeValues) {
+    if (options.includeValues) {
       out[i][valuesName] = [] as object[];
     }
   }
 
+  let totalCount = 0;
   // assign each datum to a bin (left-inclusive, right-exclusive except last bin includes max)
   for (let i = 0; i < n; i++) {
     const v: any = (data[i] as any)[field];
@@ -136,13 +142,19 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
       const right = out[j][x1Name];
       const isLast = j === numBins - 1;
       if ((num >= left && num < right) || (isLast && num <= right)) {
-        out[j][countName]++;
+        const count = (data[i] as any)[countField] ?? 1;
+        out[j][countName] += count;
+        totalCount += count;
         if (options && options.includeValues) {
           out[j][valuesName].push(data[i]);
         }
         break;
       }
     }
+  }
+
+  for (let i = 0, len = out.length; i < len; i++) {
+    out[i][percentageName] = totalCount > 0 ? out[i][countName] / totalCount : 0;
   }
 
   return out;
