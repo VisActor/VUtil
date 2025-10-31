@@ -1,4 +1,4 @@
-import { isNil } from '@visactor/vutils';
+import { isNil, isArray } from '@visactor/vutils';
 import type { Transform } from '.';
 
 export interface IBinOptions {
@@ -30,6 +30,8 @@ export interface IBinOptions {
    * whether to keep the original items in each bin
    */
   includeValues?: boolean;
+  /** optional grouping field(s): when provided, counts are aggregated per group per bin (groups counted as units) */
+  groupField?: string | string[];
   /**
    * the field name of output data
    */
@@ -99,10 +101,20 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
   } else {
     // fallback to bins count (default 10)
     const bins = options.bins && options.bins > 0 ? Math.floor(options.bins) : 10;
-    const stepSize = (max - min) / bins;
-    thresholds = new Array(bins + 1);
-    for (let i = 0; i <= bins; i++) {
-      thresholds[i] = i === bins ? max : min + stepSize * i;
+    // If the data range is larger than 1, prefer integer thresholds when possible.
+    if (max - min > 1) {
+      const start = Math.floor(min);
+      const stepSizeInt = Math.ceil((max - start) / bins);
+      thresholds = new Array(bins + 1);
+      for (let i = 0; i <= bins; i++) {
+        thresholds[i] = i === bins ? max : start + stepSizeInt * i;
+      }
+    } else {
+      const stepSize = (max - min) / bins;
+      thresholds = new Array(bins + 1);
+      for (let i = 0; i <= bins; i++) {
+        thresholds[i] = i === bins ? max : min + stepSize * i;
+      }
     }
   }
 
@@ -116,16 +128,27 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
   const countName = options.outputNames?.count ?? 'count';
   const valuesName = options.outputNames?.values ?? 'values';
   const percentageName = options.outputNames?.percentage ?? 'percentage';
-  const out: any[] = new Array(numBins);
-  for (let i = 0; i < numBins; i++) {
-    out[i] = { [x0Name]: thresholds[i], [x1Name]: thresholds[i + 1], [countName]: 0 };
-    if (options.includeValues) {
-      out[i][valuesName] = [] as object[];
+  // we'll build outputs later; if no grouping, pre-create per-bin outputs
+  const out: any[] = [];
+  if (!options.groupField) {
+    for (let i = 0; i < numBins; i++) {
+      const rec: any = { [x0Name]: thresholds[i], [x1Name]: thresholds[i + 1], [countName]: 0 };
+      if (options.includeValues) {
+        rec[valuesName] = [] as object[];
+      }
+      out.push(rec);
     }
   }
 
-  let totalCount = 0;
   // assign each datum to a bin (left-inclusive, right-exclusive except last bin includes max)
+  const groupField = options.groupField;
+  const usingGroup = !!groupField;
+
+  // when grouping, keep per-bin maps from groupKey -> aggregated weight, values and representative group object
+  const binGroupCounts: Array<Map<string, number>> = usingGroup ? new Array(numBins).fill(0).map(() => new Map()) : [];
+  const binGroupValues: Array<Map<string, any[]>> = usingGroup ? new Array(numBins).fill(0).map(() => new Map()) : [];
+  const binGroupRepr: Array<Map<string, any>> = usingGroup ? new Array(numBins).fill(0).map(() => new Map()) : [];
+
   for (let i = 0; i < n; i++) {
     const v: any = (data[i] as any)[field];
     if (v == null) {
@@ -138,14 +161,46 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
 
     // find bin index (linear scan is fine for moderate bin counts)
     for (let j = 0; j < numBins; j++) {
-      const left = out[j][x0Name];
-      const right = out[j][x1Name];
+      const left = thresholds[j];
+      const right = thresholds[j + 1];
       const isLast = j === numBins - 1;
       if ((num >= left && num < right) || (isLast && num <= right)) {
-        const count = (data[i] as any)[countField] ?? 1;
-        out[j][countName] += count;
-        totalCount += count;
-        if (options && options.includeValues) {
+        const datumCount = (data[i] as any)[countField] ?? 1;
+        if (usingGroup) {
+          // compute group key
+          let gk: string;
+          if (isArray(groupField)) {
+            gk = (groupField as string[]).map(f => String((data[i] as any)[f])).join('||');
+          } else {
+            gk = String((data[i] as any)[groupField as string]);
+          }
+          const m = binGroupCounts[j];
+          const prev = m.get(gk) ?? 0;
+          m.set(gk, prev + datumCount);
+          // store representative group value/object
+          const repMap = binGroupRepr[j];
+          if (!repMap.has(gk)) {
+            if (isArray(groupField)) {
+              repMap.set(gk, Object.fromEntries((groupField as string[]).map(f => [f, (data[i] as any)[f]])));
+            } else {
+              repMap.set(gk, (data[i] as any)[groupField as string]);
+            }
+          }
+          // collect values per group if needed
+          if (options && options.includeValues) {
+            const vv = binGroupValues[j];
+            if (!vv.has(gk)) {
+              vv.set(gk, []);
+            }
+            const arr = vv.get(gk);
+            if (arr) {
+              arr.push(data[i]);
+            }
+          }
+        } else {
+          out[j][countName] += datumCount;
+        }
+        if (options && options.includeValues && !usingGroup) {
           out[j][valuesName].push(data[i]);
         }
         break;
@@ -153,11 +208,45 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     }
   }
 
-  for (let i = 0, len = out.length; i < len; i++) {
-    out[i][percentageName] = totalCount > 0 ? out[i][countName] / totalCount : 0;
+  // compute counts and totalCount, and build final outputs
+  let totalCount = 0;
+  const finalOut: any[] = [];
+  if (usingGroup) {
+    for (let j = 0; j < numBins; j++) {
+      const m = binGroupCounts[j];
+      for (const [gk, sum] of m) {
+        totalCount += sum;
+        const rec: any = { [x0Name]: thresholds[j], [x1Name]: thresholds[j + 1], [countName]: sum };
+        // attach group fields
+        const repr = binGroupRepr[j].get(gk);
+        if (isArray(groupField)) {
+          for (const f of groupField as string[]) {
+            rec[f] = repr[f];
+          }
+        } else {
+          rec[groupField as string] = repr;
+        }
+        if (options && options.includeValues) {
+          rec[valuesName] = binGroupValues[j].get(gk) || [];
+        }
+        finalOut.push(rec);
+      }
+    }
+    // compute percentages
+    for (const r of finalOut) {
+      r[percentageName] = totalCount > 0 ? r[countName] / totalCount : 0;
+    }
+  } else {
+    for (let i = 0, len = out.length; i < len; i++) {
+      totalCount += out[i][countName];
+    }
+    for (let i = 0, len = out.length; i < len; i++) {
+      out[i][percentageName] = totalCount > 0 ? out[i][countName] / totalCount : 0;
+      finalOut.push(out[i]);
+    }
   }
 
-  return out;
+  return finalOut;
 };
 
 export default bin;
