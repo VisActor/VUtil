@@ -116,4 +116,64 @@ describe('bin transform', () => {
     expect(out[0].pct).toBeCloseTo(0.5, 12);
     expect(out[1].pct).toBeCloseTo(0.5, 12);
   });
+
+  test('groupField (single) aggregates counts per group per bin', () => {
+    const data = [
+      { g: 'A', v: 1, w: 2 },
+      { g: 'A', v: 2, w: 3 },
+      { g: 'B', v: 1, w: 1 },
+      { g: 'A', v: 8, w: 4 }
+    ];
+    // thresholds split at 5 -> two bins
+    const out: any = bin(data, { field: 'v', thresholds: [0, 5, 10], countField: 'w', groupField: 'g' });
+    expect(out.length).toBe(3);
+    expect(out[0]).toMatchObject({ g: 'A', count: 5, x0: 0, x1: 5 });
+    expect(out[1]).toMatchObject({ g: 'B', count: 1, x0: 0, x1: 5 });
+    expect(out[2]).toMatchObject({ g: 'A', count: 4, x0: 5, x1: 10 });
+    expect(out[0].percentage).toBeCloseTo(0.5, 12);
+    expect(out[1].percentage).toBeCloseTo(0.1, 12);
+    expect(out[2].percentage).toBeCloseTo(0.4, 12);
+  });
+
+  test('groupField (multi) aggregates by composite key and preserves includeValues', () => {
+    const data = [
+      { a: 'x', b: 'p', v: 1, w: 2 },
+      { a: 'x', b: 'p', v: 2, w: 3 },
+      { a: 'x', b: 'p', v: 7, w: 3 },
+      { a: 'x', b: 'q', v: 1, w: 1 },
+      { a: 'x', b: 'q', v: 2, w: 1 },
+      { a: 'x', b: 'q', v: 3, w: 1 },
+      { a: 'x', b: 'q', v: 8, w: 1 }
+    ];
+    const out: any = bin(data, {
+      field: 'v',
+      thresholds: [0, 5, 10],
+      countField: 'w',
+      groupField: ['a', 'b'],
+      includeValues: false
+    });
+    expect(out.length).toBe(4);
+    expect(out[0]).toMatchObject({ a: 'x', b: 'p', x0: 0, x1: 5, count: 5 });
+    expect(out[1]).toMatchObject({ a: 'x', b: 'q', x0: 0, x1: 5, count: 3 });
+    expect(out[2]).toMatchObject({ a: 'x', b: 'p', x0: 5, x1: 10, count: 3 });
+    expect(out[3]).toMatchObject({ a: 'x', b: 'q', x0: 5, x1: 10, count: 1 });
+    expect(out[0].percentage).toBeCloseTo(0.4166666666666667, 12);
+    expect(out[1].percentage).toBeCloseTo(0.25, 12);
+    expect(out[2].percentage).toBeCloseTo(0.25, 12);
+    expect(out[3].percentage).toBeCloseTo(0.08333333333333333, 12);
+  });
+
+  test('bins prefer integer thresholds when range > 1', () => {
+    // create data with min ~1.2 and max ~10.7 -> range > 1
+    const data = [{ v: 1.2 }, { v: 2.5 }, { v: 5.0 }, { v: 10.7 }];
+    const out: any = bin(data, { field: 'v', bins: 3 });
+    // expect thresholds to start at floor(min)=1 and use integer step ceil((max-start)/bins)=4
+    // thresholds -> [1, 5, 9, max]
+    expect(out.length).toBe(3);
+    expect(out[0].x0).toBeCloseTo(1, 12);
+    expect(out[1].x0).toBeCloseTo(5, 12);
+    expect(out[2].x0).toBeCloseTo(9, 12);
+    // last x1 should be the actual max
+    expect(out[2].x1).toBeCloseTo(10.7, 12);
+  });
 });
