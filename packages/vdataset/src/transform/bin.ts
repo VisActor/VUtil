@@ -94,7 +94,7 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     }
     thresholds = [startMin];
 
-    while (startMin < max) {
+    while (startMin <= max) {
       startMin += stepSize;
       thresholds.push(startMin);
     }
@@ -107,13 +107,13 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
       const stepSizeInt = Math.ceil((max - start) / bins);
       thresholds = new Array(bins + 1);
       for (let i = 0; i <= bins; i++) {
-        thresholds[i] = i === bins ? max : start + stepSizeInt * i;
+        thresholds[i] = start + stepSizeInt * i;
       }
     } else {
       const stepSize = (max - min) / bins;
       thresholds = new Array(bins + 1);
       for (let i = 0; i <= bins; i++) {
-        thresholds[i] = i === bins ? max : min + stepSize * i;
+        thresholds[i] = min + stepSize * i;
       }
     }
   }

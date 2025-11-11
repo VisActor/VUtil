@@ -17,6 +17,22 @@ describe('bin transform', () => {
     }
   });
 
+  test('bins in max value and threshold', () => {
+    const data = [1, 1, 1, 2, 5, 7, 8, 9, 10].map(v => ({ v }));
+    const bins = bin(data, { field: 'v', bins: 10 });
+    expect(bins.length).toBe(10);
+    expect(bins[9].x0).toBe(10);
+    expect(bins[9].x1).toBe(11);
+  });
+
+  test('bins in steps', () => {
+    const data = [1, 1, 1, 2, 5, 7, 8, 9, 10].map(v => ({ v }));
+    const bins = bin(data, { field: 'v', step: 2, bins: 10 });
+    expect(bins.length).toBe(6);
+    expect(bins[5].x0).toBe(10);
+    expect(bins[5].x1).toBe(12);
+  });
+
   test('step produces correct bin widths', () => {
     const data = [] as any[];
     for (let i = 0; i <= 20; i++) {
@@ -168,12 +184,12 @@ describe('bin transform', () => {
     const data = [{ v: 1.2 }, { v: 2.5 }, { v: 5.0 }, { v: 10.7 }];
     const out: any = bin(data, { field: 'v', bins: 3 });
     // expect thresholds to start at floor(min)=1 and use integer step ceil((max-start)/bins)=4
-    // thresholds -> [1, 5, 9, max]
+    // thresholds -> [1, 5, 9, 13]
     expect(out.length).toBe(3);
     expect(out[0].x0).toBeCloseTo(1, 12);
     expect(out[1].x0).toBeCloseTo(5, 12);
     expect(out[2].x0).toBeCloseTo(9, 12);
     // last x1 should be the actual max
-    expect(out[2].x1).toBeCloseTo(10.7, 12);
+    expect(out[2].x1).toBeCloseTo(13, 12);
   });
 });

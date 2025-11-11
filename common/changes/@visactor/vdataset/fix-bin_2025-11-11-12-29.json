@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vdataset",
+      "comment": "Fix bin range is limits by max as threshold",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vdataset"
+}
