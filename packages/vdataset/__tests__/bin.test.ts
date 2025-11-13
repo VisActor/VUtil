@@ -192,4 +192,56 @@ describe('bin transform', () => {
     // last x1 should be the actual max
     expect(out[2].x1).toBeCloseTo(13, 12);
   });
+
+  test('subView without groupField', () => {
+    const data = [
+      { v: 1, type: 'A' },
+      { v: 2, type: 'A' },
+      { v: 3, type: 'A' },
+      { v: 4, type: 'B' },
+      { v: 5, type: 'B' },
+      { v: 6, type: 'B' }
+    ];
+    const out: any = bin(data, { field: 'v', bins: 3, facetField: 'type' });
+    expect(out.length).toBe(4);
+    expect(out[0].x0).toBeCloseTo(1, 12);
+    expect(out[0].type).toBe('A');
+    expect(out[3].x0).toBeCloseTo(5, 12);
+    expect(out[3].x1).toBeCloseTo(7, 12);
+    expect(out[3].type).toBe('B');
+    expect(out[3].percentage).toBeCloseTo(2 / 3, 12);
+    expect(out[0].percentage).toBeCloseTo(2 / 3, 12);
+  });
+  test('subView without groupField', () => {
+    const data = [
+      { v: 1, type: 'A', group: 'china' },
+      { v: 2, type: 'A', group: 'china' },
+      { v: 3, type: 'A', group: 'china' },
+      { v: 4, type: 'B', group: 'china' },
+      { v: 5, type: 'B', group: 'china' },
+      { v: 6, type: 'B', group: 'china' },
+      { v: 1, type: 'A', group: 'usa' },
+      { v: 2, type: 'A', group: 'usa' },
+      { v: 3, type: 'A', group: 'usa' },
+      { v: 4, type: 'B', group: 'usa' },
+      { v: 5, type: 'B', group: 'usa' },
+      { v: 6, type: 'B', group: 'usa' }
+    ];
+    const out: any = bin(data, { field: 'v', bins: 3, facetField: 'type', groupField: 'group' });
+    expect(out.length).toBe(8);
+    expect(out[0].x0).toBeCloseTo(1, 12);
+    expect(out[0].x1).toBeCloseTo(3, 12);
+    expect(out[0].percentage).toBeCloseTo(1 / 3, 12);
+    expect(out[0].type).toBe('A');
+    expect(out[0].group).toBe('china');
+    expect(out[1].type).toBe('A');
+    expect(out[1].group).toBe('usa');
+    expect(out[0].percentage).toBeCloseTo(1 / 3, 12);
+    expect(out[7].x0).toBeCloseTo(5, 12);
+    expect(out[7].x1).toBeCloseTo(7, 12);
+    expect(out[7].type).toBe('B');
+    expect(out[7].group).toBe('usa');
+    expect(out[7].percentage).toBeCloseTo(1 / 3, 12);
+    expect(out[6].percentage).toBeCloseTo(1 / 3, 12);
+  });
 });
