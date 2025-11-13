@@ -33,7 +33,7 @@ export interface IBinOptions {
   /** optional grouping field(s): when provided, counts are aggregated per group per bin (groups counted as units) */
   groupField?: string | string[];
   /** subView Field */
-  subViewField?: string | string[];
+  facetField?: string | string[];
   /**
    * the field name of output data
    */
@@ -266,10 +266,10 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
   const valuesName = options.outputNames?.values ?? 'values';
   const percentageName = options.outputNames?.percentage ?? 'percentage';
 
-  const subViewField = isArray(options?.subViewField)
-    ? options?.subViewField
-    : options?.subViewField
-    ? [options.subViewField]
+  const facetField = isArray(options?.facetField)
+    ? options?.facetField
+    : options?.facetField
+    ? [options.facetField]
     : [];
 
   const groupField = isArray(options?.groupField)
@@ -290,12 +290,12 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     x0Name,
     x1Name
   };
-  if (!subViewField.length) {
+  if (!facetField.length) {
     return subBin(data, subViewOptions);
   }
   const subViewMap: Record<string, Array<object>> = {};
   data.forEach((dataItem: any) => {
-    const subViewKey = subViewField.map(field => dataItem?.[field]).join('-&&-');
+    const subViewKey = facetField.map(field => dataItem?.[field]).join('-&&-');
     if (!subViewMap[subViewKey]) {
       subViewMap[subViewKey] = [dataItem];
     } else {
@@ -306,7 +306,7 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     .map(subDataset => {
       return subBin(subDataset, {
         ...subViewOptions,
-        groupField: [...groupField, ...subViewField],
+        groupField: [...groupField, ...facetField],
         n: subDataset.length
       });
     })

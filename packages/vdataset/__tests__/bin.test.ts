@@ -202,7 +202,7 @@ describe('bin transform', () => {
       { v: 5, type: 'B' },
       { v: 6, type: 'B' }
     ];
-    const out: any = bin(data, { field: 'v', bins: 3, subViewField: 'type' });
+    const out: any = bin(data, { field: 'v', bins: 3, facetField: 'type' });
     expect(out.length).toBe(4);
     expect(out[0].x0).toBeCloseTo(1, 12);
     expect(out[0].type).toBe('A');
@@ -227,7 +227,7 @@ describe('bin transform', () => {
       { v: 5, type: 'B', group: 'usa' },
       { v: 6, type: 'B', group: 'usa' }
     ];
-    const out: any = bin(data, { field: 'v', bins: 3, subViewField: 'type', groupField: 'group' });
+    const out: any = bin(data, { field: 'v', bins: 3, facetField: 'type', groupField: 'group' });
     expect(out.length).toBe(8);
     expect(out[0].x0).toBeCloseTo(1, 12);
     expect(out[0].x1).toBeCloseTo(3, 12);
