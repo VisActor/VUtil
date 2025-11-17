@@ -69,12 +69,13 @@ export function regressionPolynomial(
   data: any[],
   x: (d: any) => number = d => d.x,
   y: (d: any) => number = d => d.y,
-  options: { degree?: number } = {}
+  options: { degree?: number; alpah?: number } = {}
 ) {
   let degree = options.degree ?? 0;
   if (degree < 0) {
     degree = 0;
   }
+  const alpha = options.alpah ?? 0.5;
   const m = degree + 1;
   const sums: number[] = new Array(2 * degree + 1).fill(0);
 
@@ -171,7 +172,7 @@ export function regressionPolynomial(
       }
       return out;
     },
-    confidenceInterval(N: number = 50, alpha: number = 0.05) {
+    confidenceInterval(N: number = 50) {
       const out: { x: number; mean: number; lower: number; upper: number; predLower: number; predUpper: number }[] = [];
 
       if (N <= 0) {

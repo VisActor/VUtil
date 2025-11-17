@@ -55,7 +55,15 @@ export function rSquared(
   return sst === 0 ? 0 : 1 - ssr / sst;
 }
 
-export function regressionLinear(data: any[], x: (d: any) => number = d => d.x, y: (d: any) => number = d => d.y) {
+export function regressionLinear(
+  data: any[],
+  x: (d: any) => number = d => d.x,
+  y: (d: any) => number = d => d.y,
+  options?: {
+    alpha?: number;
+  }
+) {
+  const alpha = options?.alpha ?? 0.05;
   // accumulate online means (sufficient statistics)
   let n = 0;
   let meanX = 0;
@@ -95,7 +103,7 @@ export function regressionLinear(data: any[], x: (d: any) => number = d => d.x, 
     return out;
   }
 
-  function confidenceInterval(N: number = 50, alpha: number = 0.05) {
+  function confidenceInterval(N: number = 50) {
     const out: { x: number; mean: number; lower: number; upper: number; predLower: number; predUpper: number }[] = [];
     if (comps.n === 0 || N <= 0) {
       return out;
