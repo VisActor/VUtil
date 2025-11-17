@@ -1,4 +1,4 @@
-import { clamp, isArray, isNil, quantileSorted } from '../demo-utils';
+import { clamp, isArray, isNil, quantileSorted } from '@visactor/vutils';
 import type { Transform } from '.';
 
 export interface IBoxplotOptions {
