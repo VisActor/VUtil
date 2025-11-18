@@ -146,25 +146,9 @@ export const boxplot: Transform = (data: Array<object>, options?: IBoxplotOption
     const lowerBound = isArray(whiskers) ? quantileSorted(sorted, whiskers[0]) : q1 - whiskers * iqr;
     const upperBound = isArray(whiskers) ? quantileSorted(sorted, whiskers[1]) : q3 + whiskers * iqr;
 
-    // whiskers are the most extreme data points inside the bounds
-    let lowerWhisker = dataMin;
-    for (let i = 0; i < sorted.length; i++) {
-      if (sorted[i] >= lowerBound) {
-        lowerWhisker = sorted[i];
-        break;
-      }
-    }
-    let upperWhisker = dataMax;
-    for (let i = sorted.length - 1; i >= 0; i--) {
-      if (sorted[i] <= upperBound) {
-        upperWhisker = sorted[i];
-        break;
-      }
-    }
-
     const outliers: number[] = [];
     for (let i = 0; i < sorted.length; i++) {
-      if (sorted[i] < lowerWhisker || sorted[i] > upperWhisker) {
+      if (sorted[i] < lowerBound || sorted[i] > upperBound) {
         outliers.push(sorted[i]);
       }
     }
@@ -191,8 +175,8 @@ export const boxplot: Transform = (data: Array<object>, options?: IBoxplotOption
     obj[iqrName] = iqr;
     obj[minName] = dataMin;
     obj[maxName] = dataMax;
-    obj[lowerWhiskerName] = lowerWhisker;
-    obj[upperWhiskerName] = upperWhisker;
+    obj[lowerWhiskerName] = lowerBound;
+    obj[upperWhiskerName] = upperBound;
     obj[outliersName] = outliers;
     if (includeValues) {
       obj[valuesName] = rawValues.get(key) || [];

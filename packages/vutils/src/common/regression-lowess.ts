@@ -21,10 +21,11 @@ export function regressionLowess(
   data: any[],
   x: (d: any) => number = d => d.x,
   y: (d: any) => number = d => d.y,
-  options: { span?: number; degree?: 1 | 0; iterations?: number } = {}
+  options: { span?: number; degree?: 1 | 0; iterations?: number; alpha?: number } = {}
 ) {
   const span = options.span || 0.3;
   const degree = options.degree === 0 ? 0 : 1;
+  const alpha = options?.alpha ?? 0.05;
   const iterations = options.iterations == null ? 2 : options.iterations;
 
   const ptsX: number[] = [];
@@ -170,7 +171,7 @@ export function regressionLowess(
     return out;
   }
 
-  function confidenceInterval(N: number = 50, alpha: number = 0.05) {
+  function confidenceInterval(N: number = 50) {
     const out: { x: number; mean: number; lower: number; upper: number; predLower: number; predUpper: number }[] = [];
 
     if (N <= 0) {

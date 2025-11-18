@@ -11,10 +11,11 @@ export function regressionLogistic(
   data: any[],
   x: (d: any) => number = d => d.x,
   y: (d: any) => number = d => d.y,
-  options?: { maxIteration?: number; tol?: number }
+  options?: { maxIteration?: number; tol?: number; alpha?: number }
 ) {
   const maxIter = options?.maxIteration ?? 25;
   const tol = options?.tol ?? 1e-6;
+  const alpha = options?.alpha ?? 0.05;
   // build arrays
   const xs: number[] = [];
   const ys: number[] = [];
@@ -120,7 +121,7 @@ export function regressionLogistic(
     return out;
   }
 
-  function confidenceInterval(N: number = 50, alpha: number = 0.05) {
+  function confidenceInterval(N: number = 50) {
     const out: { x: number; mean: number; lower: number; upper: number; predLower: number; predUpper: number }[] = [];
 
     if (N <= 0) {

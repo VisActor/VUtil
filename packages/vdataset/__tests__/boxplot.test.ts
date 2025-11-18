@@ -80,4 +80,74 @@ describe('boxplot transform', () => {
     expect(ids).toContain('a');
     expect(ids).toContain('b');
   });
+
+  test('whisker should be fixed not ranged by latset value', () => {
+    const data = [
+      {
+        v: -1
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 3
+      },
+      {
+        v: 4
+      },
+      {
+        v: 4
+      },
+      {
+        v: 7
+      },
+      {
+        v: 8
+      },
+      {
+        v: 9
+      },
+      {
+        v: 10
+      }
+    ];
+    const out: any = boxplot(data, { field: 'v' });
+    expect(out.length).toBe(1);
+    const o = out[0];
+    expect(o.lowerWhisker).toBe(1.5);
+    expect(o.upperWhisker).toBe(5.5);
+  });
 });
