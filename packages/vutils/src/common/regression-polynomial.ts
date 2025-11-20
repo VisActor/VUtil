@@ -69,13 +69,13 @@ export function regressionPolynomial(
   data: any[],
   x: (d: any) => number = d => d.x,
   y: (d: any) => number = d => d.y,
-  options: { degree?: number; alpah?: number } = {}
+  options: { degree?: number; alpha?: number } = {}
 ) {
   let degree = options.degree ?? 0;
   if (degree < 0) {
     degree = 0;
   }
-  const alpha = options.alpah ?? 0.5;
+  const alpha = options.alpha ?? 0.5;
   const m = degree + 1;
   const sums: number[] = new Array(2 * degree + 1).fill(0);
 
