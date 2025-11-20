@@ -1,6 +1,13 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Thu, 13 Nov 2025 09:45:43 GMT and should not be manually modified.
+This log was last generated on Thu, 20 Nov 2025 11:21:45 GMT and should not be manually modified.
+
+## 1.0.17
+Thu, 20 Nov 2025 11:21:45 GMT
+
+### Updates
+
+- set boxplot whisker as actual bound value(Q1 - N*IQR) or fixed value && add alpha option of regression function
 
 ## 1.0.16
 Thu, 13 Nov 2025 09:45:43 GMT
