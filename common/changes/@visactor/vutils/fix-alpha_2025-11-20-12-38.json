@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@visactor/vutils",
+      "comment": "typo fixed: alpah --> alpha",
+      "type": "none"
+    }
+  ],
+  "packageName": "@visactor/vutils"
+}
