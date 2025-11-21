@@ -75,7 +75,7 @@ export function regressionPolynomial(
   if (degree < 0) {
     degree = 0;
   }
-  const alpha = options.alpha ?? 0.5;
+  const alpha = options.alpha ?? 0.05;
   const m = degree + 1;
   const sums: number[] = new Array(2 * degree + 1).fill(0);
 
