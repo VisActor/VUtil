@@ -17,6 +17,182 @@ describe('bin transform', () => {
     }
   });
 
+  test('bins by count should fill bins', () => {
+    const data = [
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 1
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 1
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 1
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 2
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 5
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 7
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 8
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 9
+      },
+      {
+        color: 'red',
+        shape: 'circle',
+        v: 10
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 1
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 1
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 1
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 2
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 5
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 7
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 8
+      },
+      {
+        color: 'blue',
+        shape: 'circle',
+        v: 9
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 1
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 1
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 1
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 2
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 5
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 7
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 8
+      },
+      {
+        color: 'red',
+        shape: 'triangle',
+        v: 9
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 1
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 1
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 1
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 2
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 5
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 7
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 8
+      },
+      {
+        color: 'blue',
+        shape: 'triangle',
+        v: 9
+      }
+    ];
+
+    const bins = bin(data, {
+      field: 'v',
+      bins: 5,
+      facetField: ['color', 'shape']
+    });
+    expect(bins.length).toBe(2 * 2 * 5); // color * shape * bins
+  });
   test('bins in max value and threshold', () => {
     const data = [1, 1, 1, 2, 5, 7, 8, 9, 10].map(v => ({ v }));
     const bins = bin(data, { field: 'v', bins: 10 });
@@ -142,13 +318,17 @@ describe('bin transform', () => {
     ];
     // thresholds split at 5 -> two bins
     const out: any = bin(data, { field: 'v', thresholds: [0, 5, 10], countField: 'w', groupField: 'g' });
-    expect(out.length).toBe(3);
-    expect(out[0]).toMatchObject({ g: 'A', count: 5, x0: 0, x1: 5 });
-    expect(out[1]).toMatchObject({ g: 'B', count: 1, x0: 0, x1: 5 });
-    expect(out[2]).toMatchObject({ g: 'A', count: 4, x0: 5, x1: 10 });
-    expect(out[0].percentage).toBeCloseTo(0.5, 12);
-    expect(out[1].percentage).toBeCloseTo(0.1, 12);
-    expect(out[2].percentage).toBeCloseTo(0.4, 12);
+    expect(out.length).toBe(4);
+    const byKey = (g: string, x0: number) =>
+      out.find((item: any) => item.g === g && item.x0 === x0 && item.x1 === x0 + 5);
+    expect(byKey('A', 0)).toMatchObject({ count: 5 });
+    expect(byKey('B', 0)).toMatchObject({ count: 1 });
+    expect(byKey('A', 5)).toMatchObject({ count: 4 });
+    expect(byKey('B', 5)).toMatchObject({ count: 0 });
+    expect(byKey('A', 0)?.percentage).toBeCloseTo(0.5, 12);
+    expect(byKey('B', 0)?.percentage).toBeCloseTo(0.1, 12);
+    expect(byKey('A', 5)?.percentage).toBeCloseTo(0.4, 12);
+    expect(byKey('B', 5)?.percentage).toBeCloseTo(0, 12);
   });
 
   test('groupField (multi) aggregates by composite key and preserves includeValues', () => {
@@ -203,16 +383,38 @@ describe('bin transform', () => {
       { v: 6, type: 'B' }
     ];
     const out: any = bin(data, { field: 'v', bins: 3, facetField: 'type' });
-    expect(out.length).toBe(4);
+    expect(out.length).toBe(6);
     expect(out[0].x0).toBeCloseTo(1, 12);
+    expect(out[0].x1).toBeCloseTo(3, 12);
     expect(out[0].type).toBe('A');
-    expect(out[3].x0).toBeCloseTo(5, 12);
-    expect(out[3].x1).toBeCloseTo(7, 12);
-    expect(out[3].type).toBe('B');
-    expect(out[3].percentage).toBeCloseTo(2 / 3, 12);
     expect(out[0].percentage).toBeCloseTo(2 / 3, 12);
+
+    expect(out[1].x0).toBeCloseTo(3, 12);
+    expect(out[1].x1).toBeCloseTo(5, 12);
+    expect(out[1].type).toBe('A');
+    expect(out[1].percentage).toBeCloseTo(1 / 3, 12);
+
+    expect(out[2].x0).toBeCloseTo(5, 12);
+    expect(out[2].x1).toBeCloseTo(7, 12);
+    expect(out[2].type).toBe('A');
+    expect(out[2].percentage).toBeCloseTo(0, 12);
+
+    expect(out[3].x0).toBeCloseTo(1, 12);
+    expect(out[3].x1).toBeCloseTo(3, 12);
+    expect(out[3].type).toBe('B');
+    expect(out[3].percentage).toBeCloseTo(0, 12);
+
+    expect(out[4].x0).toBeCloseTo(3, 12);
+    expect(out[4].x1).toBeCloseTo(5, 12);
+    expect(out[4].type).toBe('B');
+    expect(out[4].percentage).toBeCloseTo(1 / 3, 12);
+
+    expect(out[5].x0).toBeCloseTo(5, 12);
+    expect(out[5].x1).toBeCloseTo(7, 12);
+    expect(out[5].type).toBe('B');
+    expect(out[5].percentage).toBeCloseTo(2 / 3, 12);
   });
-  test('subView without groupField', () => {
+  test('subView with groupField keeps full bins per combination', () => {
     const data = [
       { v: 1, type: 'A', group: 'china' },
       { v: 2, type: 'A', group: 'china' },
@@ -228,20 +430,26 @@ describe('bin transform', () => {
       { v: 6, type: 'B', group: 'usa' }
     ];
     const out: any = bin(data, { field: 'v', bins: 3, facetField: 'type', groupField: 'group' });
-    expect(out.length).toBe(8);
-    expect(out[0].x0).toBeCloseTo(1, 12);
-    expect(out[0].x1).toBeCloseTo(3, 12);
-    expect(out[0].percentage).toBeCloseTo(1 / 3, 12);
-    expect(out[0].type).toBe('A');
-    expect(out[0].group).toBe('china');
-    expect(out[1].type).toBe('A');
-    expect(out[1].group).toBe('usa');
-    expect(out[0].percentage).toBeCloseTo(1 / 3, 12);
-    expect(out[7].x0).toBeCloseTo(5, 12);
-    expect(out[7].x1).toBeCloseTo(7, 12);
-    expect(out[7].type).toBe('B');
-    expect(out[7].group).toBe('usa');
-    expect(out[7].percentage).toBeCloseTo(1 / 3, 12);
-    expect(out[6].percentage).toBeCloseTo(1 / 3, 12);
+    // 2 types * 2 groups * 3 bins
+    expect(out.length).toBe(12);
+    const grouped: Record<string, any[]> = {};
+    for (const item of out) {
+      const key = `${item.type}-${item.group}`;
+      grouped[key] = grouped[key] || [];
+      grouped[key].push(item);
+    }
+    const expectedBins = [
+      { x0: 1, x1: 3 },
+      { x0: 3, x1: 5 },
+      { x0: 5, x1: 7 }
+    ];
+    for (const binsForCombo of Object.values(grouped)) {
+      expect(binsForCombo.length).toBe(3);
+      binsForCombo.sort((a, b) => a.x0 - b.x0);
+      binsForCombo.forEach((binItem, idx) => {
+        expect(binItem.x0).toBeCloseTo(expectedBins[idx].x0, 12);
+        expect(binItem.x1).toBeCloseTo(expectedBins[idx].x1, 12);
+      });
+    }
   });
 });

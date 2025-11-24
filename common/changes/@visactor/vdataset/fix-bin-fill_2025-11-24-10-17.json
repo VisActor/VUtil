@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "fix: bin result should fill bins\n\n",
+      "type": "none",
+      "packageName": "@visactor/vdataset"
+    }
+  ],
+  "packageName": "@visactor/vdataset",
+  "email": "dingling112@gmail.com"
+}

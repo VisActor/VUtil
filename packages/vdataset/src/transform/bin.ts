@@ -67,14 +67,15 @@ const subBin: Transform = (data: Array<object>, options: ISubBinOptions) => {
       out.push(rec);
     }
   }
-
   const groupField = options.groupField;
-  const usingGroup = !!groupField;
+  const usingGroup = Array.isArray(groupField) ? groupField.length > 0 : !!groupField;
 
   // when grouping, keep per-bin maps from groupKey -> aggregated weight, values and representative group object
   const binGroupCounts: Array<Map<string, number>> = usingGroup ? new Array(numBins).fill(0).map(() => new Map()) : [];
   const binGroupValues: Array<Map<string, any[]>> = usingGroup ? new Array(numBins).fill(0).map(() => new Map()) : [];
-  const binGroupRepr: Array<Map<string, any>> = usingGroup ? new Array(numBins).fill(0).map(() => new Map()) : [];
+  const groupKeyOrder: string[] = [];
+  const groupKeySet = new Set<string>();
+  const groupRepr = new Map<string, any>();
 
   for (let i = 0; i < n; i++) {
     const v: any = (data[i] as any)[field];
@@ -104,13 +105,13 @@ const subBin: Transform = (data: Array<object>, options: ISubBinOptions) => {
           const m = binGroupCounts[j];
           const prev = m.get(gk) ?? 0;
           m.set(gk, prev + datumCount);
-          // store representative group value/object
-          const repMap = binGroupRepr[j];
-          if (!repMap.has(gk)) {
+          if (!groupKeySet.has(gk)) {
+            groupKeySet.add(gk);
+            groupKeyOrder.push(gk);
             if (isArray(groupField)) {
-              repMap.set(gk, Object.fromEntries((groupField as string[]).map(f => [f, (data[i] as any)[f]])));
+              groupRepr.set(gk, Object.fromEntries((groupField as string[]).map(f => [f, (data[i] as any)[f]])));
             } else {
-              repMap.set(gk, (data[i] as any)[groupField as string]);
+              groupRepr.set(gk, (data[i] as any)[groupField as string]);
             }
           }
           // collect values per group if needed
@@ -140,28 +141,27 @@ const subBin: Transform = (data: Array<object>, options: ISubBinOptions) => {
   const finalOut: any[] = [];
   if (usingGroup) {
     for (let j = 0; j < numBins; j++) {
-      const m = binGroupCounts[j];
-      for (const [gk, sum] of m) {
-        totalCount += sum;
+      for (const gk of groupKeyOrder) {
+        const sum = binGroupCounts[j].get(gk) ?? 0;
         const rec: any = { [x0Name]: thresholds[j], [x1Name]: thresholds[j + 1], [countName]: sum };
-        // attach group fields
-        const repr = binGroupRepr[j].get(gk);
+        const repr = groupRepr.get(gk) ?? {};
         if (isArray(groupField)) {
           for (const f of groupField as string[]) {
             rec[f] = repr[f];
           }
-        } else {
+        } else if (groupField) {
           rec[groupField as string] = repr;
         }
         if (options && options.includeValues) {
           rec[valuesName] = binGroupValues[j].get(gk) || [];
         }
         finalOut.push(rec);
+        totalCount += sum;
       }
     }
-    // compute percentages
+    const denominator = totalCount;
     for (const r of finalOut) {
-      r[percentageName] = totalCount > 0 ? r[countName] / totalCount : 0;
+      r[percentageName] = denominator > 0 ? r[countName] / denominator : 0;
     }
   } else {
     for (let i = 0, len = out.length; i < len; i++) {
