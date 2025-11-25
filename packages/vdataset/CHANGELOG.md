@@ -1,6 +1,15 @@
 # Change Log - @visactor/vdataset
 
-This log was last generated on Thu, 20 Nov 2025 11:21:45 GMT and should not be manually modified.
+This log was last generated on Mon, 24 Nov 2025 10:56:01 GMT and should not be manually modified.
+
+## 1.0.18
+Mon, 24 Nov 2025 10:56:01 GMT
+
+### Updates
+
+- fix: bin result should fill bins
+
+
 
 ## 1.0.17
 Thu, 20 Nov 2025 11:21:45 GMT
