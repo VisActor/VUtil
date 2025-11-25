@@ -452,4 +452,48 @@ describe('bin transform', () => {
       });
     }
   });
+
+  test('should not throw error when groupField is empty array', () => {
+    const data = [
+      {
+        v: 1
+      },
+      {
+        v: 1
+      },
+      {
+        v: 1
+      },
+      {
+        v: 2
+      },
+      {
+        v: 5
+      },
+      {
+        v: 7
+      },
+      {
+        v: 8
+      },
+      {
+        v: 9
+      },
+      {
+        v: 10
+      }
+    ];
+    const out: any = bin(data, {
+      field: 'v',
+      groupField: [],
+      outputNames: {
+        x0: '__BinStart__',
+        x1: '__BinEnd__',
+        count: '__BinCount__',
+        percentage: '__BinPercentage__'
+      }
+    });
+
+    expect(out.length).toBe(10);
+  });
 });

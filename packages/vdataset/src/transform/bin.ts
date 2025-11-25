@@ -56,9 +56,12 @@ interface ISubBinOptions extends IBinOptions {
 const subBin: Transform = (data: Array<object>, options: ISubBinOptions) => {
   const { numBins, thresholds, countName, percentageName, valuesName, countField, field, n, x0Name, x1Name } = options;
 
+  const groupField = options.groupField;
+  const usingGroup = Array.isArray(groupField) ? groupField.length > 0 : !!groupField;
+
   // we'll build outputs later; if no grouping, pre-create per-bin outputs
   const out: any[] = [];
-  if (!options.groupField) {
+  if (!usingGroup) {
     for (let i = 0; i < numBins; i++) {
       const rec: any = { [x0Name]: thresholds[i], [x1Name]: thresholds[i + 1], [countName]: 0 };
       if (options.includeValues) {
@@ -67,8 +70,6 @@ const subBin: Transform = (data: Array<object>, options: ISubBinOptions) => {
       out.push(rec);
     }
   }
-  const groupField = options.groupField;
-  const usingGroup = Array.isArray(groupField) ? groupField.length > 0 : !!groupField;
 
   // when grouping, keep per-bin maps from groupKey -> aggregated weight, values and representative group object
   const binGroupCounts: Array<Map<string, number>> = usingGroup ? new Array(numBins).fill(0).map(() => new Map()) : [];
@@ -277,6 +278,7 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     : options?.groupField
     ? [options.groupField]
     : [];
+  const normalizedGroupField = groupField.length ? groupField : undefined;
   const subViewOptions = {
     ...options,
     numBins,
@@ -288,7 +290,8 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     field,
     n,
     x0Name,
-    x1Name
+    x1Name,
+    groupField: normalizedGroupField
   };
   if (!facetField.length) {
     return subBin(data, subViewOptions);
@@ -304,9 +307,10 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
   });
   return Object.values(subViewMap)
     .map(subDataset => {
+      const combinedGroupField = [...groupField, ...facetField];
       return subBin(subDataset, {
         ...subViewOptions,
-        groupField: [...groupField, ...facetField],
+        groupField: combinedGroupField.length ? combinedGroupField : undefined,
         n: subDataset.length
       });
     })
