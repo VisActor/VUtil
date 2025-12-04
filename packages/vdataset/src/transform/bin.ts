@@ -238,7 +238,7 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
     }
   } else {
     // fallback to bins count (default 10)
-    const bins = options.bins && options.bins > 0 ? Math.floor(options.bins) : 10;
+    let bins = options.bins && options.bins > 0 ? Math.floor(options.bins) : 10;
     // If the data range is larger than 1, prefer integer thresholds when possible.
     if (max - min > 1) {
       const start = Math.floor(min);
@@ -246,12 +246,22 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
       thresholds = new Array(bins + 1);
       for (let i = 0; i <= bins; i++) {
         thresholds[i] = start + stepSizeInt * i;
+        if (thresholds[i] > max) {
+          bins = i + 1;
+          thresholds.length = bins;
+          break;
+        }
       }
     } else {
       const stepSize = (max - min) / bins;
       thresholds = new Array(bins + 1);
       for (let i = 0; i <= bins; i++) {
         thresholds[i] = min + stepSize * i;
+        if (thresholds[i] > max) {
+          bins = i + 1;
+          thresholds.length = bins;
+          break;
+        }
       }
     }
   }

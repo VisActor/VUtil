@@ -200,6 +200,13 @@ describe('bin transform', () => {
     expect(bins[9].x0).toBe(10);
     expect(bins[9].x1).toBe(11);
   });
+  test('bins in max value and threshold 2', () => {
+    const data = [1, 1, 1, 2, 5, 7, 8, 9, 10, 11, 12, 14].map(v => ({ v }));
+    const bins = bin(data, { field: 'v', bins: 10 });
+    expect(bins.length).toBe(7);
+    expect(bins[6].x0).toBe(13);
+    expect(bins[6].x1).toBe(15);
+  });
 
   test('bins in steps', () => {
     const data = [1, 1, 1, 2, 5, 7, 8, 9, 10].map(v => ({ v }));
