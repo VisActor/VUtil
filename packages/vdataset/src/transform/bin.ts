@@ -247,8 +247,8 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
       for (let i = 0; i <= bins; i++) {
         thresholds[i] = start + stepSizeInt * i;
         if (thresholds[i] > max) {
-          bins = i + 1;
-          thresholds.length = bins;
+          bins = i;
+          thresholds.length = bins + 1;
           break;
         }
       }
@@ -258,8 +258,8 @@ export const bin: Transform = (data: Array<object>, options?: IBinOptions) => {
       for (let i = 0; i <= bins; i++) {
         thresholds[i] = min + stepSize * i;
         if (thresholds[i] > max) {
-          bins = i + 1;
-          thresholds.length = bins;
+          bins = i;
+          thresholds.length = bins + 1;
           break;
         }
       }
