@@ -26,7 +26,7 @@ importers:
       '@types/pbf': ^3.0.2
       '@types/topojson-client': ^3.1.0
       '@types/topojson-specification': ^1.0.2
-      '@visactor/vutils': workspace:1.0.20
+      '@visactor/vutils': workspace:1.0.21
       d3-array: 3.2.3
       d3-dsv: ^2.0.0
       d3-geo: ^1.12.1
@@ -100,8 +100,8 @@ importers:
       '@turf/invariant': ^6.5.0
       '@types/jest': ~29.5.0
       '@types/node': '*'
-      '@visactor/vscale': workspace:1.0.20
-      '@visactor/vutils': workspace:1.0.20
+      '@visactor/vscale': workspace:1.0.21
+      '@visactor/vutils': workspace:1.0.21
       canvas: ~3.1.0
       eslint: ~8.18.0
       eventemitter3: ^4.0.7
@@ -145,7 +145,7 @@ importers:
       '@rushstack/eslint-patch': ~1.1.4
       '@types/jest': ~29.5.0
       '@types/node': '*'
-      '@visactor/vutils': workspace:1.0.20
+      '@visactor/vutils': workspace:1.0.21
       eslint: ~8.18.0
       jest: ~29.5.0
       ts-jest: ~29.1.0
