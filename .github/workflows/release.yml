@@ -12,6 +12,9 @@ jobs:
       contents: write
       pull-requests: write
 
+    env:
+      CI: true
+
     strategy:
       matrix:
         node-version: [18.x]
