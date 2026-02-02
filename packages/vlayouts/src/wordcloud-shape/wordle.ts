@@ -1,4 +1,4 @@
-import type { CloudWordType, LayoutConfigType, SegmentationOutputType } from './interface';
+import type { CloudWordType, LayoutConfigType, SegmentationOutputType, CoarseGrid } from './interface';
 
 export function layout(
   words: CloudWordType[],
@@ -15,6 +15,9 @@ export function layout(
     shapeRatio
   } = segmentationOutput;
   const board = initBoardWithShape(segmentationOutput);
+  if (!layoutConfig.coarseGrid) {
+    layoutConfig.coarseGrid = initCoarseGridFromLabels(segmentationOutput, layoutConfig.coarseCellSize ?? 16);
+  }
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
   // 对每个区域开始进行布局
@@ -28,7 +31,11 @@ export function layout(
       word.x = center[0];
       word.y = center[1];
 
-      if (word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)) {
+      if (
+        word.hasText &&
+        word.sprite &&
+        place(board, word, maxR, ratio, size, boardSize, stepFactor, layoutConfig.coarseGrid)
+      ) {
         word.hasPlaced = true;
       }
     }
@@ -56,7 +63,10 @@ export function layout(
       measureSprite(canvas, ctx, failedWords, i);
       word.x = shapeCenter[0];
       word.y = shapeCenter[1];
-      if (word.hasText && place(board, word, shapeMaxR, shapeRatio, size, boardSize, stepFactor)) {
+      if (
+        word.hasText &&
+        place(board, word, shapeMaxR, shapeRatio, size, boardSize, stepFactor, layoutConfig.coarseGrid)
+      ) {
         word.hasPlaced = true;
       }
     }
@@ -77,6 +87,9 @@ export function layoutSelfShrink(
     boardSize
   } = segmentationOutput;
   const board = initBoardWithShape(segmentationOutput);
+  if (!layoutConfig.coarseGrid) {
+    layoutConfig.coarseGrid = initCoarseGridFromLabels(segmentationOutput, layoutConfig.coarseCellSize ?? 16);
+  }
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
   // 对每个区域开始进行布局
@@ -91,7 +104,11 @@ export function layoutSelfShrink(
       word.x = center[0];
       word.y = center[1];
 
-      if (word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)) {
+      if (
+        word.hasText &&
+        word.sprite &&
+        place(board, word, maxR, ratio, size, boardSize, stepFactor, layoutConfig.coarseGrid)
+      ) {
         word.hasPlaced = true;
       } else {
         // console.log('失败迭代', word.text);
@@ -157,6 +174,12 @@ export function layoutGlobalShrink(
   const boardOrigin = initBoardWithShape(segmentationOutput);
   let board = boardOrigin.slice(0);
 
+  if (!layoutConfig.coarseGrid) {
+    layoutConfig.coarseGrid = initCoarseGridFromLabels(segmentationOutput, layoutConfig.coarseCellSize ?? 16);
+  }
+  const coarseGrid = layoutConfig.coarseGrid;
+  const coarseOrigin = coarseGrid ? coarseGrid.data.slice(0) : null;
+
   const fontFactor = layoutConfig.fontSizeShrinkFactor;
 
   // 同一个词如果降低到globalShinkLimit还没有布局成功，恢复到该词未布局状态
@@ -186,7 +209,12 @@ export function layoutGlobalShrink(
       word.x = center[0];
       word.y = center[1];
 
-      if (!word.skip && word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)) {
+      if (
+        !word.skip &&
+        word.hasText &&
+        word.sprite &&
+        place(board, word, maxR, ratio, size, boardSize, stepFactor, coarseGrid)
+      ) {
         word.hasPlaced = true;
       } else if (!word.skip && word.weight > weightStd && globalShinkFactor > globalShinkLimit) {
         const wordId = word.datum[Symbol.for('vGrammar_id')];
@@ -204,6 +232,9 @@ export function layoutGlobalShrink(
 
         // 清空布局画布
         board = boardOrigin.slice(0);
+        if (coarseGrid && coarseOrigin) {
+          coarseGrid.data.set(coarseOrigin);
+        }
         // console.log('重启布局', word.text, globalShinkFactor);
         restartTag = true;
         break;
@@ -220,6 +251,9 @@ export function layoutGlobalShrink(
 
         // 清空布局画布
         board = boardOrigin.slice(0);
+        if (coarseGrid && coarseOrigin) {
+          coarseGrid.data.set(coarseOrigin);
+        }
         // console.log('重启布局0', word.text, idIntialFactor);
         restartTag = true;
         break;
@@ -255,7 +289,7 @@ export function layoutGlobalShrink(
       measureSprite(canvas, ctx, failedWords, i);
       word.x = shapeCenter[0];
       word.y = shapeCenter[1];
-      if (word.hasText && place(board, word, shapeMaxR, shapeRatio, size, boardSize, stepFactor)) {
+      if (word.hasText && place(board, word, shapeMaxR, shapeRatio, size, boardSize, stepFactor, coarseGrid)) {
         word.hasPlaced = true;
       }
     }
@@ -281,6 +315,12 @@ export function layoutSelfEnlarge(
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   const boardOrigin = initBoardWithShape(segmentationOutput);
   let board = boardOrigin.slice(0);
+
+  if (!layoutConfig.coarseGrid) {
+    layoutConfig.coarseGrid = initCoarseGridFromLabels(segmentationOutput, layoutConfig.coarseCellSize ?? 16);
+  }
+  const coarseGrid = layoutConfig.coarseGrid;
+  const coarseOrigin = coarseGrid ? coarseGrid.data.slice(0) : null;
 
   const fontFactor = layoutConfig.fontSizeEnlargeFactor;
   // const fontFactor = 1.5;
@@ -314,7 +354,7 @@ export function layoutSelfEnlarge(
       word.x = center[0];
       word.y = center[1];
 
-      if (word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)) {
+      if (word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor, coarseGrid)) {
         word.hasPlaced = true;
         if (word.weight >= weightStd) {
           importantWordSuccessedNum++;
@@ -333,6 +373,9 @@ export function layoutSelfEnlarge(
 
           // 清空布局画布
           board = boardOrigin.slice(0);
+          if (coarseGrid && coarseOrigin) {
+            coarseGrid.data.set(coarseOrigin);
+          }
           // console.log('重启布局', word.text, globalEnlargeFactor);
           restartTag = true;
           importantWordSuccessedNum = 0;
@@ -353,6 +396,9 @@ export function layoutSelfEnlarge(
 
         // 清空布局画布
         board = boardOrigin.slice(0);
+        if (coarseGrid && coarseOrigin) {
+          coarseGrid.data.set(coarseOrigin);
+        }
         // console.log('重启布局0', word.text, globalEnlargeFactor);
         restartTag = true;
 
@@ -393,7 +439,7 @@ export function layoutSelfEnlarge(
       measureSprite(canvas, ctx, failedWords, i);
       word.x = shapeCenter[0];
       word.y = shapeCenter[1];
-      if (word.hasText && place(board, word, shapeMaxR, shapeRatio, size, boardSize, stepFactor)) {
+      if (word.hasText && place(board, word, shapeMaxR, shapeRatio, size, boardSize, stepFactor, coarseGrid)) {
         word.hasPlaced = true;
       }
     }
@@ -406,13 +452,14 @@ export function layoutSelfEnlarge(
  * 使用螺旋线放置单词，成功返回 true
  */
 function place(
-  board: number[],
+  board: Uint32Array,
   word: CloudWordType,
   maxR: number,
   ratio: number,
   size: [number, number],
   boardSize: [number, number],
-  stepFactor: number
+  stepFactor: number,
+  coarseGrid?: CoarseGrid
 ) {
   const startX = word.x;
   const startY = word.y;
@@ -444,8 +491,15 @@ function place(
       continue;
     }
 
+    if (coarseGrid && coarseCollide(word, coarseGrid)) {
+      continue;
+    }
+
     if (!isCollideWithBoard(word, board, boardSize)) {
       placeWordOnBoard(word, board, boardSize);
+      if (coarseGrid) {
+        updateCoarseGridForWord(word, coarseGrid, size);
+      }
 
       return true;
     }
@@ -457,7 +511,7 @@ function place(
  * 在 board 中放置 word
  * 会在 filling 中复用
  */
-export function placeWordOnBoard(word: CloudWordType, board: number[], boardSize: [number, number]) {
+export function placeWordOnBoard(word: CloudWordType, board: Uint32Array, boardSize: [number, number]) {
   const { wordSize } = word;
   // 放置单词，以 x, y 为中心
   const sprite = word.sprite;
@@ -494,7 +548,7 @@ export function placeWordOnBoard(word: CloudWordType, board: number[], boardSize
  *
  * 会在 filling words 中复用
  */
-export function isCollideWithBoard(word: CloudWordType, board: number[], boardSize: [number, number]) {
+export function isCollideWithBoard(word: CloudWordType, board: Uint32Array, boardSize: [number, number]) {
   const { sprite, wordSize } = word;
 
   const sw = boardSize[0] >> 5;
@@ -530,6 +584,132 @@ export function isCollideWithBoard(word: CloudWordType, board: number[], boardSi
   }
 
   return false;
+}
+
+function initCoarseGridFromLabels(segmentationOutput: SegmentationOutputType, cellSize: number): CoarseGrid {
+  const {
+    segmentation: { labels },
+    size
+  } = segmentationOutput;
+  const width = size[0];
+  const height = size[1];
+  const effectiveCellSize = cellSize > 0 ? cellSize : 16;
+  const cols = Math.ceil(width / effectiveCellSize);
+  const rows = Math.ceil(height / effectiveCellSize);
+  const data = new Uint8Array(cols * rows);
+
+  for (let y = 0; y < height; y++) {
+    const rowOffset = y * width;
+    const coarseRow = (y / effectiveCellSize) | 0;
+    const rowBase = coarseRow * cols;
+    for (let x = 0; x < width; x++) {
+      const label = labels[rowOffset + x];
+      if (label === 0) {
+        const coarseCol = (x / effectiveCellSize) | 0;
+        const idx = rowBase + coarseCol;
+        if (!data[idx]) {
+          data[idx] = 1;
+        }
+      }
+    }
+  }
+
+  return {
+    cellSize: effectiveCellSize,
+    cols,
+    rows,
+    data
+  };
+}
+
+export function coarseCollide(word: CloudWordType, coarse: CoarseGrid): boolean {
+  const { bounds, wordSize } = word;
+
+  if (!bounds || !wordSize) {
+    return false;
+  }
+
+  const { dTop, dBottom, dLeft, dRight } = bounds;
+  const cellSize = coarse.cellSize;
+  const cols = coarse.cols;
+  const rows = coarse.rows;
+  const data = coarse.data;
+
+  const width = cols * cellSize;
+  const height = rows * cellSize;
+
+  const left = word.x - dLeft;
+  const right = word.x + dRight;
+  const top = word.y - dTop;
+  const bottom = word.y + dBottom;
+
+  const minX = Math.max(0, left);
+  const maxX = Math.min(width - 1, right);
+  const minY = Math.max(0, top);
+  const maxY = Math.min(height - 1, bottom);
+
+  if (minX > maxX || minY > maxY) {
+    return false;
+  }
+
+  const startCol = (minX / cellSize) | 0;
+  const endCol = Math.min(cols - 1, (maxX / cellSize) | 0);
+  const startRow = (minY / cellSize) | 0;
+  const endRow = Math.min(rows - 1, (maxY / cellSize) | 0);
+
+  for (let row = startRow; row <= endRow; row++) {
+    const rowBase = row * cols;
+    for (let col = startCol; col <= endCol; col++) {
+      if (data[rowBase + col]) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function updateCoarseGridForWord(word: CloudWordType, coarse: CoarseGrid, size: [number, number]): void {
+  const { bounds, wordSize } = word;
+
+  if (!bounds || !wordSize) {
+    return;
+  }
+
+  const { dTop, dBottom, dLeft, dRight } = bounds;
+  const cellSize = coarse.cellSize;
+  const cols = coarse.cols;
+  const rows = coarse.rows;
+  const data = coarse.data;
+
+  const width = size[0];
+  const height = size[1];
+
+  const left = word.x - dLeft;
+  const right = word.x + dRight;
+  const top = word.y - dTop;
+  const bottom = word.y + dBottom;
+
+  const minX = Math.max(0, left);
+  const maxX = Math.min(width - 1, right);
+  const minY = Math.max(0, top);
+  const maxY = Math.min(height - 1, bottom);
+
+  if (minX > maxX || minY > maxY) {
+    return;
+  }
+
+  const startCol = (minX / cellSize) | 0;
+  const endCol = Math.min(cols - 1, (maxX / cellSize) | 0);
+  const startRow = (minY / cellSize) | 0;
+  const endRow = Math.min(rows - 1, (maxY / cellSize) | 0);
+
+  for (let row = startRow; row <= endRow; row++) {
+    const rowBase = row * cols;
+    for (let col = startCol; col <= endCol; col++) {
+      data[rowBase + col] = 1;
+    }
+  }
 }
 
 function archimedeanSpiral(ratio: number) {
@@ -668,7 +848,7 @@ export function measureSprite(
     [x, y] = LT;
     const w32 = wordSize[0] >> 5;
     // 将数组归0
-    const sprite = new Array(w32 * wordSize[1]).fill(0);
+    const sprite = new Uint32Array(w32 * wordSize[1]);
 
     // 先记录单词 bounds 的行列号，然后转换成与中心的delta
     let [dTop, dBottom, dLeft, dRight] = [Infinity, -Infinity, Infinity, -Infinity];
@@ -754,7 +934,7 @@ function initBoardWithShape(segmentationOutput: SegmentationOutputType) {
   } = segmentationOutput;
   // board 每个 int 编码 32 个像素的占用信息，求得 w32 表示一行有几个 int
   const w32 = boardSize[0] >> 5;
-  const board = new Array(w32 * size[1]).fill(0);
+  const board = new Uint32Array(w32 * size[1]).fill(0);
 
   for (let i = 0; i < size[1]; i++) {
     for (let j = 0; j < size[0]; j++) {

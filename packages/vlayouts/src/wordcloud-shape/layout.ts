@@ -220,6 +220,7 @@ export class Layout {
       // font style 相关
       size: options.size,
       ratio: options.ratio || 0.8,
+      coarseCellSize: options.coarseCellSize,
 
       // layout 相关
       shapeUrl: options.shape,

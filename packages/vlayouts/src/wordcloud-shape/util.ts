@@ -124,7 +124,7 @@ export function paintLabels(segmentationOutput: SegmentationOutputType, createCa
 /**
  * 绘制 board
  */
-export function paint(board: number[], paintSize: [number, number]) {
+export function paint(board: ArrayLike<number>, paintSize: [number, number]) {
   const curSize = paintSize;
   const imageData = new ImageData(curSize[0], curSize[1]);
   const array = imageData.data;
