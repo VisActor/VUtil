@@ -5,7 +5,7 @@ import type {
   WordCloudShapeOptions,
   wordsConfigType
 } from './interface';
-import { calTextLength, colorListEqual, functor } from './util';
+import { MapWordMeasureCache, calTextLength, colorListEqual, functor } from './util';
 import cloud from './cloud-shape-layout';
 import type { SegmentationInputType } from '../interface/wordcloud';
 import {
@@ -220,6 +220,8 @@ export class Layout {
       // font style 相关
       size: options.size,
       ratio: options.ratio || 0.8,
+
+      measureCache: options.measureCache ?? new MapWordMeasureCache(),
 
       // layout 相关
       shapeUrl: options.shape,
