@@ -1,5 +1,5 @@
-import type { CloudWordType, LayoutConfigType, SegmentationOutputType, CoarseGrid } from './interface';
-import { measureSprite, isCollideWithBoard, placeWordOnBoard, coarseCollide } from './wordle';
+import type { CloudWordType, LayoutConfigType, SegmentationOutputType } from './interface';
+import { measureSprite, isCollideWithBoard, placeWordOnBoard } from './wordle';
 
 export function filling(
   words: CloudWordType[],
@@ -103,24 +103,14 @@ export function filling(
           continue;
         }
 
-        if (layoutConfig.coarseGrid && coarseCollide(word, layoutConfig.coarseGrid)) {
-          if (++wi === fillingWords.length) {
-            wi = 0;
-            if (random) {
-              randomArray(fillingWords);
-            }
-          }
-          continue;
-        }
-
         const { dTop, dBottom, dLeft, dRight } = bounds;
         // 检测根据单词的 bounds 检测是否超出范围
         if (word.x - dLeft < 0 || word.x + dRight > size[0] || word.y - dTop < 0 || word.y + dBottom > size[1]) {
           continue;
         }
 
-        if (word.hasText && word.sprite && !isCollideWithBoard(word, board as Uint32Array, boardSize)) {
-          placeWordOnBoard(word, board as Uint32Array, boardSize);
+        if (word.hasText && word.sprite && !isCollideWithBoard(word, board, boardSize)) {
+          placeWordOnBoard(word, board, boardSize);
           placedFillingWords.push(Object.assign({}, word));
           // 所有单词放置完后，随机排序一下填充词
           if (++wi === fillingWords.length) {

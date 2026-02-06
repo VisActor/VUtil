@@ -37,13 +37,6 @@ export interface SegmentationOutputType extends SegmentationOutputTypeBase {
   fillingDeltaFontSize?: number;
 }
 
-export interface CoarseGrid {
-  cellSize: number;
-  cols: number;
-  rows: number;
-  data: Uint8Array;
-}
-
 export type wordsConfigType = {
   getText: TagItemFunction<string>;
   getFontSize?: TagItemFunction<number>;
@@ -102,10 +95,7 @@ export type LayoutConfigType = {
 
   // 经过计算，补充的内容
   sameColorList: boolean;
-  board?: Uint32Array | number[];
-
-  coarseCellSize?: number;
-  coarseGrid?: CoarseGrid;
+  board?: number[];
 
   minInitFontSize: number;
   minFontSize: number;
@@ -132,7 +122,7 @@ export type CloudWordType = {
   wordSize?: [number, number];
   bounds?: any;
   hasText?: boolean;
-  sprite?: Uint32Array | number[];
+  sprite?: number[];
   LT?: [number, number]; // 左上角点
 };
 
@@ -172,7 +162,6 @@ export interface WordCloudShapeOptions {
   removeWhiteBorder?: boolean;
   fontSizeShrinkFactor?: number;
   stepFactor?: number;
-  coarseCellSize?: number;
   importantWordCount?: number;
   globalShinkLimit?: number;
   fontSizeEnlargeFactor?: number;
