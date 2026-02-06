@@ -37,6 +37,24 @@ export interface SegmentationOutputType extends SegmentationOutputTypeBase {
   fillingDeltaFontSize?: number;
 }
 
+export type CachedWordMeasure = {
+  sprite: number[];
+  bounds: {
+    dTop: number;
+    dBottom: number;
+    dLeft: number;
+    dRight: number;
+  };
+  wordSize: [number, number];
+};
+
+export interface IWordMeasureCache {
+  get: (key: string) => CachedWordMeasure | undefined;
+  set: (key: string, value: CachedWordMeasure) => void;
+  clear: () => void;
+  size?: () => number;
+}
+
 export type wordsConfigType = {
   getText: TagItemFunction<string>;
   getFontSize?: TagItemFunction<number>;
@@ -100,6 +118,8 @@ export type LayoutConfigType = {
   minInitFontSize: number;
   minFontSize: number;
   minFillFontSize: number;
+
+  measureCache?: IWordMeasureCache;
 };
 export type CloudWordType = {
   x: number;
@@ -200,6 +220,8 @@ export interface WordCloudShapeOptions {
   minFontSize?: number;
   // 填充词词最小布局字号
   minFillFontSize?: number;
+
+  measureCache?: IWordMeasureCache;
 
   onUpdateMaskCanvas?: (canvas?: HTMLCanvasElement) => void;
   onBeforeLayout?: () => void;
