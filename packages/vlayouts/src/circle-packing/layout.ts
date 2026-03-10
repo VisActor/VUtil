@@ -56,6 +56,8 @@ export class CirclePackingLayout {
 
   private _maxDepth: number;
 
+  private _valueField: string;
+
   static defaultOpionts: Partial<CirclePackingOptions> = {
     setRadius: (node: CirclePackingNodeElement) => {
       return Math.sqrt(node.value);
@@ -77,6 +79,7 @@ export class CirclePackingLayout {
       ? (node: CirclePackingNodeElement) => (options.padding as number[])[node.depth + 1] ?? 0
       : () => 0;
     this._maxDepth = -1;
+    this._valueField = options?.valueField ?? 'value';
   }
 
   layout(
@@ -106,7 +109,8 @@ export class CirclePackingLayout {
       0,
       -1,
       null,
-      this._getNodeKey
+      this._getNodeKey,
+      this._valueField
     );
     this._maxDepth = res.maxDepth;
 
