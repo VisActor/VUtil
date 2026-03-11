@@ -21,6 +21,8 @@ export interface CirclePackingOptions {
   /** parse the key of node */
   nodeKey?: string | number | ((datum: HierarchicalDatum) => string | number);
   includeRoot?: boolean;
+  /** the field to read node value, default is 'value' */
+  valueField?: string;
 }
 
 export type CirclePackingTramsformOptions = CirclePackingOptions &

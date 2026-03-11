@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "chore: update rush.json\n\n",
+      "type": "none",
+      "packageName": "@visactor/vlayouts"
+    }
+  ],
+  "packageName": "@visactor/vlayouts",
+  "email": "dingling112@gmail.com"
+}
