@@ -2,6 +2,18 @@
   "name": "@visactor/vlayouts",
   "entries": [
     {
+      "version": "1.0.23",
+      "tag": "@visactor/vlayouts_v1.0.23",
+      "date": "Wed, 11 Mar 2026 06:07:08 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "chore: update rush.json\n\n"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.22",
       "tag": "@visactor/vlayouts_v1.0.22",
       "date": "Fri, 06 Feb 2026 06:33:50 GMT",
