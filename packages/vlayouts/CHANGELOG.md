@@ -1,6 +1,13 @@
 # Change Log - @visactor/vlayouts
 
-This log was last generated on Wed, 11 Mar 2026 06:07:08 GMT and should not be manually modified.
+This log was last generated on Fri, 18 Sep 2026 08:59:37 GMT and should not be manually modified.
+
+## 1.0.24
+Fri, 18 Sep 2026 08:59:37 GMT
+
+### Updates
+
+-  feat: add columns information in sankey nodeHeight callback
 
 ## 1.0.23
 Wed, 11 Mar 2026 06:07:08 GMT
