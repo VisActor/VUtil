@@ -1,6 +1,12 @@
 import { visitPoints } from './regression-linear';
 import { computeLinearCIComponents, invNorm, stdErrorsAt } from './regression-utils';
 
+interface LowessPoint {
+  x: number;
+  y: number;
+  index: number;
+}
+
 function tricube(u: number) {
   const uu = Math.abs(u);
   if (uu >= 1) {
@@ -13,13 +19,13 @@ function tricube(u: number) {
 /**
  * Stratified sampling to reduce data size while preserving distribution
  */
-function stratifiedSample(sortedData: { x: number; y: number }[], maxSamples: number) {
+function stratifiedSample(sortedData: LowessPoint[], maxSamples: number) {
   const n = sortedData.length;
   if (n <= maxSamples) {
     return sortedData;
   }
 
-  const sampled: { x: number; y: number }[] = [];
+  const sampled: LowessPoint[] = [];
 
   // More aggressive sampling - use exact step size
   const step = n / maxSamples;
@@ -54,9 +60,9 @@ export function regressionLowess(
   const maxSamples = options.maxSamples || 1000;
 
   // Collect and sort data by x
-  const rawPoints: { x: number; y: number }[] = [];
-  visitPoints(data, x, y, (dx, dy) => {
-    rawPoints.push({ x: dx, y: dy });
+  const rawPoints: LowessPoint[] = [];
+  visitPoints(data, x, y, (dx, dy, index) => {
+    rawPoints.push({ x: dx, y: dy, index });
   });
 
   rawPoints.sort((a, b) => a.x - b.x);
@@ -93,12 +99,20 @@ export function regressionLowess(
       }
     }
 
-    const m = Math.max(2, Math.min(n, Math.floor(span * n)));
+    const m = Math.min(n, Math.max(2, Math.floor(span * n)));
 
-    // Calculate range around insertion point
-    const start = Math.max(0, left - Math.floor(m / 2));
-    const end = Math.min(n, start + m);
-    const actualStart = Math.max(0, end - m);
+    // Expand by distance: equal numbers on either side need not be the nearest points.
+    let lo = left - 1;
+    let hi = left;
+    for (let count = 0; count < m; count++) {
+      if (lo >= 0 && (hi >= n || x0 - ptsX[lo] <= ptsX[hi] - x0)) {
+        lo--;
+      } else {
+        hi++;
+      }
+    }
+    const actualStart = lo + 1;
+    const end = hi;
 
     // Find max distance and compute weights in single pass
     let maxDist = 0;
@@ -127,8 +141,19 @@ export function regressionLowess(
     }
 
     if (sumw === 0) {
-      // fallback to nearest y
-      const nearestIdx = left < n ? left : n - 1;
+      // Fall back to the nearest y, preserving input order for equal distances.
+      let nearestIdx = 0;
+      let nearestDistance = Math.abs(ptsX[0] - x0);
+      for (let i = 1; i < n; i++) {
+        const distance = Math.abs(ptsX[i] - x0);
+        if (
+          distance < nearestDistance ||
+          (distance === nearestDistance && sampledPoints[i].index < sampledPoints[nearestIdx].index)
+        ) {
+          nearestIdx = i;
+          nearestDistance = distance;
+        }
+      }
       return ptsY[nearestIdx];
     }
 
