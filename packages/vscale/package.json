@@ -13,6 +13,11 @@
     "name": "VisActor",
     "url": "https://VisActor.io/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisActor/VUtil.git",
+    "directory": "packages/vscale"
+  },
   "license": "MIT",
   "sideEffects": false,
   "main": "cjs/index.js",

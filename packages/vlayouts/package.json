@@ -14,6 +14,11 @@
     "name": "VisActor",
     "url": "https://VisActor.io/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisActor/VUtil.git",
+    "directory": "packages/vlayouts"
+  },
   "license": "MIT",
   "keywords": [
     "visual",

@@ -13,6 +13,7 @@ jobs:
 
     permissions:
       contents: write
+      id-token: write
 
     strategy:
       matrix:
@@ -20,15 +21,13 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: './common/config/rush/pnpm-lock.yaml'
+          package-manager-cache: false
 
-          # Install rush
       - name: Install rush
         run: node common/scripts/install-run-rush.js install --bypass-policy
 
@@ -52,10 +51,18 @@ jobs:
       - name: Build packages
         run: node common/scripts/install-run-rush.js build --only tag:package
 
-      - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      # Keep build/test on Node 20; npm trusted publishing requires Node >=22.14.
+      - name: Use Node.js 24 for publishing
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          package-manager-cache: false
+
+      # pnpm publish delegates to the system npm CLI, which handles OIDC.
+      - name: Install npm with trusted publishing support
+        run: npm install --global npm@11.17.0
+
+      - name: Publish to npm with OIDC
         run: node common/scripts/install-run-rush.js publish --publish --include-all --tag ${{ steps.semver_parser.outputs.pre_release_type }}
 
       - name: Update shrinkwrap
