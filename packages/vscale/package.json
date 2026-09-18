@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vscale",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "Scales for visual encoding, used in VGrammar, VTable",
   "keywords": [
     "scale",
@@ -12,6 +12,11 @@
   "author": {
     "name": "VisActor",
     "url": "https://VisActor.io/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisActor/VUtil.git",
+    "directory": "packages/vscale"
   },
   "license": "MIT",
   "sideEffects": false,
@@ -34,7 +39,7 @@
     "test-cov": "jest -w 16 --coverage"
   },
   "dependencies": {
-    "@visactor/vutils": "workspace:1.0.23"
+    "@visactor/vutils": "workspace:1.0.24"
   },
   "devDependencies": {
     "@internal/bundler": "workspace:*",

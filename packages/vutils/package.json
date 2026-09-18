@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vutils",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "main": "cjs/index.js",
   "module": "es/index.js",
   "types": "es/index.d.ts",
@@ -13,6 +13,11 @@
   "author": {
     "name": "VisActor",
     "url": "https://VisActor.io/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisActor/VUtil.git",
+    "directory": "packages/vutils"
   },
   "license": "MIT",
   "keywords": [

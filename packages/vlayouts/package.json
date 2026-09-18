@@ -1,6 +1,6 @@
 {
   "name": "@visactor/vlayouts",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "main": "cjs/index.js",
   "module": "es/index.js",
   "types": "es/index.d.ts",
@@ -13,6 +13,11 @@
   "author": {
     "name": "VisActor",
     "url": "https://VisActor.io/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisActor/VUtil.git",
+    "directory": "packages/vlayouts"
   },
   "license": "MIT",
   "keywords": [
@@ -49,8 +54,8 @@
     "canvas": "~3.1.0"
   },
   "dependencies": {
-    "@visactor/vscale": "workspace:1.0.23",
-    "@visactor/vutils": "workspace:1.0.23",
+    "@visactor/vscale": "workspace:1.0.24",
+    "@visactor/vutils": "workspace:1.0.24",
     "eventemitter3": "^4.0.7",
     "@turf/invariant": "^6.5.0",
     "@turf/helpers": "^6.5.0"
