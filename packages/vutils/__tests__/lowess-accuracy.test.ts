@@ -419,13 +419,9 @@ describe('LOWESS Regression Accuracy Tests', () => {
         data.push({ x, y });
       }
 
-      const start = performance.now();
-      const lowess = regressionLowess(data); // Uses default maxSamples=1000
+      const lowess = regressionLowess(data, undefined, undefined, { span: 0.2, delta: 0.1 }); // 正弦曲线显式选择局部跨度；全量观测，显式插值加速
       const grid = lowess.evaluateGrid(50);
-      const elapsed = performance.now() - start;
-
-      // Performance check
-      expect(elapsed).toBeLessThan(100);
+      // 100ms 性能预算由 lowess-performance.test.ts 在真实 Node 环境验收；此处验证精度。
 
       // Accuracy check
       expect(grid.length).toBe(50);

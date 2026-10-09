@@ -8,11 +8,14 @@ function referencePredict(data: Point[], x0: number, span: number, degree: 0 | 1
     return 0;
   }
   const count = Math.min(data.length, Math.max(2, Math.floor(span * data.length)));
-  const nearest = data
+  let nearest = data
     .map((p, index) => ({ ...p, index, distance: Math.abs(p.x - x0) }))
-    .sort((a, b) => a.distance - b.distance || a.index - b.index)
+    .sort((a, b) => a.distance - b.distance || a.x - b.x || a.y - b.y)
     .slice(0, count);
   const radius = nearest[nearest.length - 1].distance;
+  if (nearest[0].x === nearest[nearest.length - 1].x) {
+    nearest = data.map((p, index) => ({ ...p, index, distance: Math.abs(p.x - x0) })).filter(p => p.x === nearest[0].x);
+  }
   let sw = 0;
   let sx = 0;
   let sy = 0;
@@ -28,7 +31,9 @@ function referencePredict(data: Point[], x0: number, span: number, degree: 0 | 1
     sxy += w * p.x * p.y;
   });
   if (sw === 0) {
-    return nearest[0].y;
+    const distance = Math.min(...data.map(p => Math.abs(p.x - x0)));
+    const tied = data.filter(p => Math.abs(p.x - x0) === distance);
+    return tied.reduce((sum, p) => sum + p.y, 0) / tied.length;
   }
   if (degree === 0) {
     return sy / sw;
@@ -91,11 +96,11 @@ test.each([
     { x: 0, y: 5 },
     { x: 2, y: 20 }
   ]
-])('uses original input order when equally near points have zero weight: %j, %j', (first, second) => {
-  expect(regressionLowess([first, second]).predict(1)).toBe(first.y);
+])('averages tied nearest observations independently of input order: %j, %j', (first, second) => {
+  expect(regressionLowess([first, second]).predict(1)).toBe(12.5);
 });
 
-test('keeps the first coincident points when the neighborhood radius is zero', () => {
+test('uses all coincident observations rather than an arbitrary input prefix', () => {
   const data = [1, 2, 3, 4, 5, 6, 7].map(y => ({ x: 1, y }));
-  expect(regressionLowess(data).predict(1)).toBe(1.5);
+  expect(regressionLowess(data).predict(1)).toBe(4);
 });
