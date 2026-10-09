@@ -2,6 +2,22 @@ import isNil from './isNil';
 import { normalQuantile as invNorm } from './normalQuantile';
 export { invNorm };
 
+/** Compute a two-sided normal critical value without subtracting a small tail probability from one. */
+export function confidenceCriticalValue(alpha: number): number {
+  if (!Number.isFinite(alpha) || alpha < 0 || alpha > 1) {
+    return NaN;
+  }
+  return -invNorm(alpha / 2);
+}
+
+/** A zero standard error gives a degenerate interval even when the critical value is infinite. */
+export function confidenceHalfWidth(z: number, standardError: number): number {
+  if (Number.isNaN(z)) {
+    return NaN;
+  }
+  return standardError === 0 ? 0 : z * standardError;
+}
+
 export interface LinearCIComponents {
   min: number;
   max: number;
