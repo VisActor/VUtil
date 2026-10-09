@@ -15,7 +15,7 @@
 
 独立数值对照见 __tests__/fixtures/generate-regression-python.py 与固定 JSON。LOWESS 正常非退化数据对照 statsmodels，bootstrap 重放同一抽样索引后对照 NumPy 最小二乘与分位数。退化/ties 行为及坐标基底差异单独声明，不承诺全部参数逐位相同。
 
-性能在真实 Node 构建产物测量，避免 Jest VM 对 Math 属性代理的显著额外成本；先 npm run build，再运行 lowess-performance.test.ts 或 node benchmarks/lowess.cjs。保留原 100/150/200ms 预算，使用显式 delta 并断言所有节点保留，精确路径另由数值测试和浏览器实测覆盖。
+性能在真实 Node 构建产物测量，避免 Jest VM 对 Math 属性代理的显著额外成本；先 npm run build，再运行 lowess-performance.test.ts 或 node benchmarks/lowess.cjs。保留原 100/150/200ms 预算，使用显式 delta 并断言所有节点保留，精确路径另由数值测试和浏览器实测覆盖。VUtils 的 Jest 配置使用单 worker，CI 的 Rush test 使用 --parallelism 1，避免同包或其他包并发测试影响墙钟预算；所有单元与性能用例均执行。
 
 ## 调用示例
 
