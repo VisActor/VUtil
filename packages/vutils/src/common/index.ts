@@ -96,3 +96,7 @@ export * from './regression-lowess';
 export * from './regression-polynomial';
 export * from './kde';
 export * from './ecdf';
+
+export * from './correlation';
+export * from './mean';
+export * from './bootstrap';
