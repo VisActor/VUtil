@@ -1,5 +1,10 @@
 import isNil from './isNil';
-import { computeLinearCIComponents, invNorm, stdErrorsAt } from './regression-utils';
+import {
+  computeLinearCIComponents,
+  confidenceCriticalValue,
+  confidenceHalfWidth,
+  stdErrorsAt
+} from './regression-utils';
 
 /**
  * Linear regression utilities (single clean implementation).
@@ -108,18 +113,20 @@ export function regressionLinear(
     if (comps.n === 0 || N <= 0) {
       return out;
     }
-    const z = invNorm(1 - alpha / 2);
+    const z = confidenceCriticalValue(alpha);
     if (comps.min === comps.max) {
       const m = predict(comps.min);
       const errs = stdErrorsAt(comps.min, comps);
+      const meanHalfWidth = confidenceHalfWidth(z, errs.seMean);
+      const predHalfWidth = confidenceHalfWidth(z, errs.sePred);
       for (let i = 0; i < N; i++) {
         out.push({
           x: comps.min,
           mean: m,
-          lower: m - z * errs.seMean,
-          upper: m + z * errs.seMean,
-          predLower: m - z * errs.sePred,
-          predUpper: m + z * errs.sePred
+          lower: m - meanHalfWidth,
+          upper: m + meanHalfWidth,
+          predLower: m - predHalfWidth,
+          predUpper: m + predHalfWidth
         });
       }
       return out;
@@ -129,13 +136,15 @@ export function regressionLinear(
       const px = i === N - 1 ? comps.max : comps.min + step * i;
       const m = predict(px);
       const errs = stdErrorsAt(px, comps);
+      const meanHalfWidth = confidenceHalfWidth(z, errs.seMean);
+      const predHalfWidth = confidenceHalfWidth(z, errs.sePred);
       out.push({
         x: px,
         mean: m,
-        lower: m - z * errs.seMean,
-        upper: m + z * errs.seMean,
-        predLower: m - z * errs.sePred,
-        predUpper: m + z * errs.sePred
+        lower: m - meanHalfWidth,
+        upper: m + meanHalfWidth,
+        predLower: m - predHalfWidth,
+        predUpper: m + predHalfWidth
       });
     }
     return out;

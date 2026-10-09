@@ -1,5 +1,10 @@
 import { visitPoints } from './regression-linear';
-import { computeLinearCIComponents, invNorm, stdErrorsAt } from './regression-utils';
+import {
+  computeLinearCIComponents,
+  confidenceCriticalValue,
+  confidenceHalfWidth,
+  stdErrorsAt
+} from './regression-utils';
 
 /**
  * Simple logistic regression (binary) using Newton-Raphson (IRLS).
@@ -133,18 +138,20 @@ export function regressionLogistic(
       return out;
     }
 
-    const z = Math.abs(invNorm(1 - alpha / 2));
+    const z = confidenceCriticalValue(alpha);
     if (comps.min === comps.max) {
       const v = predict(comps.min);
       const errs = stdErrorsAt(comps.min, comps);
+      const meanHalfWidth = confidenceHalfWidth(z, errs.seMean);
+      const predHalfWidth = confidenceHalfWidth(z, errs.sePred);
       for (let i = 0; i < N; i++) {
         out.push({
           x: comps.min,
           mean: v,
-          lower: v - z * errs.seMean,
-          upper: v + z * errs.seMean,
-          predLower: v - z * errs.sePred,
-          predUpper: v + z * errs.sePred
+          lower: v - meanHalfWidth,
+          upper: v + meanHalfWidth,
+          predLower: v - predHalfWidth,
+          predUpper: v + predHalfWidth
         });
       }
       return out;
@@ -155,13 +162,15 @@ export function regressionLogistic(
       const px = i === N - 1 ? comps.max : comps.min + step * i;
       const yh = predict(px);
       const errs = stdErrorsAt(px, comps);
+      const meanHalfWidth = confidenceHalfWidth(z, errs.seMean);
+      const predHalfWidth = confidenceHalfWidth(z, errs.sePred);
       out.push({
         x: px,
         mean: yh,
-        lower: yh - z * errs.seMean,
-        upper: yh + z * errs.seMean,
-        predLower: yh - z * errs.sePred,
-        predUpper: yh + z * errs.sePred
+        lower: yh - meanHalfWidth,
+        upper: yh + meanHalfWidth,
+        predLower: yh - predHalfWidth,
+        predUpper: yh + predHalfWidth
       });
     }
     return out;
