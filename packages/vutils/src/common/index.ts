@@ -101,3 +101,4 @@ export * from './ecdf';
 export * from './correlation';
 export * from './mean';
 export * from './bootstrap';
+export * from './regression-bootstrap';

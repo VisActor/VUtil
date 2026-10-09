@@ -1,4 +1,5 @@
-import { visitPoints } from './regression-linear';
+import { regressionPoints, regressionGrid, regressionBasis, normalizeRegression } from './regression-solver';
+import { median } from './median';
 import {
   computeLinearCIComponents,
   confidenceCriticalValue,
@@ -6,264 +7,241 @@ import {
   stdErrorsAt
 } from './regression-utils';
 
-interface LowessPoint {
-  x: number;
-  y: number;
-  index: number;
-}
-
-function tricube(u: number) {
-  const uu = Math.abs(u);
-  if (uu >= 1) {
-    return 0;
-  }
-  const t = 1 - uu * uu * uu;
-  return t * t * t;
-}
-
 /**
- * Stratified sampling to reduce data size while preserving distribution
- */
-function stratifiedSample(sortedData: LowessPoint[], maxSamples: number) {
-  const n = sortedData.length;
-  if (n <= maxSamples) {
-    return sortedData;
-  }
-
-  const sampled: LowessPoint[] = [];
-
-  // More aggressive sampling - use exact step size
-  const step = n / maxSamples;
-
-  for (let i = 0; i < maxSamples; i++) {
-    const idx = Math.min(Math.floor(i * step), n - 1);
-    sampled.push(sortedData[idx]);
-  }
-
-  return sampled;
-}
-
-/**
- * Simple lowess implementation (univariate x)
- * options:
- * - span: fraction of points used in local regression (0,1]
- * - degree: 0 (constant) or 1 (linear)
- * - iterations: number of robustifying iterations
- * - alpha: confidence level for CI
- * - maxSamples: maximum number of points to use (default: 1000 for fast processing)
+ * 局部线性 LOWESS。默认全量观测、span=2/3、三次稳健重加权。
+ * delta 显式插值加速；maxSamples 仅保留显式选择的历史抽样用途。
+ * predict 与 evaluateGrid 查询构建时固定的同一模型，不触发再拟合。
  */
 export function regressionLowess(
   data: any[],
   x: (d: any) => number = d => d.x,
   y: (d: any) => number = d => d.y,
-  options: { span?: number; degree?: 1 | 0; iterations?: number; alpha?: number; maxSamples?: number } = {}
+  options: {
+    span?: number;
+    degree?: 1 | 0;
+    iterations?: number;
+    alpha?: number;
+    maxSamples?: number;
+    delta?: number;
+  } = {}
 ) {
-  const span = options.span || 0.3;
-  const degree = options.degree === 0 ? 0 : 1;
+  const span = options.span ?? 2 / 3;
+  const degree = options.degree ?? 1;
+  const iterations = options.iterations ?? 3;
+  const delta = options.delta ?? 0;
   const alpha = options.alpha ?? 0.05;
-  const iterations = options.iterations == null ? 2 : options.iterations;
-  const maxSamples = options.maxSamples || 1000;
-
-  // Collect and sort data by x
-  const rawPoints: LowessPoint[] = [];
-  visitPoints(data, x, y, (dx, dy, index) => {
-    rawPoints.push({ x: dx, y: dy, index });
-  });
-
-  rawPoints.sort((a, b) => a.x - b.x);
-
-  // Apply sampling if needed
-  const sampledPoints = stratifiedSample(rawPoints, maxSamples);
-
-  const n = sampledPoints.length;
-  const ptsX: number[] = new Array(n);
-  const ptsY: number[] = new Array(n);
-
-  for (let i = 0; i < n; i++) {
-    ptsX[i] = sampledPoints[i].x;
-    ptsY[i] = sampledPoints[i].y;
+  if (
+    !(span > 0 && span <= 1) ||
+    !Number.isInteger(iterations) ||
+    iterations < 0 ||
+    !Number.isFinite(delta) ||
+    delta < 0 ||
+    (degree !== 0 && degree !== 1) ||
+    (options.maxSamples != null && (!Number.isInteger(options.maxSamples) || options.maxSamples < 2))
+  ) {
+    throw new RangeError('Invalid LOWESS span, degree, iterations, delta or maxSamples');
   }
+  let pts = regressionPoints(data, x, y).sort((a, b) => a.x - b.x || a.y - b.y);
+  if (options.maxSamples != null && pts.length > options.maxSamples) {
+    const full = pts;
+    const count = options.maxSamples;
+    pts = Array.from({ length: count }, (_, i) => full[Math.floor((i * (full.length - 1)) / (count - 1))]);
+  }
+  const n = pts.length;
+  const ptsX = pts.map(p => p.x);
+  const ptsY = pts.map(p => p.y);
+  const basis = regressionBasis(pts);
+  const normalizedX = ptsX.map(v => normalizeRegression(v, basis.xCenter, basis.xScale));
+  const normalizedY = ptsY.map(v => normalizeRegression(v, basis.yCenter, basis.yScale));
+  const count = Math.min(n, Math.max(2, Math.floor(span * n + 1e-10)));
+  let robustWeights: number[] | undefined;
 
-  /**
-   * Optimized predictSingle using binary search on pre-sorted data
-   */
-  function predictSingle(x0: number, robustWeights?: number[]) {
-    if (n === 0) {
+  function exact(x0: number) {
+    if (!n) {
       return 0;
     }
-
-    // Binary search to find insertion point
+    const query = normalizeRegression(x0, basis.xCenter, basis.xScale);
+    // 找到连续的最近邻窗口；相等距离选择较小的 x（ties 的 y 已排序）。
     let left = 0;
-    let right = n;
+    let right = n - count;
     while (left < right) {
-      const mid = (left + right) >> 1;
-      if (ptsX[mid] < x0) {
+      const mid = (left + right) >>> 1;
+      const lowerDistance = x0 - ptsX[mid];
+      const upperDistance = ptsX[mid + count] - x0;
+      if (
+        Number.isFinite(lowerDistance) && Number.isFinite(upperDistance)
+          ? lowerDistance > upperDistance
+          : query - normalizedX[mid] > normalizedX[mid + count] - query
+      ) {
         left = mid + 1;
       } else {
         right = mid;
       }
     }
-
-    const m = Math.min(n, Math.max(2, Math.floor(span * n)));
-
-    // Expand by distance: equal numbers on either side need not be the nearest points.
-    let lo = left - 1;
-    let hi = left;
-    for (let count = 0; count < m; count++) {
-      if (lo >= 0 && (hi >= n || x0 - ptsX[lo] <= ptsX[hi] - x0)) {
-        lo--;
-      } else {
-        hi++;
+    let start = left;
+    let end = left + count;
+    if (ptsX[start] === ptsX[end - 1]) {
+      while (start > 0 && ptsX[start - 1] === ptsX[start]) {
+        start--;
+      }
+      while (end < n && ptsX[end] === ptsX[start]) {
+        end++;
       }
     }
-    const actualStart = lo + 1;
-    const end = hi;
-
-    // Find max distance and compute weights in single pass
-    let maxDist = 0;
-    const windowSize = end - actualStart;
-    const distances: number[] = new Array(windowSize);
-
-    for (let i = actualStart; i < end; i++) {
-      const dist = Math.abs(ptsX[i] - x0);
-      distances[i - actualStart] = dist;
-      if (dist > maxDist) {
-        maxDist = dist;
-      }
+    const rawRadius = Math.max(Math.abs(ptsX[start] - x0), Math.abs(ptsX[end - 1] - x0));
+    const scaled = !Number.isFinite(rawRadius);
+    const radius = scaled
+      ? Math.max(Math.abs(normalizedX[start] - query), Math.abs(normalizedX[end - 1] - query))
+      : rawRadius;
+    // 局部响应坐标不能由远处、未参与该邻域的观测决定精度。
+    let yMin = Infinity;
+    let yMax = -Infinity;
+    for (let i = start; i < end; i++) {
+      yMin = Math.min(yMin, ptsY[i]);
+      yMax = Math.max(yMax, ptsY[i]);
     }
-
-    // Compute weights using pre-calculated distances
-    let sumw = 0;
-    const w: number[] = new Array(windowSize);
-    for (let i = 0; i < windowSize; i++) {
-      const u = maxDist === 0 ? 0 : distances[i] / maxDist;
-      let wi = tricube(u);
-      if (robustWeights && robustWeights[actualStart + i] != null) {
-        wi *= robustWeights[actualStart + i];
-      }
-      w[i] = wi;
-      sumw += wi;
-    }
-
-    if (sumw === 0) {
-      // Fall back to the nearest y, preserving input order for equal distances.
-      let nearestIdx = 0;
-      let nearestDistance = Math.abs(ptsX[0] - x0);
-      for (let i = 1; i < n; i++) {
-        const distance = Math.abs(ptsX[i] - x0);
-        if (
-          distance < nearestDistance ||
-          (distance === nearestDistance && sampledPoints[i].index < sampledPoints[nearestIdx].index)
-        ) {
-          nearestIdx = i;
-          nearestDistance = distance;
-        }
-      }
-      return ptsY[nearestIdx];
-    }
-
-    if (degree === 0) {
-      let s = 0;
-      for (let i = 0; i < w.length; i++) {
-        s += w[i] * ptsY[actualStart + i];
-      }
-      return s / sumw;
-    }
-
-    // weighted linear regression on local points
+    const yCenter = yMin / 2 + yMax / 2;
+    const yScale = Math.max(Math.abs(yMin - yCenter), Math.abs(yMax - yCenter)) || 1;
     let sw = 0;
     let sx = 0;
     let sy = 0;
     let sxx = 0;
     let sxy = 0;
-    for (let i = actualStart; i < end; i++) {
-      const idx = i - actualStart;
-      const xi = ptsX[i];
-      const yi = ptsY[i];
-      const wi = w[idx];
-      sw += wi;
-      sx += wi * xi;
-      sy += wi * yi;
-      sxx += wi * xi * xi;
-      sxy += wi * xi * yi;
+    for (let i = start; i < end; i++) {
+      const z = radius === 0 ? 0 : (scaled ? normalizedX[i] - query : ptsX[i] - x0) / radius;
+      const u = Math.abs(z);
+      const t = u >= 1 ? 0 : 1 - u * u * u;
+      const w = t * t * t * (robustWeights ? robustWeights[i] : 1);
+      sw += w;
+      sx += w * z;
+      const response = normalizeRegression(ptsY[i], yCenter, yScale);
+      sy += w * response;
+      sxx += w * z * z;
+      sxy += w * z * response;
     }
-
-    const meanX = sx / sw;
-    const meanY = sy / sw;
-    const denom = sxx - sx * meanX;
-    const slope = Math.abs(denom) < 1e-12 ? 0 : (sxy - sx * meanY) / denom;
-    const intercept = meanY - slope * meanX;
-    return intercept + slope * x0;
-  }
-
-  function predict(x0: number | number[]) {
-    if (Array.isArray(x0)) {
-      const len = x0.length;
-      const out: number[] = new Array(len);
-      for (let i = 0; i < len; i++) {
-        out[i] = predictSingle(x0[i]);
-      }
-      return out;
-    }
-    return predictSingle(x0 as number);
-  }
-
-  function evaluateGrid(N: number) {
-    if (N <= 0) {
-      return [];
-    }
-    if (n === 0) {
-      return [];
-    }
-
-    const out: { x: number; y: number }[] = new Array(N);
-    const min = ptsX[0];
-    const max = ptsX[n - 1];
-
-    if (min === max) {
-      const v = predictSingle(min);
-      for (let i = 0; i < N; i++) {
-        out[i] = { x: min, y: v };
-      }
-      return out;
-    }
-    const step = (max - min) / (N - 1);
-
-    // optionally add robust iterations
-    let robustWeights: number[] | undefined;
-
-    // Disable robustness iterations for large datasets to improve performance
-    // Users can override by setting iterations explicitly
-    const effectiveIterations = options.iterations != null ? iterations : n > 500 ? 0 : iterations;
-
-    if (effectiveIterations > 0) {
-      for (let iter = 0; iter < effectiveIterations; iter++) {
-        // compute fits - pre-allocate arrays
-        const fits: number[] = new Array(n);
-        const res: number[] = new Array(n);
-
-        for (let i = 0; i < n; i++) {
-          fits[i] = predictSingle(ptsX[i], robustWeights);
-          res[i] = Math.abs(ptsY[i] - fits[i]);
+    if (sw === 0) {
+      // 核边界零权重时使用最近有效观测的加权常数；等距离取均值。
+      let distance = Infinity;
+      let weight = 0;
+      let value = 0;
+      for (let i = 0; i < n; i++) {
+        const w = robustWeights ? robustWeights[i] : 1;
+        if (w === 0) {
+          continue;
         }
-
-        // median absolute deviation
-        const sortedRes = res.slice().sort((a, b) => a - b);
-        const med = sortedRes[Math.floor(n / 2)] || 0;
-        robustWeights = new Array(n);
-        for (let i = 0; i < n; i++) {
-          const u = med === 0 ? 0 : res[i] / (6 * med);
-          const w = Math.abs(u) >= 1 ? 0 : (1 - u * u) * (1 - u * u);
-          robustWeights[i] = w;
+        const d = Math.abs(scaled ? normalizedX[i] - query : ptsX[i] - x0);
+        if (d < distance) {
+          distance = d;
+          weight = w;
+          value = ptsY[i];
+        } else if (d === distance) {
+          value = value * (weight / (weight + w)) + ptsY[i] * (w / (weight + w));
+          weight += w;
         }
       }
+      if (weight === 0) {
+        throw new RangeError('LOWESS has no effective local observations');
+      }
+      return value;
     }
+    const mx = sx / sw;
+    const my = sy / sw;
+    const variance = sxx / sw - mx * mx;
+    const slope = degree === 0 || variance <= Number.EPSILON * 32 ? 0 : (sxy / sw - mx * my) / variance;
+    return yCenter + yScale * (my - slope * mx);
+  }
 
-    for (let i = 0; i < N; i++) {
-      const px = i === N - 1 ? max : min + step * i;
-      out[i] = { x: px, y: predictSingle(px, robustWeights) };
+  // delta 不删除观测。只减少局部回归求值位置，全部残差参与重加权。
+  const anchors: number[] = [];
+  for (let i = 0; i < n; ) {
+    anchors.push(i);
+    if (i === n - 1) {
+      break;
+    }
+    let next = i + 1;
+    if (delta > 0) {
+      while (next + 1 < n && ptsX[next + 1] - ptsX[i] <= delta) {
+        next++;
+      }
+    }
+    // 重复 x 一起使用同一预测；端点不能丢失。
+    while (next + 1 < n && ptsX[next + 1] === ptsX[next]) {
+      next++;
+    }
+    i = next;
+  }
+  let fits = new Array<number>(n);
+  function fitObservations() {
+    const out = new Array<number>(n);
+    for (let a = 0; a < anchors.length; a++) {
+      const index = anchors[a];
+      out[index] = exact(ptsX[index]);
+      if (a === 0) {
+        continue;
+      }
+      const previous = anchors[a - 1];
+      const rawWidth = ptsX[index] - ptsX[previous];
+      const width = Number.isFinite(rawWidth) ? rawWidth : normalizedX[index] - normalizedX[previous];
+      for (let i = previous + 1; i < index; i++) {
+        const t =
+          width === 0
+            ? 0
+            : (Number.isFinite(rawWidth) ? ptsX[i] - ptsX[previous] : normalizedX[i] - normalizedX[previous]) / width;
+        out[i] = out[previous] * (1 - t) + out[index] * t;
+      }
     }
     return out;
+  }
+  for (let iteration = 0; iteration <= iterations; iteration++) {
+    fits = fitObservations();
+    if (iteration === iterations) {
+      break;
+    }
+    const residuals = fits.map((v, i) => {
+      const residual = ptsY[i] - v;
+      return Number.isFinite(residual)
+        ? Math.abs(residual / basis.yScale)
+        : Math.abs(normalizedY[i] - normalizeRegression(v, basis.yCenter, basis.yScale));
+    });
+    const med = median(residuals.slice());
+    const currentFits = fits;
+    robustWeights = residuals.map((r, i) => {
+      if (med === 0) {
+        const tolerance = Number.EPSILON * 64 * (Math.max(Math.abs(ptsY[i]), Math.abs(currentFits[i])) / basis.yScale);
+        return r <= tolerance ? 1 : 0;
+      }
+      const u = r / (6 * med);
+      return u >= 1 ? 0 : (1 - u * u) ** 2;
+    });
+  }
+  function predictSingle(x0: number): number {
+    if (delta === 0 || n < 2 || x0 < ptsX[0] || x0 > ptsX[n - 1]) {
+      return exact(x0);
+    }
+    let lo = 0;
+    let hi = n - 1;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >>> 1;
+      if (ptsX[mid] <= x0) {
+        lo = mid;
+      } else {
+        hi = mid;
+      }
+    }
+    if (ptsX[hi] === ptsX[lo]) {
+      return fits[lo];
+    }
+    const width = ptsX[hi] - ptsX[lo];
+    const t = Number.isFinite(width)
+      ? (x0 - ptsX[lo]) / width
+      : (normalizeRegression(x0, basis.xCenter, basis.xScale) - normalizedX[lo]) / (normalizedX[hi] - normalizedX[lo]);
+    return fits[lo] * (1 - t) + fits[hi] * t;
+  }
+  function predict(x0: number | number[]) {
+    return Array.isArray(x0) ? x0.map(predictSingle) : predictSingle(x0);
+  }
+  function evaluateGrid(N: number) {
+    return regressionGrid(ptsX[0], ptsX[n - 1], N, predictSingle);
   }
 
   function confidenceInterval(N: number = 50) {
@@ -329,10 +307,11 @@ export function regressionLowess(
 
   return {
     predict,
-    evaluate: predict as any,
+    evaluate: predict,
     evaluateGrid,
-    confidenceInterval
+    confidenceInterval,
+    // 节点值按 x 排序，重复观测仍保持其统计权重。
+    fitted: pts.map((p, i) => ({ x: p.x, y: fits[i] }))
   };
 }
-
 export default regressionLowess;

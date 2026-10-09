@@ -1,5 +1,12 @@
 import isNil from './isNil';
 import {
+  regressionPoints,
+  fitRegression,
+  regressionPrediction,
+  regressionCoefficients,
+  regressionGrid
+} from './regression-solver';
+import {
   computeLinearCIComponents,
   confidenceCriticalValue,
   confidenceHalfWidth,
@@ -69,43 +76,20 @@ export function regressionLinear(
   }
 ) {
   const alpha = options?.alpha ?? 0.05;
-  // accumulate online means (sufficient statistics)
-  let n = 0;
-  let meanX = 0;
+  const points = regressionPoints(data, x, y);
+  const model = fitRegression(points, 1);
+  const coef = regressionCoefficients(model);
+  const a = coef[0];
+  const b = coef[1];
+  const predict = (xx: number) => regressionPrediction(model, xx);
+  const comps = computeLinearCIComponents(data, x, y, predict);
   let meanY = 0;
-  let meanXY = 0;
-  let meanX2 = 0;
-
-  visitPoints(data, x, y, (xi, yi) => {
-    n++;
-    meanX += (xi - meanX) / n;
-    meanY += (yi - meanY) / n;
-    meanXY += (xi * yi - meanXY) / n;
-    meanX2 += (xi * xi - meanX2) / n;
+  points.forEach((p, i) => {
+    meanY += (p.y - meanY) / (i + 1);
   });
 
-  const { a, b } = ordinaryLeastSquares(meanX, meanY, meanXY, meanX2);
-  const predict = (xx: number) => a + b * xx;
-
-  const comps = computeLinearCIComponents(data, x, y, predict);
-
   function evaluateGrid(N: number) {
-    const out: { x: number; y: number }[] = [];
-    if (comps.n === 0 || N <= 0) {
-      return out;
-    }
-    if (comps.min === comps.max) {
-      for (let i = 0; i < N; i++) {
-        out.push({ x: comps.min, y: predict(comps.min) });
-      }
-      return out;
-    }
-    const step = (comps.max - comps.min) / (N - 1);
-    for (let i = 0; i < N; i++) {
-      const px = i === N - 1 ? comps.max : comps.min + step * i;
-      out.push({ x: px, y: predict(px) });
-    }
-    return out;
+    return regressionGrid(comps.min, comps.max, N, predict);
   }
 
   function confidenceInterval(N: number = 50) {
@@ -152,6 +136,7 @@ export function regressionLinear(
 
   return {
     coef: { a, b },
+    rank: model.rank,
     predict,
     rSquared: rSquared(data, x, y, meanY, predict),
     evaluateGrid,

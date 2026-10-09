@@ -32,4 +32,5 @@ jobs:
       - name: Install rush
         run: node common/scripts/install-run-rush.js install --bypass-policy
       - run: node common/scripts/install-run-rush.js build --only tag:package
-      - run: node common/scripts/install-run-rush.js test --only tag:package
+      # LOWESS 性能断言包含墙钟预算，避免其他包的测试同时争用 CPU。
+      - run: node common/scripts/install-run-rush.js test --only tag:package --parallelism 1

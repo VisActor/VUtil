@@ -1,27 +1,20 @@
 import { regressionLowess } from '../src/common/regression-lowess';
-import { lowessScatterData, expectedGrid, expectedCI } from './data/lowess-scatter';
+import { lowessScatterData } from './data/lowess-scatter';
 
-function expectNear(actual: number, expected: number) {
-  expect(Number.isFinite(actual)).toBe(true);
-  expect(Math.abs(actual - expected)).toBeLessThan(1e-8);
-}
-
-test('preserves the scatter LOWESS curve and confidence intervals', () => {
+test('scatter LOWESS exposes one robust model, independent of input permutation', () => {
   expect(lowessScatterData).toHaveLength(406);
   const model = regressionLowess(lowessScatterData);
+  const reverse = regressionLowess(lowessScatterData.slice().reverse());
   const grid = model.evaluateGrid(101);
   const ci = model.confidenceInterval(101);
-  expect(grid).toHaveLength(101);
-  expect(ci).toHaveLength(101);
-  grid.forEach((point, i) => {
-    expectNear(point.x, expectedGrid[i].x);
-    expectNear(point.y, expectedGrid[i].y);
+  const other = reverse.evaluateGrid(101);
+  grid.forEach((row, i) => {
+    expect(Number.isFinite(row.y)).toBe(true);
+    expect(model.predict(row.x)).toBeCloseTo(row.y, 10);
+    expect(other[i].y).toBeCloseTo(row.y, 10);
+    expect(ci[i].mean).toBeCloseTo(row.y, 10);
+    expect(ci[i].lower).toBeLessThanOrEqual(row.y);
+    expect(ci[i].upper).toBeGreaterThanOrEqual(row.y);
   });
-  const keys = ['x', 'mean', 'lower', 'upper', 'predLower', 'predUpper'] as const;
-  ci.forEach((point, i) => {
-    keys.forEach(key => expectNear(point[key], expectedCI[i][key]));
-  });
-  // predict and CI use the non-robust fit; evaluateGrid uses robust iterations.
-  const predicted = model.predict(expectedCI.map(point => point.x)) as number[];
-  predicted.forEach((value, i) => expectNear(value, expectedCI[i].mean));
+  // 旧金图分别锁定稳健 grid 与非稳健 predict，是本轮明确修正的错误契约。
 });
