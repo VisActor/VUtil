@@ -7,6 +7,9 @@
  * - kde: main function to compute density estimates at provided points
  */
 
+import { mean } from './mean';
+import { variance } from './variance';
+
 export type Kernel = (u: number) => number;
 
 /** Gaussian kernel (standard normal) */
@@ -45,28 +48,50 @@ export interface KDEOptions {
   kernel?: Kernel;
   bandwidth?: number; // fixed bandwidth
   bandwidthMethod?: 'scott' | 'silverman';
+  /** Automatic bandwidth uses population deviation by default, preserving existing behavior. */
+  standardDeviation?: 'sample' | 'population';
+  /** Positive multiplier applied once to either fixed or automatic bandwidth. */
+  bandwidthAdjust?: number;
   // if bandwidth not provided, compute from data using method
 }
 
 /**
  * Compute standard deviation for numeric array
  */
-function std(values: number[]) {
+function std(values: number[], convention: 'sample' | 'population') {
   const n = values.length;
-  if (n === 0) {
+  if (n < 2) {
     return 0;
   }
-  let mean = 0;
+  const center = mean(values);
+  const differences: number[] = [];
+  let scale = 0;
+  let sourceScale = 1;
   for (let i = 0; i < n; i++) {
-    mean += values[i];
+    const difference = values[i] - center;
+    differences.push(difference);
+    scale = Math.max(scale, Math.abs(difference));
   }
-  mean /= n;
-  let s = 0;
+  // Finite values of opposite signs can overflow subtraction although population deviation is representable.
+  if (scale === Infinity) {
+    sourceScale = Math.abs(center);
+    for (const value of values) {
+      sourceScale = Math.max(sourceScale, Math.abs(value));
+    }
+    scale = 0;
+    for (let i = 0; i < n; i++) {
+      differences[i] = values[i] / sourceScale - center / sourceScale;
+      scale = Math.max(scale, Math.abs(differences[i]));
+    }
+  }
+  if (scale === 0) {
+    return 0;
+  }
   for (let i = 0; i < n; i++) {
-    const d = values[i] - mean;
-    s += d * d;
+    differences[i] /= scale;
   }
-  return Math.sqrt(s / n);
+  const correction = convention === 'population' ? (n - 1) / n : 1;
+  return Math.sqrt(variance(differences) * correction) * scale * sourceScale;
 }
 
 export interface KDEEvaluator {
@@ -90,12 +115,20 @@ export interface KDEEvaluator {
  * Usage: const model = kde(data, options); model.evaluate(x) or model.evaluate([x1,x2])
  */
 export function kde(data: number[], options: KDEOptions = {}): KDEEvaluator {
+  const deviation = options.standardDeviation === undefined ? 'population' : options.standardDeviation;
+  const adjustment = options.bandwidthAdjust === undefined ? 1 : options.bandwidthAdjust;
+  if (deviation !== 'sample' && deviation !== 'population') {
+    throw new RangeError('standardDeviation must be sample or population');
+  }
+  if (!Number.isFinite(adjustment) || adjustment <= 0) {
+    throw new RangeError('bandwidthAdjust must be finite and positive');
+  }
   const n = data.length;
   const kernel = options.kernel || gaussian;
 
   let h = options.bandwidth;
   if (!h || h <= 0) {
-    const sd = std(data) || 0;
+    const sd = std(data, deviation) || 0;
     const method = options.bandwidthMethod || 'scott';
     if (method === 'silverman') {
       h = silverman(n, sd, 1);
@@ -103,6 +136,7 @@ export function kde(data: number[], options: KDEOptions = {}): KDEEvaluator {
       h = scott(n, sd, 1);
     }
   }
+  h *= adjustment;
 
   // if still zero (constant data), evaluator returns zeros
   if (!h || h <= 0) {
@@ -152,7 +186,7 @@ export function kde(data: number[], options: KDEOptions = {}): KDEEvaluator {
     };
   }
 
-  const invNh = 1 / (n * h);
+  const invNh = 1 / n / h;
 
   function evalPoint(x: number) {
     let sum = 0;

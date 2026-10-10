@@ -8,7 +8,8 @@
     "cjs",
     "es",
     "dist",
-    "REGRESSION.md"
+    "REGRESSION.md",
+    "KDE.md"
   ],
   "description": "util",
   "author": {

@@ -1,6 +1,52 @@
 import { epanechnikov, gaussian, kde, scott, silverman } from '../src/common/kde';
 
 describe('kde', () => {
+  test('sample bandwidth and adjustment match the one-dimensional SciPy convention', () => {
+    const values = [1, 2, 3, 4, 5];
+    const factor = Math.pow(5, -0.2);
+    expect(kde(values).bandwidth).toBeCloseTo(Math.sqrt(2) * factor, 12);
+    expect(kde(values, { standardDeviation: 'sample' }).bandwidth).toBeCloseTo(Math.sqrt(2.5) * factor, 12);
+    expect(kde(values, { standardDeviation: 'sample', bandwidthAdjust: 2 }).bandwidth).toBeCloseTo(
+      Math.sqrt(2.5) * factor * 2,
+      12
+    );
+    expect(kde(values, { bandwidth: 3, bandwidthAdjust: 2 }).bandwidth).toBe(6);
+  });
+
+  test('automatic bandwidth remains finite under large translations and scales', () => {
+    const base = [0, 2, 4, 6];
+    const options = { standardDeviation: 'sample' as const };
+    const expected = kde(base, options).bandwidth;
+    expect(
+      kde(
+        base.map(x => x + 1e15),
+        options
+      ).bandwidth
+    ).toBeCloseTo(expected, 12);
+    expect(
+      kde(
+        base.map(x => x * 1e160),
+        options
+      ).bandwidth / 1e160
+    ).toBeCloseTo(expected, 12);
+  });
+
+  test('finite population deviation survives overflowing centered differences and n * bandwidth', () => {
+    const scale = 1.7e308;
+    const model = kde([scale, scale, -scale]);
+    const ratio = Math.sqrt(8 / 9) * Math.pow(3, -0.2);
+    expect(model.bandwidth / scale).toBeCloseTo(ratio, 12);
+    expect(model.evaluate(0) * scale).toBeCloseTo(gaussian(1 / ratio) / ratio, 12);
+  });
+
+  test('new options reject invalid values at the factory boundary', () => {
+    for (const bandwidthAdjust of [0, -1, NaN, Infinity, null as any]) {
+      expect(() => kde([1, 2], { bandwidthAdjust })).toThrow(RangeError);
+    }
+    expect(() => kde([1, 2], { standardDeviation: 'invalid' as any })).toThrow(RangeError);
+    expect(() => kde([1, 2], { standardDeviation: null as any })).toThrow(RangeError);
+  });
+
   test('evaluate and grid', () => {
     const data = [1, 2, 3, 4, 5];
     const model = kde(data, { bandwidthMethod: 'scott' });
