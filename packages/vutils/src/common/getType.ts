@@ -1,8 +1,5 @@
 const getType = (value: any): string => {
-  return {}.toString
-    .call(value)
-    .replace(/^\[object /, '')
-    .replace(/]$/, '');
+  return Object.prototype.toString.call(value).slice(8, -1);
 };
 
 export default getType;
