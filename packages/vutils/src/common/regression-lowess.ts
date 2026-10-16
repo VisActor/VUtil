@@ -8,7 +8,7 @@ import {
 } from './regression-utils';
 
 /**
- * 局部线性 LOWESS。默认全量观测、span=2/3、三次稳健重加权。
+ * 局部线性 LOWESS。默认全量观测，保留历史参数 span=0.3、iterations=2。
  * delta 显式插值加速；maxSamples 仅保留显式选择的历史抽样用途。
  * predict 与 evaluateGrid 查询构建时固定的同一模型，不触发再拟合。
  */
@@ -25,9 +25,9 @@ export function regressionLowess(
     delta?: number;
   } = {}
 ) {
-  const span = options.span ?? 2 / 3;
+  const span = options.span ?? 0.3;
   const degree = options.degree ?? 1;
-  const iterations = options.iterations ?? 3;
+  const iterations = options.iterations ?? 2;
   const delta = options.delta ?? 0;
   const alpha = options.alpha ?? 0.05;
   if (
