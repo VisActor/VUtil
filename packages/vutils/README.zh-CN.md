@@ -10,3 +10,20 @@ normalQuantile(0.975); // 约 1.95996398454
 回归区间的 `alpha` 表示显著性水平，置信度为 `1-alpha`，默认 `alpha=0.05`。区间通过下尾概率计算临界值，避免 `1-alpha/2` 在 `alpha` 极小时舍入为 1。
 
 `alpha=0` 时，正标准误产生无限区间，零标准误产生退化区间；`alpha=1` 产生退化区间。非有限 `alpha` 或超出 `[0,1]` 的值产生 NaN 区间端点。
+
+## LOWESS 回归
+
+`regressionLowess` 保留历史默认参数 `span=0.3`、`iterations=2`；仅省略的参数使用默认值，显式 `iterations=0` 仍表示不做稳健重加权。默认使用全部有效观测；数值稳定性、最近邻选择以及同一模型下 `predict`、`evaluateGrid`、`fitted` 和置信区间均值一致性的修复继续保留。
+
+需要对齐 statsmodels 默认参数的调用方，应显式指定 `span=2/3`、`iterations=3`。StatPlots 已显式传入这些参数，不依赖 VUtils 的默认选择。
+
+```ts
+import { regressionLowess } from '@visactor/vutils';
+
+const data = [0, 1, 2, 3, 4].map(x => ({ x, y: x + Math.sin(x) }));
+const model = regressionLowess(data); // span=0.3、iterations=2
+const statsmodelsModel = regressionLowess(data, undefined, undefined, {
+  span: 2 / 3,
+  iterations: 3
+});
+```
