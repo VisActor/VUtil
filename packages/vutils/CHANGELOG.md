@@ -1,6 +1,13 @@
 # Change Log - @visactor/vutils
 
-This log was last generated on Sat, 10 Oct 2026 06:53:02 GMT and should not be manually modified.
+This log was last generated on Fri, 16 Oct 2026 06:47:51 GMT and should not be manually modified.
+
+## 1.0.28
+Fri, 16 Oct 2026 06:47:51 GMT
+
+### Patches
+
+- 恢复 LOWESS 历史默认参数 span=0.3、iterations=2，保留数值稳定性、全量观测及同一拟合模型的一致性修复；显式传入新参数的调用保持不变。
 
 ## 1.0.27
 Sat, 10 Oct 2026 06:53:02 GMT

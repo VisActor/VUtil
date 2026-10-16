@@ -2,6 +2,18 @@
   "name": "@visactor/vutils",
   "entries": [
     {
+      "version": "1.0.28",
+      "tag": "@visactor/vutils_v1.0.28",
+      "date": "Fri, 16 Oct 2026 06:47:51 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "恢复 LOWESS 历史默认参数 span=0.3、iterations=2，保留数值稳定性、全量观测及同一拟合模型的一致性修复；显式传入新参数的调用保持不变。"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.27",
       "tag": "@visactor/vutils_v1.0.27",
       "date": "Sat, 10 Oct 2026 06:53:02 GMT",
