@@ -186,9 +186,14 @@ export function layoutGlobalShrink(
       word.x = center[0];
       word.y = center[1];
 
-      if (!word.skip && word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)) {
-        word.hasPlaced = true;
-      } else if (!word.skip && word.weight > weightStd && globalShinkFactor > globalShinkLimit) {
+      word.hasPlaced = Boolean(
+        !word.skip && word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)
+      );
+      if (word.hasPlaced) {
+        continue;
+      }
+
+      if (!word.skip && word.weight > weightStd && globalShinkFactor > globalShinkLimit) {
         const wordId = word.datum[Symbol.for('vGrammar_id')];
         if (wordId !== id) {
           id = wordId;
@@ -314,8 +319,10 @@ export function layoutSelfEnlarge(
       word.x = center[0];
       word.y = center[1];
 
-      if (word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)) {
-        word.hasPlaced = true;
+      word.hasPlaced = Boolean(
+        word.hasText && word.sprite && place(board, word, maxR, ratio, size, boardSize, stepFactor)
+      );
+      if (word.hasPlaced) {
         if (word.weight >= weightStd) {
           importantWordSuccessedNum++;
         }
